@@ -48,7 +48,7 @@ ______________________________________________________________________________ *
 	// liste stations entre A et B
 	void recherche_intineraires(char* depart,char* arriver, liste_pStations_t** toutes_les_lignes); 
 	// affiche les stations de la ligne ligne
-	void liste_station(liste_pStations_t ligne); 
+	void liste_station(liste_pStations_t** toutes_les_lignes); 
 	// Affiche le nom de toutes les stations de toutes les lignes	
 	void liste_station_de_toutes_les_lignes(liste_pStations_t** toutes_les_lignes);
 	// Affiche les lignes qui sont ouverte pour nom_station	
@@ -56,13 +56,15 @@ ______________________________________________________________________________ *
 	// test la ligne avec 1 si elle est ouverte et 0 si elle est fermée; mini 2 stations ouvertes
 	int ligne_ouverte(liste_pStations_t* lignes); 
 	
-	void station_dans_ligne(char* nom_station, liste_pStations_t** toutes_les_lignes);
+	void station_dans_ligne(liste_pStations_t ligne);
 	// toutes les lignes d'une station
 	void ligne_station(char* nom_station, liste_pStations_t** toutes_les_lignes); 
 	// Autorisation des caracteres
 	int allow_chaine(char* station);  
 	// clean up chaines de caracteres
 	char* clean(char* nom);
+	
+	int est_voisin(char* station1, char* station2, liste_pStations_t** toutes_les_lignes);
 
 	
 	liste_pStations_t* ligne1(liste_pStations_t* ligne);

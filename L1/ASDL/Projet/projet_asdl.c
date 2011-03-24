@@ -124,18 +124,42 @@ ______________________________________________________________________________ *
 	// liste stations entre A et B
 	void recherche_intineraires(char* depart,char* arriver, liste_pStations_t** toutes_les_lignes)
 	{
+	    int i = 0; int j = 0;
+	    while((strcmp(depart, toutes_les_lignes[i]->s->nom) != 0)|| i < 14)
+	    {
+		toutes_les_lignes[i] = toutes_les_lignes[i]->next;
+		if(toutes_les_lignes[i]->next == NULL)
+		       i++;
+		if(strcmp(depart, toutes_les_lignes[i]->s->nom) != 0)
+		{
+		    while((strcmp(arriver, toutes_les_lignes[i]->s->nom) != 0)|| i < 14)
+		    {
+			toutes_les_lignes[i] = toutes_les_lignes[i]->next;
+			j++;
+			if(toutes_les_lignes[i]->next == NULL)
+			i++;
+		    }
+		}
+	    }
+	    
+	    printf("la station est a %d arrets", j);
 	    
 	}
-	// affiche les stations de la ligne ligne  MARCHE
-	void liste_station(liste_pStations_t ligne)
+
+	void liste_station(liste_pStations_t** toutes_les_lignes)
 	{
-	    puts("Les Station de cette ligne sont : ");
-	    while(ligne.next != NULL)
-	    {
-		printf("%s\n", ligne.s->nom);
-		ligne = *ligne.next;
-	    }
-	    puts("");
+		int i;
+		for(i = 0; i < 14; i++)
+		{
+			while(toutes_les_lignes[i]->next != NULL)
+			{
+				printf("%s ", toutes_les_lignes[i]->s->nom);
+				toutes_les_lignes[i] = toutes_les_lignes[i]->next;
+			}
+			puts("");
+		
+		}
+
 	}
 	// Affiche le nom de toutes les stations de toutes les lignes
 	void liste_station_de_toutes_les_lignes(liste_pStations_t** toutes_les_lignes)
@@ -201,13 +225,16 @@ ______________________________________________________________________________ *
 	    
 	    return 2 <= cmp;
 	}
-	
-	void station_dans_ligne(char* nom_station, liste_pStations_t** toutes_les_lignes)	
+		// affiche les stations de la ligne ligne  MARCHE
+	void station_dans_ligne(liste_pStations_t ligne)
 	{
-	    int i = 0;
-	    while(toutes_les_lignes[i]->next != NULL)
+	    puts("Les Station de cette ligne sont : ");
+	    while(ligne.next != NULL)
 	    {
+		printf("%s\n", ligne.s->nom);
+		ligne = *ligne.next;
 	    }
+	    puts("");
 	}
 	
 	// toutes les lignes d'une station	
@@ -239,6 +266,36 @@ ______________________________________________________________________________ *
 	    puts("");
 	}
 
+	int est_voisin(char* station1, char* station2, liste_pStations_t** toutes_les_lignes)
+	{
+	    int i = 0;
+	    while((strcmp(toutes_les_lignes[i]->s->nom , "") == 0) && (i < 14))
+	    {
+		if(strcmp(station1, toutes_les_lignes[i]->s->nom)==0)
+		{
+		    if(strcmp(station2, toutes_les_lignes[i]->next->s->nom)==0)
+		    {
+			return 1;
+		    }  
+		}
+		if(strcmp(station2, toutes_les_lignes[i]->s->nom)==0)
+		{
+		    if(strcmp(station1, toutes_les_lignes[i]->next->s->nom)==0)
+		    {
+			return 1;
+		    }  	    
+		}
+		if( strcmp(toutes_les_lignes[i]->s->nom , "") == 0)
+		{ 
+		    i++;    
+		}
+		else
+		{
+		    toutes_les_lignes[i] = toutes_les_lignes[i]->next;
+		}
+	    }
+	    return 0;
+	}
 	// Autorisation des caracteres	
 	int allow_chaine(char* station)
 	{
