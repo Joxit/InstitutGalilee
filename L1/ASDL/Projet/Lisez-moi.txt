@@ -1,0 +1,56 @@
+Bienvenue et merci de me lire.
+
+Programme réalisé par MAGLOIRE Jones et DELCOURT Rémi
+pour le projet d'Algorithmique des Structures de Données Linéaires.
+
+Programme en version test :
+	Le nom des stations pour les itineraires sont pré-enregistrés dans le code.
+	depart = "Nation";
+	arriver = "La Defense";
+	Ainsi que pour les informations sur les stations.
+	nom_station = "Nation";
+	
+
+___________________________
+0) ORGANISATION            |
+___________________________|
+
+Le programme est séparé en plusieurs fichiers ::
+
+main.c : Fonction principale du programme
+
+projet_asdl.h : Déclaration des fonctions de projet_asdl.c; lignes.c; menu.c
+
+projet_asdl.c : Définitions des fonctions utilisateur et de l'agent R.A.T.P 
+
+lignes.c : Définitions des fonctions pour la création des lignes
+
+menu.c : Définitions des fonctions pour l'affichage du menu
+
+makefile.sh : compilateur
+
+___________________________
+1) COMPILATION             |
+___________________________|
+
+Vous pouvez compiler en tapant
+
+	make
+	
+___________________________
+2) LANCEMENT               |
+___________________________|
+
+Pour lancer le programme tapez 
+
+	./projet
+	
+Il faut un code pour pour acceder aux options avancés
+
+___________________________
+3) RANGER                  |
+___________________________|
+
+Pour suprimer les *.o 
+	
+	make clean

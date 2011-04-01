@@ -1,9 +1,33 @@
 /* ______________________________________________________________________________
-| Projet A.S.D.L par MAGLOIRE Jones																|
-| Lignes RATP de paris																				|
-|																											|
-| Version 1.0 : mise en place du projet														|
-|______________________________________________________________________________ */
+	Projet A.S.D.L par MAGLOIRE Jones 11000369 et DELCOURT Rémi 11002398
+	Lignes RATP de paris
+    
+	Version 1.0 :
+			- mise en place du projet
+			- Création des fonctions de base
+			- Creation du mot de passe pour l'agent RATP
+			- Recherche itineraire : 
+					- Cas de base itineraire sur la meme ligne
+					- quitte la fonction si depart = arrivee
+			- seulement lignes 1 et 2 implementees
+	Version 1.1 :
+			- Changement de l'affichage en fonction recursive
+			- Ajout des sous choix utilisateur et de l'agent R.A.T.P
+			- Fix ::
+				- ligne_station
+				- get_station_ouverte
+				- ligne_ouverte
+				- ouvrir_station/fermer_station
+				- retirer_station_carte
+			- Implantation ligne 3
+			- Ajout de securité dans station_dans_ligne et ligne_ouverte
+			- reorganisation de projet_asdl.h et projet_asdl.c ::
+ 				- création de sous fichiers menu.c et lignes.c pour alléger projet_asdl.c	
+	
+ 	Vendredi 1 Avril 2011	
+ 	
+	pour plus d'information sur les fonctions voir projet_adsl.h
+______________________________________________________________________________ */
 
 /* Declaration de fonctionnalites supplementaire */
 
@@ -13,89 +37,26 @@
 #include "projet_asdl.h"
 
 
-
 /* Fonction principale */
 
 int main(int argc, char** argv)
 {
-	int i, choix = 0;
-	char* mot_de_passe = malloc(40*sizeof(char*));
-	mot_de_passe = "Joxit!";
-	char* reponse = malloc(40*sizeof(char*));
-	//liste_pStations_t* toutes_les_stations;
-	liste_pStations_t* toutes_les_lignes[14];
-	char* nom_station = malloc(40*sizeof(char*));
-	char* depart = malloc(40*sizeof(char*));
-	char* arriver = malloc(40*sizeof(char*));
-	*toutes_les_lignes = malloc(20*sizeof(liste_pStations_t*));
-	for(i = 0; i < 14; i++)
-	    toutes_les_lignes[i] = (liste_pStations_t*)malloc(60*sizeof(liste_pStations_t*));
+	int i;
+	//liste_pStations_t* toutes_les_stations; TODO
+	liste_pStations_t* toutes_les_lignes[14];	
+	// Allocation dynamique des variables
+	*toutes_les_lignes = malloc(2*NB_STATION*sizeof(liste_pStations_t*));
+	for(i = 0; i < NB_STATION; i++)
+		toutes_les_lignes[i] = (liste_pStations_t*)malloc(32*sizeof(liste_pStations_t*));
 	toutes_les_lignes[0] = ligne1(toutes_les_lignes[0]);
 	toutes_les_lignes[1] = ligne2(toutes_les_lignes[1]);
-	//gets(depart);
-	//gets(arriver);
-	gets(nom_station);
-	//recherche_intineraires( depart, arriver, toutes_les_lignes); // liste stations entre A et B
+	toutes_les_lignes[2] = ligne3(toutes_les_lignes[2]);
+	toutes_les_lignes[3] = ligne4(toutes_les_lignes[3]);
+	toutes_les_lignes[4] = ligne5(toutes_les_lignes[4]);
+	toutes_les_lignes[5] = ligne6(toutes_les_lignes[5]);
+
 	
-	
-	   //liste_station( *toutes_les_lignes[0]);// TODO
-	//liste_station_de_toutes_les_lignes(toutes_les_lignes); // MARCHE!
-	 //get_station_ouverte( nom_station, toutes_les_lignes);
-	 //printf("%d", ligne_ouverte( toutes_les_lignes[1])); // mini 2 stations ouvertes Marche!?
-	 // station_dans_ligne( nom_station,  toutes_les_lignes); //marche
-	 //ligne_station( nom_station,  toutes_les_lignes); // toutes les lignes d'une station MARCHE!
-	 clean(nom_station);// MARCHE
-	printf("%s\n", nom_station);
-	   /* TODO*/
-	 //retirer_station(nom_station,  toutes_les_lignes[0]);
-	 //liste_station( *toutes_les_lignes[0]);
-	 //ajout_ligne(int numero_ligne, liste_pStations_t** toutes_les_lignes)	
-	 //ouvrir_station( nom_station,  toutes_les_lignes[0]);
-	  //fermer_station( nom_station,  toutes_les_lignes[0]);
-	 //rechercher_station( nom_station,  toutes_les_lignes);
-	 
-	 //recherche_intineraires(depart, arriver, toutes_les_lignes);
-	
-	 
-	 
-	 
-	 
-	  Affichage1();
-		    
-	    switch(choix)
-	    {
-		    case 1:
-			printf("choississez votre station de depart : ");
-			gets(depart);
-			printf("choississez votre station d'arriver : ");
-			gets(arriver);
-			recherche_intineraires(depart, arriver, toutes_les_lignes);
-		    case 2:
-			printf("Quel ligne voulez vous voir? 1-14");
-			scanf("%d", &choix);
-			while(choix < 1 || choix > 14)
-			{
-				printf("Mauvaise ligne!");
-				scanf("%d", &choix);
-			}
-			station_dans_ligne( *toutes_les_lignes[choix-1]);
-		    case 3:
-			printf("choississez votre station : ");
-			gets(nom_station);
-			ligne_station( nom_station,  toutes_les_lignes);
-		    case 4:
-			puts("etes vous un agent de la RATP? Donnez le mot de passe! ");
-			gets(reponse);
-			if(strcmp(reponse, mot_de_passe) == 0)
-			{
-				Affichage2();
-			}
-			else
-				puts("Mot de passe incorecte!");
-		    case 5:
-			return EXIT_SUCCESS;
-	    }
-	// DONE Affichage2();
+	Menu1(toutes_les_lignes);
 		
 		return EXIT_SUCCESS;
 }
