@@ -34,200 +34,242 @@ ______________________________________________________________________________ *
 	#include <ctype.h>
 	#include "projet_asdl.h"
 
-	liste_pStations_t* ligne1(liste_pStations_t* ligne)
+	liste_pStations_t* ligne1(liste_pStations_t* ligne,liste_pStations_t** toutes_les_lignes0, int* id, int n)
 	{
+	    int i;
+	    	liste_pStations_t** toutes_les_lignes = (liste_pStations_t**)malloc(2*NB_STATION*sizeof(liste_pStations_t*));
+		for(i = 0; i < NB_STATION; i++)
+		{
+		    toutes_les_lignes[i] = (liste_pStations_t*)malloc(32*sizeof(liste_pStations_t*));
+		    toutes_les_lignes[i] = toutes_les_lignes0[i];
+		}
 	    
 	    ligne = malloc(2*sizeof(liste_pStations_t*));
-	   ligne = ajout_station("", ligne);
-	   ligne = ajout_station("La Defense", ligne);
-	   ligne = ajout_station("Grande Arche ", ligne);
-	   ligne = ajout_station("Esplanade de la Défense ", ligne);
-	   ligne = ajout_station("Pont de Neuilly", ligne);
-	   ligne = ajout_station("Les Sablons", ligne);
-	   ligne = ajout_station("Jardin d'Acclimatation", ligne);
-	   ligne = ajout_station("Porte Maillot", ligne);
-	   ligne = ajout_station("Argentine", ligne);
-	   ligne = ajout_station("Charles de Gaulle - Étoile", ligne);
-	   ligne = ajout_station("George V", ligne);
-	   ligne = ajout_station("Franklin D. Roosevelt", ligne);
-	   ligne = ajout_station("Champs-Élysées - Clemenceau", ligne);
-	   ligne = ajout_station("Concorde", ligne);
-	   ligne = ajout_station("Tuileries", ligne);
-	   ligne = ajout_station("Palais Royal - Musée du Louvre", ligne);
-	   ligne = ajout_station("Louvre - Rivoli", ligne);
-	   ligne = ajout_station("Châtelet", ligne);
-	   ligne = ajout_station("Hôtel de Ville", ligne);
-	   ligne = ajout_station("Saint-Paul", ligne);
-	   ligne = ajout_station("Bastille", ligne);
-	   ligne = ajout_station("Gare de Lyon", ligne);
-	   ligne = ajout_station("Reuilly - Diderot", ligne);
-	   ligne = ajout_station("Nation", ligne);
-	   ligne = ajout_station("Porte de Vincennes", ligne);
-	   ligne = ajout_station("Saint-Mandé", ligne);
-	   ligne = ajout_station("Bérault", ligne);
-	   ligne = ajout_station("Château de Vincennes", ligne);
+	   ligne = ajout_station("", ligne, toutes_les_lignes, id, n);
+	   ligne = ajout_station("La Defense", ligne, toutes_les_lignes, id, n);
+	   ligne = ajout_station("Grande Arche ", ligne, toutes_les_lignes, id, n);
+	   ligne = ajout_station("Esplanade de la Défense ", ligne, toutes_les_lignes, id, n);
+	   ligne = ajout_station("Pont de Neuilly", ligne, toutes_les_lignes, id, n);
+	   ligne = ajout_station("Les Sablons", ligne, toutes_les_lignes, id, n);
+	   ligne = ajout_station("Jardin d'Acclimatation", ligne, toutes_les_lignes, id, n);
+	   ligne = ajout_station("Porte Maillot", ligne, toutes_les_lignes, id, n);
+	   ligne = ajout_station("Argentine", ligne, toutes_les_lignes, id, n);
+	   ligne = ajout_station("Charles de Gaulle - Étoile", ligne, toutes_les_lignes, id, n);
+	   ligne = ajout_station("George V", ligne, toutes_les_lignes, id, n);
+	   ligne = ajout_station("Franklin D. Roosevelt", ligne, toutes_les_lignes, id, n);
+	   ligne = ajout_station("Champs-Élysées - Clemenceau", ligne, toutes_les_lignes, id, n);
+	   ligne = ajout_station("Concorde", ligne, toutes_les_lignes, id, n);
+	   ligne = ajout_station("Tuileries", ligne, toutes_les_lignes, id, n);
+	   ligne = ajout_station("Palais Royal - Musée du Louvre", ligne, toutes_les_lignes, id, n);
+	   ligne = ajout_station("Louvre - Rivoli", ligne, toutes_les_lignes, id, n);
+	   ligne = ajout_station("Châtelet", ligne, toutes_les_lignes, id, n);
+	   ligne = ajout_station("Hôtel de Ville", ligne, toutes_les_lignes, id, n);
+	   ligne = ajout_station("Saint-Paul", ligne, toutes_les_lignes, id, n);
+	   ligne = ajout_station("Bastille", ligne, toutes_les_lignes, id, n);
+	   ligne = ajout_station("Gare de Lyon", ligne, toutes_les_lignes, id, n);
+	   ligne = ajout_station("Reuilly - Diderot", ligne, toutes_les_lignes, id, n);
+	   ligne = ajout_station("Nation", ligne, toutes_les_lignes, id, n);
+	   ligne = ajout_station("Porte de Vincennes", ligne, toutes_les_lignes, id, n);
+	   ligne = ajout_station("Saint-Mandé", ligne, toutes_les_lignes, id, n);
+	   ligne = ajout_station("Bérault", ligne, toutes_les_lignes, id, n);
+	   ligne = ajout_station("Château de Vincennes", ligne, toutes_les_lignes, id, n);
 	   
 	   return ligne;
 	}
 	
-	liste_pStations_t* ligne2(liste_pStations_t* ligne)
+	liste_pStations_t* ligne2(liste_pStations_t* ligne,liste_pStations_t** toutes_les_lignes0, int* id, int n)
 	{
+	    int i;
+	    	liste_pStations_t** toutes_les_lignes = (liste_pStations_t**)malloc(2*NB_STATION*sizeof(liste_pStations_t*));
+		for(i = 0; i < NB_STATION; i++)
+		{
+		    toutes_les_lignes[i] = (liste_pStations_t*)malloc(32*sizeof(liste_pStations_t*));
+		    toutes_les_lignes[i] = toutes_les_lignes0[i];
+		}
 	    
 	    ligne = malloc(2*sizeof(liste_pStations_t*));
-	    ligne = ajout_station("", ligne);
-	    ligne = ajout_station("Porte Dauphine", ligne);
-	    ligne = ajout_station("Victor Hugo", ligne);
-	    ligne = ajout_station("Charles de Gaulle - Étoile", ligne);
-	    ligne = ajout_station("Ternes", ligne);
-	    ligne = ajout_station("Courcelles", ligne);
-	    ligne = ajout_station("Monceau", ligne);
-	    ligne = ajout_station("Villiers", ligne);
-	    ligne = ajout_station("Rome", ligne);
-	    ligne = ajout_station("Place de Clichy", ligne);
-	    ligne = ajout_station("Blanche", ligne);
-	    ligne = ajout_station("Pigalle", ligne);
-	    ligne = ajout_station("AnversSacré-Cœur", ligne);
-	    ligne = ajout_station("Barbès - Rochechouart", ligne);
-	    ligne = ajout_station("La Chapelle", ligne);
-	    ligne = ajout_station("Stalingrad", ligne);
-	    ligne = ajout_station("Jaurès", ligne);
-	    ligne = ajout_station("Colonel Fabien", ligne);
-	    ligne = ajout_station("Belleville", ligne);
-	    ligne = ajout_station("Couronnes", ligne);
-	    ligne = ajout_station("Ménilmontant", ligne);
-	    ligne = ajout_station("Père Lachaise", ligne);
-	    ligne = ajout_station("Philippe Auguste", ligne);
-	    ligne = ajout_station("Alexandre Dumas", ligne);
-	    ligne = ajout_station("Avron", ligne);
-	    ligne = ajout_station("Nation", ligne);
+	    ligne = ajout_station("", ligne, toutes_les_lignes, id, n);
+	    ligne = ajout_station("Porte Dauphine", ligne, toutes_les_lignes, id, n);
+	    ligne = ajout_station("Victor Hugo", ligne, toutes_les_lignes, id, n);
+	    ligne = ajout_station("Charles de Gaulle - Étoile", ligne, toutes_les_lignes, id, n);
+	    ligne = ajout_station("Ternes", ligne, toutes_les_lignes, id, n);
+	    ligne = ajout_station("Courcelles", ligne, toutes_les_lignes, id, n);
+	    ligne = ajout_station("Monceau", ligne, toutes_les_lignes, id, n);
+	    ligne = ajout_station("Villiers", ligne, toutes_les_lignes, id, n);
+	    ligne = ajout_station("Rome", ligne, toutes_les_lignes, id, n);
+	    ligne = ajout_station("Place de Clichy", ligne, toutes_les_lignes, id, n);
+	    ligne = ajout_station("Blanche", ligne, toutes_les_lignes, id, n);
+	    ligne = ajout_station("Pigalle", ligne, toutes_les_lignes, id, n);
+	    ligne = ajout_station("AnversSacré-Cœur", ligne, toutes_les_lignes, id, n);
+	    ligne = ajout_station("Barbès - Rochechouart", ligne, toutes_les_lignes, id, n);
+	    ligne = ajout_station("La Chapelle", ligne, toutes_les_lignes, id, n);
+	    ligne = ajout_station("Stalingrad", ligne, toutes_les_lignes, id, n);
+	    ligne = ajout_station("Jaurès", ligne, toutes_les_lignes, id, n);
+	    ligne = ajout_station("Colonel Fabien", ligne, toutes_les_lignes, id, n);
+	    ligne = ajout_station("Belleville", ligne, toutes_les_lignes, id, n);
+	    ligne = ajout_station("Couronnes", ligne, toutes_les_lignes, id, n);
+	    ligne = ajout_station("Ménilmontant", ligne, toutes_les_lignes, id, n);
+	    ligne = ajout_station("Père Lachaise", ligne, toutes_les_lignes, id, n);
+	    ligne = ajout_station("Philippe Auguste", ligne, toutes_les_lignes, id, n);
+	    ligne = ajout_station("Alexandre Dumas", ligne, toutes_les_lignes, id, n);
+	    ligne = ajout_station("Avron", ligne, toutes_les_lignes, id, n);
+	    ligne = ajout_station("Nation", ligne, toutes_les_lignes, id, n);
 	    return ligne;
 	}
 
-	liste_pStations_t* ligne3(liste_pStations_t* ligne)
+	liste_pStations_t* ligne3(liste_pStations_t* ligne,liste_pStations_t** toutes_les_lignes0, int* id, int n)
 	{
+	    int i;
+	    	liste_pStations_t** toutes_les_lignes = (liste_pStations_t**)malloc(2*NB_STATION*sizeof(liste_pStations_t*));
+		for(i = 0; i < NB_STATION; i++)
+		{
+		    toutes_les_lignes[i] = (liste_pStations_t*)malloc(32*sizeof(liste_pStations_t*));
+		    toutes_les_lignes[i] = toutes_les_lignes0[i];
+		}
 	    ligne = malloc(2*sizeof(liste_pStations_t*));
-	    ligne = ajout_station("", ligne);
-	    ligne = ajout_station("Pont de Levallois - Bécon", ligne);
-	    ligne = ajout_station("Anatole France", ligne);
-	    ligne = ajout_station("Louise Michel", ligne);
-	    ligne = ajout_station("Porte de Champerret", ligne);
-	    ligne = ajout_station("Pereire", ligne);
-	    ligne = ajout_station("Wagram", ligne);
-	    ligne = ajout_station("Malesherbes", ligne);
-	    ligne = ajout_station("Villiers", ligne);
-	    ligne = ajout_station("Europe", ligne);
-	    ligne = ajout_station("Saint-Lazare", ligne);
-	    ligne = ajout_station("Havre - Caumartin", ligne);
-	    ligne = ajout_station("Opéra", ligne);
-	    ligne = ajout_station("Quatre-Septembre", ligne);
-	    ligne = ajout_station("Bourse", ligne);
-	    ligne = ajout_station("Sentier", ligne);
-	    ligne = ajout_station("Réaumur - Sébastopol", ligne);
-	    ligne = ajout_station("Arts et Métiers", ligne);
-	    ligne = ajout_station("Temple", ligne);
-	    ligne = ajout_station("République", ligne);
-	    ligne = ajout_station("Parmentier", ligne);
-	    ligne = ajout_station("Rue Saint-Maur", ligne);
-	    ligne = ajout_station("Père Lachaise", ligne);
-	    ligne = ajout_station("Gambetta", ligne);
-	    ligne = ajout_station("Porte de Bagnolet", ligne);
-	    ligne = ajout_station("Gallieni", ligne);
+	    ligne = ajout_station("", ligne, toutes_les_lignes, id, n);
+	    ligne = ajout_station("Pont de Levallois - Bécon", ligne, toutes_les_lignes, id, n);
+	    ligne = ajout_station("Anatole France", ligne, toutes_les_lignes, id, n);
+	    ligne = ajout_station("Louise Michel", ligne, toutes_les_lignes, id, n);
+	    ligne = ajout_station("Porte de Champerret", ligne, toutes_les_lignes, id, n);
+	    ligne = ajout_station("Pereire", ligne, toutes_les_lignes, id, n);
+	    ligne = ajout_station("Wagram", ligne, toutes_les_lignes, id, n);
+	    ligne = ajout_station("Malesherbes", ligne, toutes_les_lignes, id, n);
+	    ligne = ajout_station("Villiers", ligne, toutes_les_lignes, id, n);
+	    ligne = ajout_station("Europe", ligne, toutes_les_lignes, id, n);
+	    ligne = ajout_station("Saint-Lazare", ligne, toutes_les_lignes, id, n);
+	    ligne = ajout_station("Havre - Caumartin", ligne, toutes_les_lignes, id, n);
+	    ligne = ajout_station("Opéra", ligne, toutes_les_lignes, id, n);
+	    ligne = ajout_station("Quatre-Septembre", ligne, toutes_les_lignes, id, n);
+	    ligne = ajout_station("Bourse", ligne, toutes_les_lignes, id, n);
+	    ligne = ajout_station("Sentier", ligne, toutes_les_lignes, id, n);
+	    ligne = ajout_station("Réaumur - Sébastopol", ligne, toutes_les_lignes, id, n);
+	    ligne = ajout_station("Arts et Métiers", ligne, toutes_les_lignes, id, n);
+	    ligne = ajout_station("Temple", ligne, toutes_les_lignes, id, n);
+	    ligne = ajout_station("République", ligne, toutes_les_lignes, id, n);
+	    ligne = ajout_station("Parmentier", ligne, toutes_les_lignes, id, n);
+	    ligne = ajout_station("Rue Saint-Maur", ligne, toutes_les_lignes, id, n);
+	    ligne = ajout_station("Père Lachaise", ligne, toutes_les_lignes, id, n);
+	    ligne = ajout_station("Gambetta", ligne, toutes_les_lignes, id, n);
+	    ligne = ajout_station("Porte de Bagnolet", ligne, toutes_les_lignes, id, n);
+	    ligne = ajout_station("Gallieni", ligne, toutes_les_lignes, id, n);
 	    return ligne;
 	}
 
-	liste_pStations_t* ligne4(liste_pStations_t* ligne)
-	{	
+	liste_pStations_t* ligne4(liste_pStations_t* ligne,liste_pStations_t** toutes_les_lignes0, int* id, int n)
+	{
+	    int i;
+	    liste_pStations_t** 	toutes_les_lignes = (liste_pStations_t**)malloc(2*NB_STATION*sizeof(liste_pStations_t*));
+		for(i = 0; i < NB_STATION; i++)
+		{
+		    toutes_les_lignes[i] = (liste_pStations_t*)malloc(32*sizeof(liste_pStations_t*));
+		    toutes_les_lignes[i] = toutes_les_lignes0[i];
+		}	
 	    ligne = malloc(2*sizeof(liste_pStations_t*));
-	    ligne = ajout_station("", ligne);
-	    ligne = ajout_station("Porte de Clignancourt", ligne);
-	    ligne = ajout_station("Simplon", ligne);
-	    ligne = ajout_station("Marcadet – Poissonniers", ligne);
-	    ligne = ajout_station("Château Rouge", ligne);
-	    ligne = ajout_station("Barbès – Rochechouart", ligne);
-	    ligne = ajout_station("Gare du Nord", ligne);
-	    ligne = ajout_station("Gare de l'Est", ligne);
-	    ligne = ajout_station("Château d'Eau", ligne);
-	    ligne = ajout_station("Strasbourg – Saint-Denis", ligne);
-	    ligne = ajout_station("Réaumur – Sébastopol", ligne);
-	    ligne = ajout_station("Étienne Marcel", ligne);
-	    ligne = ajout_station("Les Halles", ligne);
-	    ligne = ajout_station("Châtelet", ligne);
-	    ligne = ajout_station("Cité", ligne);
-	    ligne = ajout_station("Saint-Michel", ligne);
-	    ligne = ajout_station("Odéon", ligne);
-	    ligne = ajout_station("Saint-Germain-des-Prés", ligne);
-	    ligne = ajout_station("Saint-Sulpice", ligne);
-	    ligne = ajout_station("Saint-Placide", ligne);
-	    ligne = ajout_station("Montparnasse – Bienvenüe", ligne);
-	    ligne = ajout_station("Vavin", ligne);
-	    ligne = ajout_station("Raspail", ligne);
-	    ligne = ajout_station("Denfert-Rochereau", ligne);
-	    ligne = ajout_station("Mouton-Duvernet", ligne);
-	    ligne = ajout_station("Alésia", ligne);
-	    ligne = ajout_station("Porte d'Orléans", ligne);
+	    ligne = ajout_station("", ligne, toutes_les_lignes, id, n);
+	    ligne = ajout_station("Porte de Clignancourt", ligne, toutes_les_lignes, id, n);
+	    ligne = ajout_station("Simplon", ligne, toutes_les_lignes, id, n);
+	    ligne = ajout_station("Marcadet – Poissonniers", ligne, toutes_les_lignes, id, n);
+	    ligne = ajout_station("Château Rouge", ligne, toutes_les_lignes, id, n);
+	    ligne = ajout_station("Barbès – Rochechouart", ligne, toutes_les_lignes, id, n);
+	    ligne = ajout_station("Gare du Nord", ligne, toutes_les_lignes, id, n);
+	    ligne = ajout_station("Gare de l'Est", ligne, toutes_les_lignes, id, n);
+	    ligne = ajout_station("Château d'Eau", ligne, toutes_les_lignes, id, n);
+	    ligne = ajout_station("Strasbourg – Saint-Denis", ligne, toutes_les_lignes, id, n);
+	    ligne = ajout_station("Réaumur – Sébastopol", ligne, toutes_les_lignes, id, n);
+	    ligne = ajout_station("Étienne Marcel", ligne, toutes_les_lignes, id, n);
+	    ligne = ajout_station("Les Halles", ligne, toutes_les_lignes, id, n);
+	    ligne = ajout_station("Châtelet", ligne, toutes_les_lignes, id, n);
+	    ligne = ajout_station("Cité", ligne, toutes_les_lignes, id, n);
+	    ligne = ajout_station("Saint-Michel", ligne, toutes_les_lignes, id, n);
+	    ligne = ajout_station("Odéon", ligne, toutes_les_lignes, id, n);
+	    ligne = ajout_station("Saint-Germain-des-Prés", ligne, toutes_les_lignes, id, n);
+	    ligne = ajout_station("Saint-Sulpice", ligne, toutes_les_lignes, id, n);
+	    ligne = ajout_station("Saint-Placide", ligne, toutes_les_lignes, id, n);
+	    ligne = ajout_station("Montparnasse – Bienvenüe", ligne, toutes_les_lignes, id, n);
+	    ligne = ajout_station("Vavin", ligne, toutes_les_lignes, id, n);
+	    ligne = ajout_station("Raspail", ligne, toutes_les_lignes, id, n);
+	    ligne = ajout_station("Denfert-Rochereau", ligne, toutes_les_lignes, id, n);
+	    ligne = ajout_station("Mouton-Duvernet", ligne, toutes_les_lignes, id, n);
+	    ligne = ajout_station("Alésia", ligne, toutes_les_lignes, id, n);
+	    ligne = ajout_station("Porte d'Orléans", ligne, toutes_les_lignes, id, n);
 	    return ligne;
 	}
 
-	liste_pStations_t* ligne5(liste_pStations_t* ligne)
-	{	
+	liste_pStations_t* ligne5(liste_pStations_t* ligne,liste_pStations_t** toutes_les_lignes0, int* id, int n)
+	{
+	    int i;
+	    	liste_pStations_t** toutes_les_lignes = (liste_pStations_t**)malloc(2*NB_STATION*sizeof(liste_pStations_t*));
+		for(i = 0; i < NB_STATION; i++)
+		{
+		    toutes_les_lignes[i] = (liste_pStations_t*)malloc(32*sizeof(liste_pStations_t*));
+		    toutes_les_lignes[i] = toutes_les_lignes0[i];
+		}	
 	    ligne = malloc(2*sizeof(liste_pStations_t*));
-		ligne = ajout_station("", ligne);
-	    ligne = ajout_station("Bobigny - Pablo Picasso", ligne);
-	    ligne = ajout_station("Bobigny - Pantin - Raymond Queneau", ligne);
-	    ligne = ajout_station("Église de Pantin", ligne);
-	    ligne = ajout_station("Hoche", ligne);
-	    ligne = ajout_station("Porte de Pantin", ligne);
-	    ligne = ajout_station("Ourcq", ligne);
-	    ligne = ajout_station("Laumière", ligne);
-	    ligne = ajout_station("Jaurès", ligne);
-	    ligne = ajout_station("Stalingrad", ligne);
-	    ligne = ajout_station("Gare du Nord", ligne);
-	    ligne = ajout_station("Gare de l'Est", ligne);
-	    ligne = ajout_station("Jacques Bonsergent", ligne);
-	    ligne = ajout_station("République", ligne);
-	    ligne = ajout_station("Oberkampf", ligne);
-	    ligne = ajout_station("Richard-Lenoir", ligne);
-	    ligne = ajout_station("Bréguet - Sabin", ligne);
-	    ligne = ajout_station("Bastille", ligne);
-	    ligne = ajout_station("Quai de la Rapée", ligne);
-	    ligne = ajout_station("Gare d'Austerlitz", ligne);
-	    ligne = ajout_station("Saint-Marcel", ligne);
-	    ligne = ajout_station("Campo-Formio", ligne);
-	    ligne = ajout_station("Place d'Italie", ligne);
+		ligne = ajout_station("", ligne, toutes_les_lignes, id, n);
+	    ligne = ajout_station("Bobigny - Pablo Picasso", ligne, toutes_les_lignes, id, n);
+	    ligne = ajout_station("Bobigny - Pantin - Raymond Queneau", ligne, toutes_les_lignes, id, n);
+	    ligne = ajout_station("Église de Pantin", ligne, toutes_les_lignes, id, n);
+	    ligne = ajout_station("Hoche", ligne, toutes_les_lignes, id, n);
+	    ligne = ajout_station("Porte de Pantin", ligne, toutes_les_lignes, id, n);
+	    ligne = ajout_station("Ourcq", ligne, toutes_les_lignes, id, n);
+	    ligne = ajout_station("Laumière", ligne, toutes_les_lignes, id, n);
+	    ligne = ajout_station("Jaurès", ligne, toutes_les_lignes, id, n);
+	    ligne = ajout_station("Stalingrad", ligne, toutes_les_lignes, id, n);
+	    ligne = ajout_station("Gare du Nord", ligne, toutes_les_lignes, id, n);
+	    ligne = ajout_station("Gare de l'Est", ligne, toutes_les_lignes, id, n);
+	    ligne = ajout_station("Jacques Bonsergent", ligne, toutes_les_lignes, id, n);
+	    ligne = ajout_station("République", ligne, toutes_les_lignes, id, n);
+	    ligne = ajout_station("Oberkampf", ligne, toutes_les_lignes, id, n);
+	    ligne = ajout_station("Richard-Lenoir", ligne, toutes_les_lignes, id, n);
+	    ligne = ajout_station("Bréguet - Sabin", ligne, toutes_les_lignes, id, n);
+	    ligne = ajout_station("Bastille", ligne, toutes_les_lignes, id, n);
+	    ligne = ajout_station("Quai de la Rapée", ligne, toutes_les_lignes, id, n);
+	    ligne = ajout_station("Gare d'Austerlitz", ligne, toutes_les_lignes, id, n);
+	    ligne = ajout_station("Saint-Marcel", ligne, toutes_les_lignes, id, n);
+	    ligne = ajout_station("Campo-Formio", ligne, toutes_les_lignes, id, n);
+	    ligne = ajout_station("Place d'Italie", ligne, toutes_les_lignes, id, n);
 	    return ligne;
 	}
 	
-	liste_pStations_t* ligne6(liste_pStations_t* ligne)
+	liste_pStations_t* ligne6(liste_pStations_t* ligne,liste_pStations_t** toutes_les_lignes0, int* id, int n)
 	{	
+	    int i;
+	    	liste_pStations_t** toutes_les_lignes = (liste_pStations_t**)malloc(2*NB_STATION*sizeof(liste_pStations_t*));
+		for(i = 0; i < NB_STATION; i++)
+		{
+		    toutes_les_lignes[i] = (liste_pStations_t*)malloc(32*sizeof(liste_pStations_t*));
+		    toutes_les_lignes[i] = toutes_les_lignes0[i];
+		}
 	    ligne = malloc(2*sizeof(liste_pStations_t*));
-		ligne = ajout_station("", ligne);
-		ligne = ajout_station("Charles de Gaulle - Étoile", ligne);
-		ligne = ajout_station("Kléber", ligne);
-		ligne = ajout_station("Boissière", ligne);
-		ligne = ajout_station("Trocadéro", ligne);
-		ligne = ajout_station("Passy", ligne);
-		ligne = ajout_station("Bir-Hakeim", ligne);
-	    ligne = ajout_station("Dupleix", ligne);
-	    ligne = ajout_station("La Motte-Picquet - Grenelle", ligne);
-	    ligne = ajout_station("Cambronne", ligne);
-	    ligne = ajout_station("Sèvres - Lecourbe", ligne);
-	    ligne = ajout_station("Pasteur", ligne);
-	    ligne = ajout_station("Montparnasse - Bienvenüe", ligne);
-	    ligne = ajout_station("Edgar Quinet", ligne);
-	    ligne = ajout_station("Raspail", ligne);
-	    ligne = ajout_station("Denfert-Rochereau", ligne);
-	    ligne = ajout_station("Saint-Jacques", ligne);
-	    ligne = ajout_station("Glacière", ligne);
-	    ligne = ajout_station("Corvisart", ligne);
-	    ligne = ajout_station("Place d'Italie", ligne);
-	    ligne = ajout_station("Nationale", ligne);
-	    ligne = ajout_station("Chevaleret", ligne);
-	    ligne = ajout_station("Quai de la Gare", ligne);
-	    ligne = ajout_station("Bercy", ligne);
-	    ligne = ajout_station("Dugommier", ligne);
-	    ligne = ajout_station("Daumesnil", ligne);
-	    ligne = ajout_station("Bel-Air", ligne);
-	    ligne = ajout_station("Picpus", ligne);
-	    ligne = ajout_station("Nation", ligne);
+		ligne = ajout_station("", ligne, toutes_les_lignes, id, n);
+		ligne = ajout_station("Charles de Gaulle - Étoile", ligne, toutes_les_lignes, id, n);
+		ligne = ajout_station("Kléber", ligne, toutes_les_lignes, id, n);
+		ligne = ajout_station("Boissière", ligne, toutes_les_lignes, id, n);
+		ligne = ajout_station("Trocadéro", ligne, toutes_les_lignes, id, n);
+		ligne = ajout_station("Passy", ligne, toutes_les_lignes, id, n);
+		ligne = ajout_station("Bir-Hakeim", ligne, toutes_les_lignes, id, n);
+	    ligne = ajout_station("Dupleix", ligne, toutes_les_lignes, id, n);
+	    ligne = ajout_station("La Motte-Picquet - Grenelle", ligne, toutes_les_lignes, id, n);
+	    ligne = ajout_station("Cambronne", ligne, toutes_les_lignes, id, n);
+	    ligne = ajout_station("Sèvres - Lecourbe", ligne, toutes_les_lignes, id, n);
+	    ligne = ajout_station("Pasteur", ligne, toutes_les_lignes, id, n);
+	    ligne = ajout_station("Montparnasse - Bienvenüe", ligne, toutes_les_lignes, id, n);
+	    ligne = ajout_station("Edgar Quinet", ligne, toutes_les_lignes, id, n);
+	    ligne = ajout_station("Raspail", ligne, toutes_les_lignes, id, n);
+	    ligne = ajout_station("Denfert-Rochereau", ligne, toutes_les_lignes, id, n);
+	    ligne = ajout_station("Saint-Jacques", ligne, toutes_les_lignes, id, n);
+	    ligne = ajout_station("Glacière", ligne, toutes_les_lignes, id, n);
+	    ligne = ajout_station("Corvisart", ligne, toutes_les_lignes, id, n);
+	    ligne = ajout_station("Place d'Italie", ligne, toutes_les_lignes, id, n);
+	    ligne = ajout_station("Nationale", ligne, toutes_les_lignes, id, n);
+	    ligne = ajout_station("Chevaleret", ligne, toutes_les_lignes, id, n);
+	    ligne = ajout_station("Quai de la Gare", ligne, toutes_les_lignes, id, n);
+	    ligne = ajout_station("Bercy", ligne, toutes_les_lignes, id, n);
+	    ligne = ajout_station("Dugommier", ligne, toutes_les_lignes, id, n);
+	    ligne = ajout_station("Daumesnil", ligne, toutes_les_lignes, id, n);
+	    ligne = ajout_station("Bel-Air", ligne, toutes_les_lignes, id, n);
+	    ligne = ajout_station("Picpus", ligne, toutes_les_lignes, id, n);
+	    ligne = ajout_station("Nation", ligne, toutes_les_lignes, id, n);
 		return ligne;
 	}

@@ -90,9 +90,10 @@ ______________________________________________________________________________ *
 	
 	
 	// crée une nouvelle structure station_t rajoute cette structure à toutes_les_stations MARCHE 
-	liste_pStations_t* ajout_station(char* nom_station, liste_pStations_t* ligne)
+	liste_pStations_t* ajout_station(char* nom_station, liste_pStations_t* ligne,liste_pStations_t** toutes_les_lignes, int* id, int n)
 	{
 	    liste_pStations_t *new_station;
+	    int i = 0;
 	    
 	    new_station = malloc(2*sizeof(liste_pStations_t*));
 	    new_station->s = malloc(2*sizeof(liste_pStations_t*));
@@ -101,7 +102,26 @@ ______________________________________________________________________________ *
 	    strcpy(new_station->s->nom, nom_station);
 	    
 	    new_station->s->ouvert = 1;
+	      while( i < n)
+	    {
 	    
+	  
+		if(( strcmp(toutes_les_lignes[i]->s->nom , "") != 0))
+		{
+		    if( strcmp(toutes_les_lignes[i]->s->nom , nom_station) == 0)
+		    {
+			new_station->s->id = toutes_les_lignes[i]->s->id;
+			return new_station;
+			
+		    }
+		    toutes_les_lignes[i] = toutes_les_lignes[i]->next;
+		}
+		else
+		    i++;
+	    }
+	    new_station->s->id = *id;
+	    puts("ok");
+	    *id = *id+1;
 	    return new_station;
 	}
 	// Retire une station d'une ligne
@@ -288,7 +308,7 @@ ______________________________________________________________________________ *
 		    printf("%s ", toutes_les_lignes[i]->s->nom);
 		    toutes_les_lignes[i] = toutes_les_lignes[i]->next;
 		}
-		
+		puts("");
 	    }
 	    
 	}
@@ -433,41 +453,101 @@ ______________________________________________________________________________ *
 	    return FALSE;
 	}
 	
-	void set_id(liste_pStations_t** toutes_les_lignes)
+	liste_pStations_t** set_id(liste_pStations_t** toutes_les_lignes)
 	{
-		liste_pStations_t** toutes_les_lignes2 = toutes_les_lignes;
-		liste_pStations_t** toutes_les_lignes3 = toutes_les_lignes;
-		int i = 0, j = 0, id = 0, Bool = FALSE;
+		liste_pStations_t** lignes;
+		liste_pStations_t** toutes_les_lignes2;
+		int i, j = 0, id = 0, connard = -1, k;
 		
-		while(i < NB_STATION)
+		lignes = (liste_pStations_t**)malloc(2*NB_STATION*sizeof(liste_pStations_t*));
+		for(i = 0; i < NB_STATION; i++)
 		{
-			j = 0;
-			toutes_les_lignes3 = toutes_les_lignes;
-			Bool = FALSE;				
-			if(toutes_les_lignes2[i]->s == NULL)
+		    lignes[i] = (liste_pStations_t*)malloc(32*sizeof(liste_pStations_t*));
+		   // lignes[i] = toutes_les_lignes[i];
+		}
+	
+		toutes_les_lignes2 = malloc(2*NB_STATION*sizeof(liste_pStations_t*));
+		for(i = 0; i < NB_STATION; i++)
+		{
+		    toutes_les_lignes2[i] = (liste_pStations_t*)malloc(32*sizeof(liste_pStations_t*));
+		    toutes_les_lignes2[i] = toutes_les_lignes[i];
+		}
+		
+		
+		
+		
+		lignes = toutes_les_lignes;
+		
+		i = 0;
+		//liste_station_de_toutes_les_lignes(toutes_les_lignes);
+		//liste_station_de_toutes_les_lignes(lignes);
+		//liste_station_de_toutes_les_lignes(toutes_les_lignes2);
+		while(i < NB_STATION)
+		{printf("while1 de i = %d", i);
+			
+			if(( strcmp(toutes_les_lignes2[i]->s->nom , "") != 0))
 			{
-				i++;
-			}
-			while(j < i || Bool == FALSE)
-			{				
-				if(toutes_les_lignes3[j]->s == NULL)
+			 j = 0;	   
+			connard = -1;	   
+			for(k = 0; k < i; k++)
+			{
+		    //lignes[k] = (liste_pStations_t*)malloc(32*sizeof(liste_pStations_t*));
+			    lignes[k] = toutes_les_lignes[k];
+			}		
+			while(connard == -1)
+			{		printf(" while2 de j = %d %s", j, lignes[j]->s->nom); 
+			    			
+				if( strcmp(lignes[j]->s->nom , "") != 0)
 				{
-					j++;
+					if( j == i)
+					{
+					//puts("bool");
+					connard = FALSE;	
+					}
+					if(connard== -1)
+					{printf(" 0 %s = %d et %d\n",  toutes_les_lignes2[i]->s->nom, toutes_les_lignes2[i]->s->id, id);
+					    if(strcmp(toutes_les_lignes2[i]->s->nom, lignes[j]->s->nom) == 0 )
+					    {
+					    
+						toutes_les_lignes2[i]->s->id = lignes[j]->s->id;
+						printf(" 1 %s %d = %d et %d\n", lignes[j]->s->nom, toutes_les_lignes2[i]->s->id, lignes[j]->s->id, j);
+						connard = TRUE;
+					    }
+					    else
+						lignes[j] = lignes[j]->next;	
+						//puts("next");
+				    }
+				    
+					
 				}
 				else
-				if(strcmp(toutes_les_lignes2[i]->s->nom, toutes_les_lignes3[j]->s->nom) == 0 )
-				{
-					Bool = TRUE;
-					toutes_les_lignes2[i]->s->id = toutes_les_lignes3[j]->s->id;
-				}
+				    if( strcmp(lignes[j]->s->nom , "") == 0)
+				    {
+					//printf("lol ");
+					j=j+1;
+					lignes = toutes_les_lignes;	
+				    }
+				//printf("putain");
+				    
 			}
-			if(Bool == FALSE )
+			if(connard == FALSE )
 			{
 					toutes_les_lignes2[i]->s->id = id;	
+					printf(" 2 %s %d = %d %d\n", toutes_les_lignes2[i]->s->nom, toutes_les_lignes2[i]->s->id, id, j);
 					id++;
+					
 			}		
-			toutes_les_lignes2[i] = toutes_les_lignes2[i]->next;			
+			toutes_les_lignes2[i] = toutes_les_lignes2[i]->next;	
+// 			for(k = 0; k < i; k++)
+// 			{
+// 			    lignes[k] = NULL;
+// 			}
+			}
+			else 
+			  //  if(toutes_les_lignes2[i]->s == NULL)
+			    i++;
 		}
+		return toutes_les_lignes;
 	}
 	// Autorisation des caracteres	
 	int allow_chaine(char* station)

@@ -42,21 +42,31 @@ ______________________________________________________________________________ *
 int main(int argc, char** argv)
 {
 	int i;
+	int* id = (int*)malloc(sizeof(int));
+	*id = 0;
 	//liste_pStations_t* toutes_les_stations; TODO
 	liste_pStations_t* toutes_les_lignes[14];	
 	// Allocation dynamique des variables
 	*toutes_les_lignes = malloc(2*NB_STATION*sizeof(liste_pStations_t*));
 	for(i = 0; i < NB_STATION; i++)
 		toutes_les_lignes[i] = (liste_pStations_t*)malloc(32*sizeof(liste_pStations_t*));
-	toutes_les_lignes[0] = ligne1(toutes_les_lignes[0]);
-	toutes_les_lignes[1] = ligne2(toutes_les_lignes[1]);
-	toutes_les_lignes[2] = ligne3(toutes_les_lignes[2]);
-	toutes_les_lignes[3] = ligne4(toutes_les_lignes[3]);
-	toutes_les_lignes[4] = ligne5(toutes_les_lignes[4]);
-	toutes_les_lignes[5] = ligne6(toutes_les_lignes[5]);
-
-	
-	Menu1(toutes_les_lignes);
+	toutes_les_lignes[0] = ligne1(toutes_les_lignes[0], toutes_les_lignes, id, 0);
+	toutes_les_lignes[1] = ligne2(toutes_les_lignes[1], toutes_les_lignes, id, 1);
+	toutes_les_lignes[2] = ligne3(toutes_les_lignes[2], toutes_les_lignes, id, 2);
+	toutes_les_lignes[3] = ligne4(toutes_les_lignes[3], toutes_les_lignes, id, 3);
+	toutes_les_lignes[4] = ligne5(toutes_les_lignes[4], toutes_les_lignes, id, 4);
+	toutes_les_lignes[5] = ligne6(toutes_les_lignes[5], toutes_les_lignes, id, 5);
+	i = 0;
+	//set_id(toutes_les_lignes);
+	while(i<NB_STATION)
+	{
+	    if(( strcmp(toutes_les_lignes[i]->s->nom , "") != 0))
+	    {
+		printf("%s = %d\n",toutes_les_lignes[i]->s->nom, toutes_les_lignes[i]->s->id);
+		toutes_les_lignes[i] = toutes_les_lignes[i]->next;
+	    }
+	    else i++;
+	}
 		
 		return EXIT_SUCCESS;
 }

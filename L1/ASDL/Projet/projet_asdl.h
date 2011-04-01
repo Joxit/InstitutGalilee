@@ -65,7 +65,7 @@ ______________________________________________________________________________ *
 	
 	/* Fonctions sur les stations */
 	// crée une nouvelle structure station_t rajoute cette structure à toutes_les_stations 
-	liste_pStations_t* ajout_station(char* nom_station, liste_pStations_t* ligne);
+	liste_pStations_t* ajout_station(char* nom_station, liste_pStations_t* ligne,liste_pStations_t** toutes_les_lignes, int* id, int n);
 	// Retire une station d'une ligne
 	liste_pStations_t* retirer_station(char* nom_station, liste_pStations_t* ligne);
 	// Retire une station du reseau
@@ -108,18 +108,18 @@ ______________________________________________________________________________ *
 	// clean up chaines de caracteres
 	char* clean(char* nom);
 	// Boolean qui renvoie TRUE si les stations son voisines FALSE sinon
-	int est_voisin(char* station1, char* station2, liste_pStations_t** toutes_les_lignes
+	int est_voisin(char* station1, char* station2, liste_pStations_t** toutes_les_lignes);
 	
-	void set_id(liste_pStations_t** toutes_les_lignes);
+	liste_pStations_t** set_id(liste_pStations_t** toutes_les_lignes);
 
 	/* DEFINITIONS DANS : lignes.c */ 
 		
-	liste_pStations_t* ligne1(liste_pStations_t* ligne);
-	liste_pStations_t* ligne2(liste_pStations_t* ligne);
-	liste_pStations_t* ligne3(liste_pStations_t* ligne);
-	liste_pStations_t* ligne4(liste_pStations_t* ligne);
-	liste_pStations_t* ligne5(liste_pStations_t* ligne);
-	liste_pStations_t* ligne6(liste_pStations_t* ligne);
+	liste_pStations_t* ligne1(liste_pStations_t* ligne,liste_pStations_t** toutes_les_lignes, int* id, int n);
+	liste_pStations_t* ligne2(liste_pStations_t* ligne,liste_pStations_t** toutes_les_lignes, int* id, int n);
+	liste_pStations_t* ligne3(liste_pStations_t* ligne,liste_pStations_t** toutes_les_lignes, int* id, int n);
+	liste_pStations_t* ligne4(liste_pStations_t* ligne,liste_pStations_t** toutes_les_lignes, int* id, int n);
+	liste_pStations_t* ligne5(liste_pStations_t* ligne,liste_pStations_t** toutes_les_lignes, int* id, int n);
+	liste_pStations_t* ligne6(liste_pStations_t* ligne,liste_pStations_t** toutes_les_lignes, int* id, int n);
 	
 	/* DEFINITIONS DANS : menu.c */ 	
 	

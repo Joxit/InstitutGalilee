@@ -282,7 +282,7 @@ void Action_Station(liste_pStations_t** toutes_les_lignes)
 		printf("Quel est le numero de la ligne de %s que vous voulez ajouter ? : ", nom_station);
 		scanf("%d", &choix);
 		purger ();
-		toutes_les_lignes[choix-1] = ajout_station(nom_station, toutes_les_lignes[choix-1]);
+		//toutes_les_lignes[choix-1] = ajout_station(nom_station, toutes_les_lignes[choix-1]);
 		    return ;
 	    case 2:
 		printf("Quel est le nom de la Station que vous voulez supprimer ? : ");
