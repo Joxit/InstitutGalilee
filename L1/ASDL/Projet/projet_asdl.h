@@ -32,7 +32,7 @@ ______________________________________________________________________________ *
 
 #define TRUE 1
 #define FALSE 0
-#define NB_STATION 6
+#define NB_LIGNES 17
 #define MOTDEPASSE "Joxit"
 
 	typedef struct 
@@ -112,15 +112,6 @@ ______________________________________________________________________________ *
 	
 	liste_pStations_t** set_id(liste_pStations_t** toutes_les_lignes);
 
-	/* DEFINITIONS DANS : lignes.c */ 
-		
-	liste_pStations_t* ligne1(liste_pStations_t* ligne,liste_pStations_t** toutes_les_lignes, int* id, int n);
-	liste_pStations_t* ligne2(liste_pStations_t* ligne,liste_pStations_t** toutes_les_lignes, int* id, int n);
-	liste_pStations_t* ligne3(liste_pStations_t* ligne,liste_pStations_t** toutes_les_lignes, int* id, int n);
-	liste_pStations_t* ligne4(liste_pStations_t* ligne,liste_pStations_t** toutes_les_lignes, int* id, int n);
-	liste_pStations_t* ligne5(liste_pStations_t* ligne,liste_pStations_t** toutes_les_lignes, int* id, int n);
-	liste_pStations_t* ligne6(liste_pStations_t* ligne,liste_pStations_t** toutes_les_lignes, int* id, int n);
-	
 	/* DEFINITIONS DANS : menu.c */ 	
 	
 	void Menu1(liste_pStations_t** toutes_les_lignes);

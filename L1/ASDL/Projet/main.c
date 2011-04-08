@@ -23,6 +23,8 @@
 			- Ajout de securité dans station_dans_ligne et ligne_ouverte
 			- reorganisation de projet_asdl.h et projet_asdl.c ::
  				- création de sous fichiers menu.c et lignes.c pour alléger projet_asdl.c	
+ 	Version 1.2 :
+ 			- Création du mode fichier, toutes les stations des lignes sont dans des fichiers
 	
  	Vendredi 1 Avril 2011	
  	
@@ -41,24 +43,67 @@ ______________________________________________________________________________ *
 
 int main(int argc, char** argv)
 {
-	int i;
+	int i, taille, x;
 	int* id = (int*)malloc(sizeof(int));
 	*id = 0;
+	FILE* adt;
+	char* nom_station = malloc(100*sizeof(char));
 	//liste_pStations_t* toutes_les_stations; TODO
-	liste_pStations_t* toutes_les_lignes[14];	
+	liste_pStations_t* toutes_les_lignes[18];	
 	// Allocation dynamique des variables
-	*toutes_les_lignes = malloc(2*NB_STATION*sizeof(liste_pStations_t*));
-	for(i = 0; i < NB_STATION; i++)
-		toutes_les_lignes[i] = (liste_pStations_t*)malloc(32*sizeof(liste_pStations_t*));
-	toutes_les_lignes[0] = ligne1(toutes_les_lignes[0], toutes_les_lignes, id, 0);
-	toutes_les_lignes[1] = ligne2(toutes_les_lignes[1], toutes_les_lignes, id, 1);
-	toutes_les_lignes[2] = ligne3(toutes_les_lignes[2], toutes_les_lignes, id, 2);
-	toutes_les_lignes[3] = ligne4(toutes_les_lignes[3], toutes_les_lignes, id, 3);
-	toutes_les_lignes[4] = ligne5(toutes_les_lignes[4], toutes_les_lignes, id, 4);
-	toutes_les_lignes[5] = ligne6(toutes_les_lignes[5], toutes_les_lignes, id, 5);
-	i = 0;
+	//*toutes_les_lignes = malloc(2*NB_LIGNES*sizeof(liste_pStations_t*));
+	for(i = 0; i < NB_LIGNES; i++)
+		toutes_les_lignes[i] = (liste_pStations_t*)malloc(40*sizeof(liste_pStations_t*));
+	
+	if( argc-1 != NB_LIGNES)
+	{
+		printf("Lancez %s à l'aide de ./run.sh", argv[0]);
+		printf(" %d\n", argc);
+		exit (-1);
+	}
+	
+	i = 1;
+	adt = fopen(argv[i], "r");
+	if(adt == NULL)
+		perror("Fichier non ouvert");
+	puts(argv[i]);
+	while(i < argc)
+	{
+		if(!feof(adt))
+		{
+			fgets(nom_station, 100, adt);
+			if(nom_station == NULL)
+				perror("La lecture a echoué");	
+			
+			taille = strlen(nom_station);
+			nom_station[taille-1] = '\0';
+			toutes_les_lignes[i-1] = ajout_station( nom_station,  toutes_les_lignes[i-1], toutes_les_lignes, id, i-1);
+		}
+		else
+		{
+			toutes_les_lignes[i-1] = toutes_les_lignes[i-1]->next;
+			x = fclose(adt);
+			if(x != 0)
+				perror("Fichier non fermé");
+			i++;
+			if(i == argc)
+				break;
+			printf("%s %d < %d \n",argv[i], i, argc);
+			adt = fopen(argv[i], "r");
+			if(adt == NULL)
+				perror("Fichier non ouvert");
+		}
+	}
+	
+	for(i = 1; i< argc; i++)
+	{
+		puts(argv[i]);
+		station_dans_ligne(*toutes_les_lignes[i-1]);
+		puts("");
+	}
+	
 	//set_id(toutes_les_lignes);
-	while(i<NB_STATION)
+	/*while(i<NB_LIGNES)
 	{
 	    if(( strcmp(toutes_les_lignes[i]->s->nom , "") != 0))
 	    {
@@ -66,7 +111,9 @@ int main(int argc, char** argv)
 		toutes_les_lignes[i] = toutes_les_lignes[i]->next;
 	    }
 	    else i++;
-	}
+	}*/
+	
+	Menu1(toutes_les_lignes);
 		
 		return EXIT_SUCCESS;
 }

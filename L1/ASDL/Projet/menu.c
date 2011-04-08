@@ -142,7 +142,7 @@ void Info_Ligne(liste_pStations_t** toutes_les_lignes)
 	   case 1: 
 		printf("Quel ligne voulez vous voir? 1-14 : ");
 		scanf("%d", &choix);
-		while(choix < 1 || choix > NB_STATION)
+		while(choix < 1 || choix > NB_LIGNES)
 		{
 		    printf("Mauvaise ligne!");
 		    scanf("%d", &choix);
@@ -152,7 +152,7 @@ void Info_Ligne(liste_pStations_t** toutes_les_lignes)
 	    case 2:
 		printf("Quel ligne voulez vous voir? 1-14 : ");
 		scanf("%d", &choix);
-		while(choix < 1 || choix > NB_STATION)
+		while(choix < 1 || choix > NB_LIGNES)
 		{
 		    printf("Mauvaise ligne!");
 		    scanf("%d", &choix);

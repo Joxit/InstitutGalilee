@@ -23,11 +23,13 @@ projet_asdl.h : Déclaration des fonctions de projet_asdl.c; lignes.c; menu.c
 
 projet_asdl.c : Définitions des fonctions utilisateur et de l'agent R.A.T.P 
 
-lignes.c : Définitions des fonctions pour la création des lignes
-
 menu.c : Définitions des fonctions pour l'affichage du menu
 
 makefile.sh : compilateur
+
+run.sh commande de lancement du programme incluant toutes les lignes dans les fichiers
+
+Dossier Lignes : contient toutes les lignes de la R.A.T.P
 
 ___________________________
 1) COMPILATION             |
@@ -43,7 +45,7 @@ ___________________________|
 
 Pour lancer le programme tapez 
 
-	./projet
+	./run.sh
 	
 Il faut un code pour pour acceder aux options avancés
 

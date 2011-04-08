@@ -3,8 +3,8 @@
 # _______________________________
 
 #all: projet
-projet: projet_asdl.o lignes.o menu.o main.o
-	gcc projet_asdl.o lignes.o menu.o main.o -o projet -Wall
+projet: projet_asdl.o menu.o main.o
+	gcc projet_asdl.o menu.o main.o -o projet -Wall
 
 #_______________________________
 # modèle
@@ -13,10 +13,6 @@ projet: projet_asdl.o lignes.o menu.o main.o
 projet_asdl.o: projet_asdl.c
 	gcc -c projet_asdl.c -o projet_asdl.o -Wall
 	 
-#lignes.c: projet_asdl.h
-lignes.o: lignes.c
-	gcc -c lignes.c -o lignes.o -Wall
-
 #menu.c: projet_asdl.h
 menu.o: main.c
 	gcc -c menu.c -o menu.o -Wall

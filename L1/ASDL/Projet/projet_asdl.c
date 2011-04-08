@@ -37,7 +37,7 @@ ______________________________________________________________________________ *
 	liste_pStations_t** initialisation(liste_pStations_t** toutes_les_lignes)
 	{
 		/*int i;
-		for(i = 0; i < NB_STATION; i++)
+		for(i = 0; i < NB_LIGNES; i++)
 			toutes_les_lignes[i] = (liste_pStations_t*)malloc(60*sizeof(liste_pStations_t*));
 		toutes_les_lignes[0] = ligne1(toutes_les_lignes[0]);
 		toutes_les_lignes[1] = ligne2(toutes_les_lignes[1]);*/
@@ -93,7 +93,7 @@ ______________________________________________________________________________ *
 	liste_pStations_t* ajout_station(char* nom_station, liste_pStations_t* ligne,liste_pStations_t** toutes_les_lignes, int* id, int n)
 	{
 	    liste_pStations_t *new_station;
-	    int i = 0;
+	   // int i = 0;
 	    
 	    new_station = malloc(2*sizeof(liste_pStations_t*));
 	    new_station->s = malloc(2*sizeof(liste_pStations_t*));
@@ -102,7 +102,7 @@ ______________________________________________________________________________ *
 	    strcpy(new_station->s->nom, nom_station);
 	    
 	    new_station->s->ouvert = 1;
-	      while( i < n)
+	     /* while( i < n) TODO
 	    {
 	    
 	  
@@ -120,8 +120,8 @@ ______________________________________________________________________________ *
 		    i++;
 	    }
 	    new_station->s->id = *id;
-	    puts("ok");
-	    *id = *id+1;
+	    //puts("ok");
+	    *id = *id+1;*/
 	    return new_station;
 	}
 	// Retire une station d'une ligne
@@ -152,7 +152,7 @@ ______________________________________________________________________________ *
 	    int i = 0;
 	    liste_pStations_t* ligne = toutes_les_lignes[i];
 	    
-	    while( i < NB_STATION)
+	    while( i < NB_LIGNES)
 	    {
 		if(strcmp(nom_station, ligne->s->nom) == 0)
 		{    
@@ -223,11 +223,11 @@ ______________________________________________________________________________ *
 	    int i = 0;
 	    //clean(nom_station);
 	    //char* station_clean = malloc(60*sizeof(char*));
-	    while(i < NB_STATION)
+	    while(i < NB_LIGNES)
 	    {
 		if(toutes_les_lignes[i]->s == NULL)
 		       i++;	
-		if(i == NB_STATION)
+		if(i == NB_LIGNES)
 			return NULL;
 		if(strcmp(nom_station, toutes_les_lignes[i]->s->nom)==0)
 		{
@@ -283,7 +283,7 @@ ______________________________________________________________________________ *
 	void liste_station(liste_pStations_t** toutes_les_lignes)
 	{
 		int i;
-		for(i = 0; i < NB_STATION; i++)
+		for(i = 0; i < NB_LIGNES; i++)
 		{
 			while(toutes_les_lignes[i]->next != NULL)
 			{
@@ -299,7 +299,7 @@ ______________________________________________________________________________ *
 	{
 	    int i;
 
-	    for(i = 0; i < NB_STATION; i++)
+	    for(i = 0; i < NB_LIGNES; i++)
 	    {
 
 		printf("Les Station de la ligne %d sont : \n", i+1);
@@ -317,7 +317,7 @@ ______________________________________________________________________________ *
 	{
 	    int i = 0;
 		
-	    while(i < NB_STATION)
+	    while(i < NB_LIGNES)
 	    {
 			if(toutes_les_lignes[i]->s == NULL)
 			{
@@ -394,7 +394,7 @@ ______________________________________________________________________________ *
 	    int i = 0;
 	    
 		printf("Ligne(s) passant par la station %s : ", nom_station);
-	    while(i < NB_STATION)
+	    while(i < NB_LIGNES)
 	    {
 			if(toutes_les_lignes[i]->s == NULL)
 			{
@@ -425,7 +425,7 @@ ______________________________________________________________________________ *
 	int est_voisin(char* station1, char* station2, liste_pStations_t** toutes_les_lignes)
 	{
 	    int i = 0;
-	    while(i < NB_STATION)
+	    while(i < NB_LIGNES)
 	    {
 		if(strcmp(station1, toutes_les_lignes[i]->s->nom)==0)
 		{
@@ -459,15 +459,15 @@ ______________________________________________________________________________ *
 		liste_pStations_t** toutes_les_lignes2;
 		int i, j = 0, id = 0, connard = -1, k;
 		
-		lignes = (liste_pStations_t**)malloc(2*NB_STATION*sizeof(liste_pStations_t*));
-		for(i = 0; i < NB_STATION; i++)
+		lignes = (liste_pStations_t**)malloc(2*NB_LIGNES*sizeof(liste_pStations_t*));
+		for(i = 0; i < NB_LIGNES; i++)
 		{
 		    lignes[i] = (liste_pStations_t*)malloc(32*sizeof(liste_pStations_t*));
 		   // lignes[i] = toutes_les_lignes[i];
 		}
 	
-		toutes_les_lignes2 = malloc(2*NB_STATION*sizeof(liste_pStations_t*));
-		for(i = 0; i < NB_STATION; i++)
+		toutes_les_lignes2 = malloc(2*NB_LIGNES*sizeof(liste_pStations_t*));
+		for(i = 0; i < NB_LIGNES; i++)
 		{
 		    toutes_les_lignes2[i] = (liste_pStations_t*)malloc(32*sizeof(liste_pStations_t*));
 		    toutes_les_lignes2[i] = toutes_les_lignes[i];
@@ -482,7 +482,7 @@ ______________________________________________________________________________ *
 		//liste_station_de_toutes_les_lignes(toutes_les_lignes);
 		//liste_station_de_toutes_les_lignes(lignes);
 		//liste_station_de_toutes_les_lignes(toutes_les_lignes2);
-		while(i < NB_STATION)
+		while(i < NB_LIGNES)
 		{printf("while1 de i = %d", i);
 			
 			if(( strcmp(toutes_les_lignes2[i]->s->nom , "") != 0))
