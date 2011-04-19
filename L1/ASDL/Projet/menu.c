@@ -35,23 +35,15 @@ void Menu1(liste_pStations_t** toutes_les_lignes, liste_pStations_t toutes_les_s
 	    {
 		    case 1:
 				printf("Choississez votre station de depart : ");
-				gets(depart);
+				
+				depart = get_choix_station( choix, toutes_les_stations);
 				choix = get_id(depart, toutes_les_stations);
-				/*while( choix == -1 && choix > 300)
-				{
-				    gets(depart);
-				    choix = get_id(depart, toutes_les_stations); 
-				}*/
-				depart = get_nom_station(choix, toutes_les_stations);
+				
 				printf("Choississez votre station d'arriver : ");
-				gets(arriver);
+				
+				arriver = get_choix_station( choix2, toutes_les_stations);
 				choix2 = get_id(arriver, toutes_les_stations);
-				/*while( choix2 == -1 && choix > 300)
-				{
-				    gets(arriver);
-				    choix2 = get_id(arriver, toutes_les_stations); 
-				}*/
-				arriver = get_nom_station(choix2, toutes_les_stations);
+				
 				recherche_intineraires(choix, choix2, voisin, distance, toutes_les_lignes, toutes_les_stations);
 				break;
 		    case 2:
@@ -236,26 +228,13 @@ void Info_Station(liste_pStations_t** toutes_les_lignes, liste_pStations_t toute
 	{
 	    case 1: 
 			printf("Quel Station voulez vous voir? : ");
-			gets(nom_station);
-			puts(nom_station); 
-			choix = get_id(nom_station, toutes_les_stations);
-			while( choix == -1)
-			{
-			    gets(nom_station);purger();
-			    choix = get_id(nom_station, toutes_les_stations); 
-			}
-			ligne_station(get_nom_station(choix, toutes_les_stations), toutes_les_lignes);
+			nom_station = get_choix_station( choix, toutes_les_stations);
+			ligne_station(nom_station, toutes_les_lignes);
 			return ;
 	    case 2:
 			printf("Quel Station voulez vous voir? : ");
-			gets(nom_station);
-			choix = get_id(nom_station, toutes_les_stations);
-			while( choix == -1)
-			{
-			    gets(nom_station);purger();
-			    choix = get_id(nom_station, toutes_les_stations); 
-			}
-			get_station_ouverte(get_nom_station(choix, toutes_les_stations), toutes_les_lignes);
+			nom_station = get_choix_station( choix, toutes_les_stations);
+			get_station_ouverte(nom_station, toutes_les_lignes);
 			return ;
 	    case 3: 
 			return ;
@@ -299,7 +278,7 @@ void Action_Ligne(liste_pStations_t** toutes_les_lignes, liste_pStations_t toute
 void Action_Station(liste_pStations_t** toutes_les_lignes, liste_pStations_t toutes_les_stations)
 {
     int choix = 0;
-    char* nom_station = malloc(40*sizeof(char*));
+    char* nom_station = malloc(100*sizeof(char*));
     puts("Quelle action voulez vous faire?");
     puts("\t 1) Ajouter une Station");
     puts("\t 2) Supprimer une Station");
@@ -315,14 +294,7 @@ void Action_Station(liste_pStations_t** toutes_les_lignes, liste_pStations_t tou
 	{
 	    case 1: 
 		printf("Quel est le nom de la Station que vous voulez ajouter ? : ");
-		gets(nom_station);
-			choix = get_id(nom_station, toutes_les_stations);
-			while( choix == -1)
-			{
-			    gets(nom_station);purger();
-			    choix = get_id(nom_station, toutes_les_stations); 
-			}
-		nom_station = get_nom_station(choix, toutes_les_stations);
+		nom_station = get_choix_station( choix, toutes_les_stations);
 		printf("Quel est le numero de la ligne de %s que vous voulez ajouter ? : ", nom_station);
 		choix = get_choix(choix);
 		purger ();
@@ -362,14 +334,7 @@ void Action_Station(liste_pStations_t** toutes_les_lignes, liste_pStations_t tou
 		    return ;
 	    case 2:
 		printf("Quel est le nom de la Station que vous voulez supprimer ? : ");
-		gets(nom_station);
-			choix = get_id(nom_station, toutes_les_stations);
-			while( choix == -1)
-			{
-			    gets(nom_station);
-			    choix = get_id(nom_station, toutes_les_stations); 
-			}
-		nom_station = get_nom_station(choix, toutes_les_stations);
+		nom_station = get_choix_station( choix, toutes_les_stations);
 		printf("Quel est le numero de la ligne de %s que vous voulez supprimer ? : ", nom_station);
 		choix = get_choix(choix);
 		purger ();
@@ -409,14 +374,7 @@ void Action_Station(liste_pStations_t** toutes_les_lignes, liste_pStations_t tou
 		    return;
 	    case 3: 
 		printf("Quel est le nom de la Station que vous voulez Ouvrir ? : ");
-		gets(nom_station);
-			choix = get_id(nom_station, toutes_les_stations);
-			while( choix == -1)
-			{
-			    gets(nom_station);purger();
-			    choix = get_id(nom_station, toutes_les_stations); 
-			}
-		nom_station = get_nom_station(choix, toutes_les_stations);
+		nom_station = get_choix_station( choix, toutes_les_stations);
 		printf("Quel est le numero de la ligne de %s que vous voulez Ouvrir ? : ", nom_station);
 		choix = get_choix(choix);
 		purger ();
@@ -456,14 +414,7 @@ void Action_Station(liste_pStations_t** toutes_les_lignes, liste_pStations_t tou
 		    return ;
 	    case 4: 
 		printf("Quel est le nom de la Station que vous voulez Fermer ? : ");
-		gets(nom_station);
-			choix = get_id(nom_station, toutes_les_stations);
-			while( choix == -1)
-			{
-			    gets(nom_station);purger();
-			    choix = get_id(nom_station, toutes_les_stations); 
-			}
-		nom_station = get_nom_station(choix, toutes_les_stations);
+		nom_station = get_choix_station( choix, toutes_les_stations);
 		printf("Quel est le numero de la ligne de %s que vous voulez Fermer ? : ", nom_station);
 		choix = get_choix(choix);
 		purger ();
@@ -503,14 +454,7 @@ void Action_Station(liste_pStations_t** toutes_les_lignes, liste_pStations_t tou
 		    return;
 	    case 5:
 		printf("Quel est le nom de la Station que vous voulez supprimer du reseau ? : ");
-		gets(nom_station);
-			choix = get_id(nom_station, toutes_les_stations);
-			while( choix == -1)
-			{
-			    gets(nom_station);purger();
-			    choix = get_id(nom_station, toutes_les_stations); 
-			}
-		nom_station = get_nom_station(choix, toutes_les_stations);
+		nom_station = get_choix_station( choix, toutes_les_stations);
 		retirer_station_carte(nom_station, toutes_les_lignes); 
 		    return ;
 	    case 6:

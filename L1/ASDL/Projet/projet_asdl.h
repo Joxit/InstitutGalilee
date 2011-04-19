@@ -25,8 +25,7 @@ ______________________________________________________________________________ *
 		struct liste_pStations_s* next;
 	} liste_pStations_t;
 
-	/* DEFINITIONS DANS : projet_adsl.c 
-	 * Toutes les fonctions utiles au projet */ 
+	/* DEFINITIONS DANS : actions.c */ 
 	
 	// création de la liste de totues les stations
 	liste_pStations_t*  liste_station(liste_pStations_t* toutes_les_stations, liste_pStations_t** toutes_les_lignes); 
@@ -59,7 +58,7 @@ ______________________________________________________________________________ *
 	/* ajoute a la fin de la ligne i la station s. (on suppose que cette station est déjà référencée dans toutes_les_stations */
 	station_t ajout_station_en_fin_ligne(station_t* s,int i, liste_pStations_t** toutes_les_lignes);
 	 
-
+	/* DEFINITIONS DANS : infos.c */ 
 	// fonctionalitées pour l'utilisateur x :
 	// Itineraire entre A et B
 	void  recherche_intineraires(int depart, int arrivee,int** voisin, int** distance, liste_pStations_t** toutes_les_lignes, liste_pStations_t toutes_les_stations); 
@@ -80,6 +79,7 @@ ______________________________________________________________________________ *
 	void station_dans_ligne(liste_pStations_t ligne);
 	
 	
+	/* DEFINITIONS DANS : proget_asdl.c */ 
 	/* Fonctions Interface Homme - Machine */
 	// prend en argument la valeur du tableau toutes_les_lignes et renvoie le vrais numero_ligne
 	int get_num_ligne(int i);
@@ -87,6 +87,7 @@ ______________________________________________________________________________ *
 	int choix_num_ligne(int i);
 	// demande le choix de la ligne a l'utilisateur
 	int get_choix(int choix);
+	char* get_choix_station(int choix, liste_pStations_t toutes_les_stations);
 	
 	/* Fonctions basées sur les id des stations */
 	// Boolean qui renvoie TRUE si les stations son voisines FALSE sinon

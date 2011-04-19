@@ -1,0 +1,8 @@
+Etudiant 1
+Nom : MAGLOIRE
+Prénom : Jones
+Numéro : 11000369
+Etudiant 2 (absent è la 2eme sceance)
+Nom : DELCOURT
+Prénom : Rémi
+Numéro : 11002398

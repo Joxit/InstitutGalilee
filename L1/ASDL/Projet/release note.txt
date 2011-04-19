@@ -42,12 +42,18 @@
 				- get_id qui prend un nom_station et renvoi un id
 				- get_nom_station qui prend un id et renvoi le nom
 				- id_proche qui indique l'id de station la plus proche de l'arrivee
+				- get_choix_station qui demande le nom de la station a l'utilisateur
 			Suppression de fonctions :
 				- retirer_ligne inutile et improbable dans la vie réele
 				- ajout_ligne n'est plus disponible pour l'agent RATP
 			Fix ::
 				- Action_station : donne les vrais lignes à la machine
-
+	
+	Version 1.4 :
+			- Separation de projet_asdl.c en 3 fichiers
+				- actions.c contenant toutes les fonctions de l'agent et de création du reseau
+				- infos.c contenant toutes les fonctions utilisateur
+				- aide.c contenant les fonctions de soutien et d'echange utilisateur-programme
 			
 	
  	Vendredi 19 Avril 2011	
