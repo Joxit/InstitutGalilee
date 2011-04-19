@@ -2,28 +2,7 @@
 	Projet A.S.D.L par MAGLOIRE Jones 11000369 et DELCOURT Rémi 11002398
 	Lignes RATP de paris
     
-	Version 1.0 :
-			- mise en place du projet
-			- Création des fonctions de base
-			- Creation du mot de passe pour l'agent RATP
-			- Recherche itineraire : 
-					- Cas de base itineraire sur la meme ligne
-					- quitte la fonction si depart = arrivee
-			- seulement lignes 1 et 2 implementees
-	Version 1.1 :
-			- Changement de l'affichage en fonction recursive
-			- Ajout des sous choix utilisateur et de l'agent R.A.T.P
-			- Fix ::
-				- ligne_station
-				- get_station_ouverte
-				- ligne_ouverte
-				- ouvrir_station/fermer_station
-				- retirer_station_carte
-			- Implantation ligne 3
-			- Ajout de securité dans station_dans_ligne et ligne_ouverte
-			- reorganisation de projet_asdl.h et projet_asdl.c ::
- 				- création de sous fichiers menu.c et lignes.c pour alléger projet_asdl.c
- 				
+
  	Vendredi 1 Avril 2011			
 	
 	pour plus d'information sur les fonctions voir projet_adsl.h
@@ -31,37 +10,39 @@ ______________________________________________________________________________ *
 	#include <stdio.h>
 	#include <stdlib.h>
 	#include <string.h>
+	#include <math.h>
 	#include "projet_asdl.h"
 
-	/* initialise le tableau toutes_les_lignes avec des NULL */
-	liste_pStations_t** initialisation(liste_pStations_t** toutes_les_lignes)
-	{
-		/*int i;
-		for(i = 0; i < NB_LIGNES; i++)
-			toutes_les_lignes[i] = (liste_pStations_t*)malloc(60*sizeof(liste_pStations_t*));
-		toutes_les_lignes[0] = ligne1(toutes_les_lignes[0]);
-		toutes_les_lignes[1] = ligne2(toutes_les_lignes[1]);*/
-		return toutes_les_lignes;
-	}
 	/* Fonctionalitées de l'agent RATP */
 	// Ajoute une ligne
-	liste_pStations_t* ajout_ligne(int numero_ligne, liste_pStations_t** toutes_les_lignes)
+	liste_pStations_t* ajout_ligne(int numero_ligne, liste_pStations_t* ligne, FILE* adt)
 	{
-	    return toutes_les_lignes[numero_ligne-1] = (liste_pStations_t*)malloc(32*sizeof(liste_pStations_t*));
+	    int taille;
+	    char* nom_station = malloc(100*sizeof(char));
+	    ligne = (liste_pStations_t*)malloc(4*sizeof(liste_pStations_t*));
 	    
+	    while(!feof(adt))
+	    {
+		fgets(nom_station, 100, adt);
+		if(nom_station == NULL)
+		    perror("La lecture a echoué");	
+		
+		taille = strlen(nom_station);
+		nom_station[taille-1] = '\0';
+		ligne= ajout_station( nom_station, ligne);
+	    }
+	    *ligne = *ligne->next;
+	    
+	    return ligne;
 	}
-	// Retire une ligne du reseau
-	void retirer_ligne(int numero_ligne, liste_pStations_t** toutes_les_lignes)
-	{
-	    free(toutes_les_lignes[numero_ligne-1]);
-	}
+	
 	// met ouvert = 1 a toutes les station de la ligne 
 	liste_pStations_t* ouvrir_ligne(liste_pStations_t* ligne)
 	{
-		if(ligne->s == NULL)
+	    if(ligne->s == NULL)
 	    {
-			puts("Erreur: ligne inexistante");
-			return NULL;
+		puts("Erreur: ligne inexistante");
+		return NULL;
 	    }
 	    liste_pStations_t* ligne2 = ligne;
 	    while(ligne->next != NULL)
@@ -71,6 +52,7 @@ ______________________________________________________________________________ *
 	    }     
 	    return ligne2;
 	}
+	
 	// met ouvert = 0 a toutes les station de la ligne 	
 	liste_pStations_t* fermer_ligne(liste_pStations_t* ligne)
 	{
@@ -90,38 +72,19 @@ ______________________________________________________________________________ *
 	
 	
 	// crée une nouvelle structure station_t rajoute cette structure à toutes_les_stations MARCHE 
-	liste_pStations_t* ajout_station(char* nom_station, liste_pStations_t* ligne,liste_pStations_t** toutes_les_lignes, int* id, int n)
+	liste_pStations_t* ajout_station(char* nom_station, liste_pStations_t* ligne)
 	{
 	    liste_pStations_t *new_station;
 	   // int i = 0;
 	    
-	    new_station = malloc(2*sizeof(liste_pStations_t*));
-	    new_station->s = malloc(2*sizeof(liste_pStations_t*));
+	    new_station = malloc(4*sizeof(liste_pStations_t*));
+	    new_station->s = malloc(4*sizeof(station_t*));
 	    new_station->s->nom = (char*)malloc(100*sizeof(char));
 	    new_station->next = ligne;
 	    strcpy(new_station->s->nom, nom_station);
 	    
 	    new_station->s->ouvert = 1;
-	     /* while( i < n) TODO
-	    {
-	    
-	  
-		if(( strcmp(toutes_les_lignes[i]->s->nom , "") != 0))
-		{
-		    if( strcmp(toutes_les_lignes[i]->s->nom , nom_station) == 0)
-		    {
-			new_station->s->id = toutes_les_lignes[i]->s->id;
-			return new_station;
-			
-		    }
-		    toutes_les_lignes[i] = toutes_les_lignes[i]->next;
-		}
-		else
-		    i++;
-	    }
-	    new_station->s->id = *id;
-	    //puts("ok");
-	    *id = *id+1;*/
+	 
 	    return new_station;
 	}
 	// Retire une station d'une ligne
@@ -133,7 +96,7 @@ ______________________________________________________________________________ *
 			puts("Erreur: ligne inexistante");
 			return NULL;
 	    }
-	    while((strcmp(ligne->s->nom , "") != 0))
+	    while(ligne->s != NULL)
 	    {
 		if(strcmp(nom_station, ligne->s->nom) == 0)
 		{    
@@ -156,6 +119,7 @@ ______________________________________________________________________________ *
 	    {
 		if(strcmp(nom_station, ligne->s->nom) == 0)
 		{    
+		    puts("ok");
 		    *ligne = *ligne->next; 
 		    i++;
 		    ligne = toutes_les_lignes[i];
@@ -164,16 +128,7 @@ ______________________________________________________________________________ *
 		    ligne = ligne->next;
 	    }  	    
 	}
-	// Retire une ligne completement
-	/*liste_pStations_t* retirer_une_ligne(liste_pStations_t* ligne)
-	{
-	    if(ligne->next != NULL)
-	    {
-		ligne = retirer_une_ligne(ligne);
-	    }
-	    ligne->next = NULL;
-	    return ligne;
-	}*/
+	
 	// met 1 a nom_station de la ligne 
 	void ouvrir_station(char* nom_station, liste_pStations_t* ligne)
 	{
@@ -182,39 +137,45 @@ ______________________________________________________________________________ *
 			puts("Erreur: ligne inexistante");
 			return ;
 	    }
-	    while((strcmp(nom_station, ligne->s->nom) != 0)||(ligne->next != NULL))
+	    while(ligne->next != NULL)
 	    {
-		if(strcmp(nom_station, ligne->s->nom))
+		if(strcmp(nom_station, ligne->s->nom) == 0)
 		{
 		    if(ligne->s->ouvert == 1)
 			puts("Station deja ouverte");
 		    ligne->s->ouvert = 1; 
+		    if(ligne->s->ouvert == 1)
+			puts("La station a bien été ouverte");
 		    return ;
 		}
 		   else
-		    *ligne = *ligne->next;
+		    ligne = ligne->next;
 	    }    
+	    puts("La station n'a pas été trouvée");
 	}
 	// met 0 a nom_station de la ligne 	
 	void fermer_station(char* nom_station, liste_pStations_t* ligne)
 	{
-		if(ligne->s == NULL)
+	    if(ligne->s == NULL)
 	    {
-			puts("Erreur: ligne inexistante");
-			return ;
+		puts("Erreur: ligne inexistante");
+		return ;
 	    }
-	    while((strcmp(nom_station, ligne->s->nom) != 0)||(ligne->next != NULL))
+	    while(ligne->next != NULL)
 	    {
-		if(strcmp(nom_station, ligne->s->nom))
+		if(strcmp(nom_station, ligne->s->nom) == 0)
 		{
 		    if(ligne->s->ouvert == 0)
 			puts("Station deja fermée");
 		    ligne->s->ouvert = 0; 
+		    if(ligne->s->ouvert == 0)
+			puts("La station a bien été fermée");
 		    return ;
 		}
-		   else
-		    *ligne = *ligne->next;
-	    }    
+		else
+		    ligne = ligne->next;
+	    }  
+	    puts("La station n'a pas été trouvée");
 	}
 	
 	// renvoie un pointeur sur la station dont le nom est donnée en paramètre, ou NULL si erreur
@@ -241,6 +202,7 @@ ______________________________________________________________________________ *
 	    printf("\n la station %s n'existe pas", nom_station);
 	    return NULL;
 	}
+	
 	// ajoute a la fin de la ligne i la station s. (on suppose que cette station est déjà référencée dans toutes_les_stations 
 	station_t ajout_station_en_fin_ligne(station_t* s,int i, liste_pStations_t** toutes_les_lignes)
 	{
@@ -251,125 +213,181 @@ ______________________________________________________________________________ *
 
 	// fonctionalitées pour l'utilisateur x :
 	// liste stations entre A et B CAS de base : A et B sur la meme ligne
-	void recherche_intineraires(char* depart,char* arrivee, liste_pStations_t* ligne)
+	void recherche_intineraires(int depart, int arrivee,int** voisin, int** distance, liste_pStations_t** toutes_les_lignes, liste_pStations_t toutes_les_stations)
 	{
-	    int i = 1; int bool = FALSE;
-		if(strcmp(depart , arrivee) == 0)
+	    int i = 0;
+	    liste_pStations_t ligne;
+	    int n = 0, numero_ligne;
+	    int cur_id, sub_id, id;
+		if(depart == arrivee)
 		{
 			puts("ERREUR : vous avez choisi la meme station!");
 			return;
 		}
-		while((strcmp(ligne->s->nom , "") != 0) || (bool == FALSE))
+		id = depart;
+		while(id != arrivee)
 		{
-			if((strcmp(depart, ligne->s->nom) == 0) || (strcmp(arrivee, ligne->s->nom) == 0))
+		n = ligne_station( get_nom_station(id, toutes_les_stations), toutes_les_lignes);
+		    i = 0;
+		    cur_id = id;
+		    while (n > 0) 
+		    {
+			if (n % 2) 
 			{
-				while(bool == FALSE || (strcmp(ligne->s->nom , "") != 0))
-				{
-					ligne = ligne->next;
-					printf("%s", ligne->s->nom);
-					if((strcmp(depart, ligne->s->nom) == 0) || (strcmp(arrivee, ligne->s->nom) == 0))
-					{
-						bool = TRUE;
-						break;
-					}
-					i = i + 1;
-				}
+			    ligne = *toutes_les_lignes[i];
+			    sub_id = id_proche(id, arrivee, ligne, distance);
+			    if(distance[sub_id][arrivee] <= distance[cur_id][arrivee])
+			    {
+				cur_id = sub_id;
+				numero_ligne = i;
+			    }
 			}
-			ligne = ligne->next;				
+			i = i + 1;
+			n = n / 2;
+			if(cur_id == arrivee)
+			    break;
+		    }	
+		    printf("\tPrendre la ligne %d\n", get_num_ligne(numero_ligne));
+		    id = cur_id;
+		    ligne = *toutes_les_lignes[numero_ligne];
 		}
-	    printf("\nLa station %s est a %d arrets de %s\n", depart, i, arrivee);
+		printf("%s est a %d stations de %s\n", get_nom_station(depart, toutes_les_stations), distance[depart][arrivee], get_nom_station(arrivee, toutes_les_stations));
 	}
-
-	void liste_station(liste_pStations_t** toutes_les_lignes)
+	   
+	// création de la liste de totues les stations
+	liste_pStations_t*  liste_station(liste_pStations_t* toutes_les_stations, liste_pStations_t** toutes_les_lignes)
 	{
-		int i;
-		for(i = 0; i < NB_LIGNES; i++)
+	    int i, j, x;
+	    liste_pStations_t ligne;
+	    for(i=0; i < 300; i++)
+	    {
+		j = 0;
+		x = 0;
+		ligne = *toutes_les_lignes[j];
+		while(x == 0)
 		{
-			while(toutes_les_lignes[i]->next != NULL)
+		    if(ligne.s != NULL)
+		    {
+			if(i == ligne.s->id)
 			{
-				printf("%s ", toutes_les_lignes[i]->s->nom);
-				toutes_les_lignes[i] = toutes_les_lignes[i]->next;
+			    toutes_les_stations = ajout_station(ligne.s->nom,  toutes_les_stations);
+			    toutes_les_stations->s->id = i;
+			    x = 1;
 			}
-		
+			else
+			    ligne = *ligne.next;
+		    }
+		    if(ligne.s == NULL)
+		    {
+			j = j + 1;
+			ligne = *toutes_les_lignes[j];
+		    }
 		}
-
+		
+	    }
+	    return toutes_les_stations;
 	}
+
 	// Affiche le nom de toutes les stations de toutes les lignes
 	void liste_station_de_toutes_les_lignes(liste_pStations_t** toutes_les_lignes)
 	{
 	    int i;
-
+	    liste_pStations_t ligne;
+	    
 	    for(i = 0; i < NB_LIGNES; i++)
 	    {
-
-		printf("Les Station de la ligne %d sont : \n", i+1);
-		while(toutes_les_lignes[i]->next != NULL)
+		ligne = *toutes_les_lignes[i];
+		switch(i)
 		{
-		    printf("%s ", toutes_les_lignes[i]->s->nom);
-		    toutes_les_lignes[i] = toutes_les_lignes[i]->next;
+		    case 6:
+			
+			printf("Les Station de la ligne %d directon Villejuif : \n", get_num_ligne(i));
+			break;
+		    case 7:
+			printf("Les Station de la ligne %d directon Ivry : \n", get_num_ligne(i));
+			break;
+		    case 10:	
+			printf("Les Station de la ligne %d directon Boulogne : \n", get_num_ligne(i));
+			break;
+		    case 11:	
+			printf("Les Station de la ligne %d directon Gare d'Austerlitz : \n", get_num_ligne(i));
+			break;
+		    case 14:	
+			printf("Les Station de la ligne %d directon Saint Denis : \n", get_num_ligne(i));
+			break;
+		    case 15:	
+			printf("Les Station de la ligne %d directon Gennevilliers : \n", get_num_ligne(i));
+			break;
+		    default : 
+			printf("Les Station de la ligne %d sont : \n", get_num_ligne(i));
+			break;
 		}
-		puts("");
+		while(ligne.next != NULL)
+		{
+		    printf("%s; ", ligne.s->nom);
+		    ligne = *ligne.next;
+		}
+		puts("\n");
 	    }
-	    
 	}
 	// Affiche les lignes qui sont ouverte pour nom_station
 	void get_station_ouverte(char* nom_station, liste_pStations_t** toutes_les_lignes)
 	{
 	    int i = 0;
-		
+	    liste_pStations_t ligne;
+	    ligne = *toutes_les_lignes[i];
 	    while(i < NB_LIGNES)
 	    {
-			if(toutes_les_lignes[i]->s == NULL)
+		if(ligne.s != NULL)
+		{
+		    if(strcmp(nom_station, ligne.s->nom) == 0)
+		    {
+			if(ligne.s->ouvert == 1)
 			{
-				i++;
+			    printf("La station %s est ouverte pour la ligne %d \n", nom_station, get_num_ligne(i));   
 			}
-			if(strcmp(nom_station, toutes_les_lignes[i]->s->nom) == 0)
-			{
-			    if(toutes_les_lignes[i]->s->ouvert == 1)
-			    {
-				printf("La station %s est ouverte pour la ligne %d \n", nom_station, i+1);   
-			    }
-			    else 
-					printf("La station %s est fermée pour la ligne %d \n", nom_station, i+1);
-			    // une station n'est pas deux fois sur la meme ligne
-			    i++;
-			}
-			else
-			{
-				if( strcmp(toutes_les_lignes[i]->s->nom , "") == 0)
-				{ 
-				    i++;    
-				}
-				else
-				    toutes_les_lignes[i] = toutes_les_lignes[i]->next;
-			}
+			else 
+			    printf("La station %s est fermée pour la ligne %d \n", nom_station, get_num_ligne(i));
+			    // une station n'est pas deux fois sur la meme ligne mais erreur avec  ligne = *ligne.next; qui suit
+			    //i++;
+			    //ligne = *toutes_les_lignes[i];
+		    }
+		}
+		
+		if(ligne.s  == NULL)
+		{ 
+		    i++;
+		    ligne = *toutes_les_lignes[i];    
+		}
+		else
+		    ligne = *ligne.next;
+		
+		
 	    }
 	}
 	// test la ligne avec 1 si elle est ouverte et 0 si elle est fermée; mini 2 stations ouvertes
-	int ligne_ouverte(liste_pStations_t* ligne) // toutes_les_lignes[i] en argument!
+	int ligne_ouverte(liste_pStations_t ligne) // toutes_les_lignes[i] en argument!
 	{
 	    int cmp = 0;
-	    if(ligne->s == NULL)
+	    if(ligne.s == NULL)
 	    {
 		puts("Erreur: ligne inexistante");
 		return 0;
 	    }
-
-	    while(( strcmp(ligne->s->nom , "") != 0) || cmp < 2)
+	    
+	    while(ligne.next != NULL)
 	    {
-		if(ligne->s->ouvert == 1) // ouvert
+		if(ligne.s->ouvert == 1) // ouvert
 		{
-		    cmp++;
+		    cmp = cmp +1;
 		}
-		if(strcmp(ligne->s->nom , "") == 0) 
-		{
-		    return 0;
-		}
-		else
-		    ligne = ligne->next;
+		if(cmp == 2)
+		    return 1;
+		
+		ligne = *ligne.next;
 	    }
 	    
-	    return 2 <= cmp;
+	    return 0;
 	}
 		// affiche les stations de la ligne ligne  MARCHE
 	void station_dans_ligne(liste_pStations_t ligne)
@@ -389,214 +407,308 @@ ______________________________________________________________________________ *
 	}
 	
 	// toutes les lignes d'une station	
-	void ligne_station(char* nom_station, liste_pStations_t** toutes_les_lignes)
+	int ligne_station(char* nom_station, liste_pStations_t** toutes_les_lignes)
 	{
 	    int i = 0;
-	    
-		printf("Ligne(s) passant par la station %s : ", nom_station);
+	    liste_pStations_t ligne;
+	    ligne = *toutes_les_lignes[i];
+	    int numero_lignes = 0;
+	    printf("Ligne(s) passant par la station %s : ", nom_station);
 	    while(i < NB_LIGNES)
 	    {
-			if(toutes_les_lignes[i]->s == NULL)
-			{
-				i++;
-			}
-			if(strcmp(nom_station, toutes_les_lignes[i]->s->nom)==0)
-			{
-			    // une station n'est pas deux fois sur la meme ligne
-			   i++;
-			    printf("%d ", i);		    
-			}
-			else
-			{
-			    if( strcmp(toutes_les_lignes[i]->s->nom , "") == 0)
-			    { 
-					i++;    
-			    }
-			    else
-			    {
-					//printf("ok %d %s\n", i, toutes_les_lignes[i]->s->nom );
-					toutes_les_lignes[i] = toutes_les_lignes[i]->next;
-			    }
-			}
-	    }
-	    puts("");
-	}
-
-	int est_voisin(char* station1, char* station2, liste_pStations_t** toutes_les_lignes)
-	{
-	    int i = 0;
-	    while(i < NB_LIGNES)
-	    {
-		if(strcmp(station1, toutes_les_lignes[i]->s->nom)==0)
+		if(ligne.s != NULL)
 		{
-		    if(strcmp(station2, toutes_les_lignes[i]->next->s->nom)==0)
+		    if(strcmp(nom_station, ligne.s->nom)==0)
 		    {
-			return TRUE;
-		    }  
+			printf("%d ", get_num_ligne(i));
+			// codage en binaire pour une verification dans recherche_intineraires
+			numero_lignes = numero_lignes + (int)pow(2, (double)i);
+			// une station n'est pas deux fois sur la meme ligne mais erreur avec  ligne = *ligne.next; qui suit
+			    //i++;
+			    //ligne = *toutes_les_lignes[i];
+		    }
 		}
-		if(strcmp(station2, toutes_les_lignes[i]->s->nom)==0)
-		{
-		    if(strcmp(station1, toutes_les_lignes[i]->next->s->nom)==0)
-		    {
-			return TRUE;
-		    }  	    
-		}
-		if( strcmp(toutes_les_lignes[i]->s->nom , "") == 0)
+		if( ligne.s == NULL)
 		{ 
 		    i++;    
+		    ligne = *toutes_les_lignes[i];
 		}
 		else
 		{
-		    toutes_les_lignes[i] = toutes_les_lignes[i]->next;
+		    ligne = *ligne.next;
 		}
+		
 	    }
-	    return FALSE;
+	    puts("");
+	    return numero_lignes;
+	}
+
+	int est_voisin(int id1, int id2, liste_pStations_t** toutes_les_lignes)
+	{
+	    if(id1 == id2)
+		return -1;
+	    int i = 0;
+	    liste_pStations_t ligne;
+	    ligne = *toutes_les_lignes[i];
+	    while(i < NB_LIGNES)
+	    {
+		if(ligne.next->s != NULL)
+		{
+		    if(id1 == ligne.s->id)
+		    {
+			if(id2 == ligne.next->s->id)
+			{
+			    return TRUE;
+			}  
+		    }
+		    if(id2 == ligne.s->id)
+		    {
+			if(id1 == ligne.next->s->id)
+			{
+			    return TRUE;
+			}  
+		    }
+		}
+		
+		if( ligne.next->s == NULL)
+		{ 
+		    i++;    
+		    ligne = *toutes_les_lignes[i];
+		}
+		else
+		   ligne = *ligne.next;
+		
+	    }
+	    return 0;
 	}
 	
-	liste_pStations_t** set_id(liste_pStations_t** toutes_les_lignes)
+	void set_id(liste_pStations_t** toutes_les_lignes)
 	{
-		liste_pStations_t** lignes;
-		liste_pStations_t** toutes_les_lignes2;
-		int i, j = 0, id = 0, connard = -1, k;
-		
-		lignes = (liste_pStations_t**)malloc(2*NB_LIGNES*sizeof(liste_pStations_t*));
-		for(i = 0; i < NB_LIGNES; i++)
-		{
-		    lignes[i] = (liste_pStations_t*)malloc(32*sizeof(liste_pStations_t*));
-		   // lignes[i] = toutes_les_lignes[i];
-		}
-	
-		toutes_les_lignes2 = malloc(2*NB_LIGNES*sizeof(liste_pStations_t*));
-		for(i = 0; i < NB_LIGNES; i++)
-		{
-		    toutes_les_lignes2[i] = (liste_pStations_t*)malloc(32*sizeof(liste_pStations_t*));
-		    toutes_les_lignes2[i] = toutes_les_lignes[i];
-		}
-		
-		
-		
-		
-		lignes = toutes_les_lignes;
-		
-		i = 0;
-		//liste_station_de_toutes_les_lignes(toutes_les_lignes);
-		//liste_station_de_toutes_les_lignes(lignes);
-		//liste_station_de_toutes_les_lignes(toutes_les_lignes2);
-		while(i < NB_LIGNES)
-		{printf("while1 de i = %d", i);
-			
-			if(( strcmp(toutes_les_lignes2[i]->s->nom , "") != 0))
-			{
-			 j = 0;	   
-			connard = -1;	   
-			for(k = 0; k < i; k++)
-			{
-		    //lignes[k] = (liste_pStations_t*)malloc(32*sizeof(liste_pStations_t*));
-			    lignes[k] = toutes_les_lignes[k];
-			}		
-			while(connard == -1)
-			{		printf(" while2 de j = %d %s", j, lignes[j]->s->nom); 
-			    			
-				if( strcmp(lignes[j]->s->nom , "") != 0)
-				{
-					if( j == i)
-					{
-					//puts("bool");
-					connard = FALSE;	
-					}
-					if(connard== -1)
-					{printf(" 0 %s = %d et %d\n",  toutes_les_lignes2[i]->s->nom, toutes_les_lignes2[i]->s->id, id);
-					    if(strcmp(toutes_les_lignes2[i]->s->nom, lignes[j]->s->nom) == 0 )
-					    {
-					    
-						toutes_les_lignes2[i]->s->id = lignes[j]->s->id;
-						printf(" 1 %s %d = %d et %d\n", lignes[j]->s->nom, toutes_les_lignes2[i]->s->id, lignes[j]->s->id, j);
-						connard = TRUE;
-					    }
-					    else
-						lignes[j] = lignes[j]->next;	
-						//puts("next");
-				    }
-				    
-					
-				}
-				else
-				    if( strcmp(lignes[j]->s->nom , "") == 0)
-				    {
-					//printf("lol ");
-					j=j+1;
-					lignes = toutes_les_lignes;	
-				    }
-				//printf("putain");
-				    
-			}
-			if(connard == FALSE )
-			{
-					toutes_les_lignes2[i]->s->id = id;	
-					printf(" 2 %s %d = %d %d\n", toutes_les_lignes2[i]->s->nom, toutes_les_lignes2[i]->s->id, id, j);
-					id++;
-					
-			}		
-			toutes_les_lignes2[i] = toutes_les_lignes2[i]->next;	
-// 			for(k = 0; k < i; k++)
-// 			{
-// 			    lignes[k] = NULL;
-// 			}
-			}
-			else 
-			  //  if(toutes_les_lignes2[i]->s == NULL)
-			    i++;
-		}
-		return toutes_les_lignes;
-	}
-	// Autorisation des caracteres	
-	int allow_chaine(char* station)
-	{
-	    int i;
-	    int p = strlen(station);
+	    liste_pStations_t ligne;
+	    liste_pStations_t ligne2;
+	    int i = 0, j = 0, id = 0, boolean = -1;
+	    ligne = *toutes_les_lignes[i];
+	    ligne2 = *toutes_les_lignes[i];
 	    
-	    for(i = 0; i <= p; i++)
+	    // premiere boucle : permet de mettre les id sur toutes les lignes
+	    while(i < NB_LIGNES)
 	    {
-		if(('a' < station[i]  && station[i] < 'z' ) || ('A' < station[i] && station[i] < 'Z') || station[i] != '_'  )
+		// ligne2 est le pointeur qui prend les modifications pour toutes_les_lignes[18]
+		if(ligne2.s != NULL)
 		{
-
+		    j = 0;
+		    ligne = *toutes_les_lignes[j];	
+		    boolean = -1;	   // carte de sortie
+		    // Deuxieme boucle qui permet de verifier si une station a deja une id sur toutes les lignes deja vue 
+		    while(boolean == -1)
+		    {
+			if( ligne.s != NULL)
+			{
+			    // si on est sur la meme ligne que ligne2 on quitte
+			    if( j == i)
+			    {
+				boolean = FALSE;	
+			    }
+			    if(boolean== -1)
+			    {
+				// comparaison des deux lignes
+				if(strcmp(ligne2.s->nom, ligne.s->nom) == 0 )
+				{
+				    // si les noms sont identique on donne l'id de ligne a ligne2 et on quitte
+				    ligne2.s->id = ligne.s->id;
+				    boolean = TRUE;
+				}
+				else // sinon on passe
+				    ligne = *ligne.next;	
+			    }
+			    
+			}
+			else // si la station est nul on passe a la ligne suivante
+			    if(ligne.s == NULL)
+			    {
+				j = j + 1;
+				ligne = *toutes_les_lignes[j];	
+			    }
+			
+		    }
+		    // si boolean == FALSE c'est qu'on a pas trouvé de station avec la meme  id
+		    if(boolean == FALSE )
+		    {
+			ligne2.s->id = id;	
+			id++;
+		    }
+		    //station suivante
+		    ligne2 = *ligne2.next;
 		}
-		else
+		else 
 		{
-		    puts("Nom de station non valide!");
-		    return 0;		    
+		    i++;
+		    ligne2 = *toutes_les_lignes[i];	
 		}
-	   }
-	    return 1;
+	    }
 	}
 	
-	char* clean(char* nom)
-	{
-	    int i=0, j=0;
-	    printf("%d\n", j);
-	    while(nom[i] != '\0')
+	int get_id(char* nom_station, liste_pStations_t toutes_les_stations)
+	{    
+	    liste_pStations_t stations = toutes_les_stations;
+	    char* pointeur;
+	    int choix = -1;
+	    if(stations.s == NULL)
 	    {
-		puts("ok");
-		puts(nom);
-		if((nom[i] >= 'a') && (nom[i] <= 'z'))
-		{
-			puts("fail");
-			//nom[i] = toupper(nom[i]);
-		}
-		i++;
+		puts("Erreur: liste des stations inexistante");
+		return -1;
 	    }
-	    puts("ok2");
-	    i = 0;
-	    while(nom[i] != '\0')
+	    while(stations.s != NULL)
 	    {
-			if('A' <= nom[i] && nom[i] <= 'Z')
-			{
-			    nom[j] = nom[i];
-			    j = j + 1;
-			}
-			i = i +1;
-	   }
-	   nom[j] = '\0';
+		if(strcmp(stations.s->nom, nom_station) == 0)
+		    return stations.s->id;
+		else
+		    stations = *stations.next;
+	    }
+	    puts("La station n'a pas été trouvée");
+	    stations = toutes_les_stations;
+	    
+	    while(stations.s != NULL)
+	    {
+		pointeur = strstr(stations.s->nom, nom_station);
+		if(pointeur != NULL)
+		{
+		    printf("Tapez %d pour %s\n", stations.s->id, stations.s->nom);
+		    choix = 1;
+		    stations = *stations.next;
+		}
+		else
+		    stations = *stations.next;
+	    }
+	    if(choix != 0)
+	    {
+		scanf("%d", &choix);
+		purger ();
+	    }
+	    return choix;
+	}
+	
+	char* get_nom_station(int id, liste_pStations_t toutes_les_stations)
+	{    
+	    liste_pStations_t stations = toutes_les_stations;
+	    
+	    if(stations.s == NULL)
+	    {
+		puts("Erreur: liste des stations inexistante");
+		return NULL;
+	    }
+	    while(stations.s != NULL)
+	    {
+		if(id == stations.s->id )
+		    return stations.s->nom;
+		else
+		    stations = *stations.next;
+	    }
+	   
+	    puts("La station n'a pas été trouvé");
+	    return NULL;
+	}
+	
+	int id_proche(int depart, int arrivee, liste_pStations_t ligne, int** distance)
+	{
+	    while(ligne.s != NULL)
+	    {
+		if((distance[depart][ligne.s->id] + distance[ligne.s->id][arrivee]) == (distance[depart][arrivee]) && (ligne.s->id != depart))
+		{
+		    depart = ligne.s->id;
+		}
+		ligne = *ligne.next;
+	    }
+	    return depart;
+	}
+		
+	int get_num_ligne(int i)
+	{
+	    switch(i)
+	    {
+		case 0:
+		    return 1;
+		case 1:
+		    return 2;
+		case 2:
+		    return 3;
+		case 3:
+		    return 4;
+		case 4:
+		    return 5;
+		case 5:
+		    return 6;
+		case 6:
+		    return 7;
+		case 7:
+		    return 7;
+		case 8:
+		    return 8;
+		case 9:
+		    return 9;
+		case 10:
+		    return 10;
+		case 11:
+		    return 10;
+		case 12:
+		    return 11;
+		case 13:
+		    return 12;
+		case 14:
+		    return 13;
+		case 15:
+		    return 13;
+		case 16:
+		    return 14;
+		default :
+		    return 0;
+	    }
+	}
 
-	    return nom;
+	int choix_num_ligne(int i)
+	{
+	    switch(i)
+	    {		
+		case 1:
+		    return 0; 
+		case 2:
+		    return 1;
+		case 3:
+		    return 2;
+		case 4:
+		    return 3;
+		case 5:
+		    return 4;
+		case 6:
+		    return 5;
+		case 7: // devrait retourner 6 puis 7
+		    return -1;
+		case 8:
+		    return 8;
+		case 9:
+		    return 9;
+		case 10: // devrait retourner 10 puis 11
+		    return -1;
+		case 11:
+		    return 12;
+		case 12:
+		    return 13;
+		case 13: // devrait retourner 14 puis 15
+		    return -1;
+		case 14:
+		    return 16;
+		default :
+		    return -1;
+	    }
+	}
+	
+	int get_choix(int choix)
+	{
+	    scanf("%d", &choix);
+	    while(choix < 1 || choix > 14)
+		{
+		    puts("Mauvaise ligne! Il y a 14 lignes");
+		    scanf("%d", &choix);
+		}
+		return choix;
 	}

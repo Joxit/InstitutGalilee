@@ -4,14 +4,14 @@
 
 #all: projet
 projet: projet_asdl.o menu.o main.o
-	gcc projet_asdl.o menu.o main.o -o projet -Wall
+	gcc projet_asdl.o menu.o main.o -o projet -Wall -lm
 
 #_______________________________
 # modèle
 #projet_asdl.h: 
 #projet_asdl.c: projet_asdl.h
 projet_asdl.o: projet_asdl.c
-	gcc -c projet_asdl.c -o projet_asdl.o -Wall
+	gcc -c projet_asdl.c -o projet_asdl.o -Wall -lm
 	 
 #menu.c: projet_asdl.h
 menu.o: main.c
