@@ -40,6 +40,7 @@ liste_pStations_t* ajout_ligne(int numero_ligne, liste_pStations_t* ligne, FILE*
 	}
 	*ligne = *ligne->next;
 	
+	free(nom_station);
 	return ligne;
 }
 
@@ -382,8 +383,8 @@ void set_distance(liste_pStations_t* toutes_les_lignes[], int** voisin, int** di
 {
 	double START, END;
 	START = temps_CPU();
+	puts("\tCreation des matrices");
 	int i,j, k;
-	FILE* adt = fopen("voisin2.txt", "w");
 	for(i = 0; i < 300; i++)
 	{
 		for(j = 0; j < 150; j++)
@@ -405,24 +406,7 @@ void set_distance(liste_pStations_t* toutes_les_lignes[], int** voisin, int** di
 		voisin[i][i] = -1;
 		distance[i][i] = 0;
 	}
-	/*for(i = 0; i < 300; i++){
-		for(j = 0; j < 300; j++){
-			if((voisin[i][j] = est_voisin(i,j,toutes_les_lignes)) > 0)
-				distance[i][j] = voisin[i][j];
-			else
-				if(i !=j)
-					distance[i][j] = 1000;
-		}
-	}*/
 	est_voisin(i,j,toutes_les_lignes, voisin, distance);
-	for(i = 0; i < 300; i++){
-		for(j = 0; j < 300; j++){
-			fprintf(adt, "%d ", voisin[i][j]);
-		}
-		fprintf(adt, "\n");
-	}
-	fclose(adt);
-	adt = fopen("distance.txt", "w");
 	// Premier passage de la boucle distance
 	for(i = 0; i < 300; i++){
 		for(j = 0; j < 300; j++){
@@ -445,13 +429,6 @@ void set_distance(liste_pStations_t* toutes_les_lignes[], int** voisin, int** di
 			}
 		}
 	}
-	for(i = 0; i < 300; i++){
-		for(j = 0; j < 300; j++){
-			fprintf(adt, "%d ", distance[i][j]);
-		}
-		fprintf(adt, "\n");
-	}
-	fclose(adt);
 	END  = temps_CPU();
 	printf("\tTemps de creation des matrices : %.4f s\n", END-START);
 }

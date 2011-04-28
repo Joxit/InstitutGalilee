@@ -64,6 +64,7 @@ void Menu1(liste_pStations_t** toutes_les_lignes, liste_pStations_t toutes_les_s
 		default :
 			puts("Choix incorrecte!");
 	}
+	free(reponse);
 	Menu1(toutes_les_lignes, toutes_les_stations, voisin, distance);
 }
 
@@ -101,7 +102,9 @@ void Menu2(liste_pStations_t** toutes_les_lignes, liste_pStations_t toutes_les_s
 			Info_Station(toutes_les_lignes, toutes_les_stations);
 			break;
 		case 5:
+			puts("Sauvegarde des changements en cours");
 			set_distance(toutes_les_lignes, voisin, distance);
+			puts("Sauvegarde terminee, passez une bonne journee");
 			break;
 		case 6:
 			return ;	    
@@ -552,6 +555,7 @@ void Action_Station(liste_pStations_t** toutes_les_lignes, liste_pStations_t tou
 		default :
 			puts("Choix incorrecte!");
 	}
+	free(nom_station);
 	Action_Station(toutes_les_lignes, toutes_les_stations);
 }
 

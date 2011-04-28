@@ -27,7 +27,7 @@ ______________________________________________________________________________ *
 			// à la recherche de la station qui le moins de stations jusqu'à l'arrivee
 			// en étant évidement différente de depart 
 			// la formule etant basé sur la regle de l'inegalité triangulaire de distance[][]
-			if((distance[depart][ligne.s->id] + distance[ligne.s->id][arrivee]) == (distance[depart][arrivee]) && (ligne.s->id != depart) && (is_open(ligne)))
+			if((distance[depart][ligne.s->id] + distance[ligne.s->id][arrivee]) == (distance[depart][arrivee]) && (ligne.s->id != depart) && (is_open(ligne) == 1))
 			{
 				depart = ligne.s->id;
 			}
@@ -139,7 +139,7 @@ ______________________________________________________________________________ *
 			gets(nom_station);
 			choix = get_id(nom_station, toutes_les_stations); 
 		}
-	    
+	    free(nom_station);
 		return get_nom_station(choix, toutes_les_stations);
 	}
 		
