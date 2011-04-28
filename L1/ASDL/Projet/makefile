@@ -17,16 +17,13 @@ actions.o: actions.c
 infos.o: infos.c
 	gcc -c infos.c -o infos.o -Wall -lm
 
-	 
-#menu.c: projet_asdl.h
-menu.o: main.c
+menu.o: menu.c
 	gcc -c menu.c -o menu.o -Wall
 
 #main.c: projet_asdl.h
 main.o: main.c
 	gcc -c main.c -o main.o -Wall
 
-	
 	
 # nettoyage
 clean: 

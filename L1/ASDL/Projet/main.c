@@ -2,7 +2,7 @@
 	Projet A.S.D.L par MAGLOIRE Jones 11000369 et DELCOURT Rémi 11002398
 	Lignes RATP de paris
 	
-	Vendredi 1 Avril 2011	
+	Mardi 19 Avril 2011	
 	
 	pour plus d'information sur les fonctions voir projet_adsl.h
 ______________________________________________________________________________ */
@@ -16,13 +16,13 @@ ______________________________________________________________________________ *
 	#include <time.h>
 	#include "projet_asdl.h"
 
-double temps_CPU()
+/*double temps_CPU()
 {
 	struct rusage usage;
 
 	getrusage(RUSAGE_SELF, &usage);
 	return usage.ru_utime.tv_sec + (usage.ru_utime.tv_usec / 1000000.0);
-}
+}*/
 
 /* Fonction principale */
 
@@ -84,21 +84,34 @@ int main(int argc, char** argv)
 		    distance[i][j] = 1000;
 	}
     }
-    
+    // Premier passage de la boucle distance
     for(i = 0; i < 300; i++){
    	for(j = 0; j < 300; j++){
 	    for(k = 0; k < 300; k++){
 		if(distance[i][k] + distance[k][j] < distance[i][j]){
 		    distance[i][j] = distance[i][k] + distance[k][j];
+		    distance[j][i] = distance[i][k] + distance[k][j];
+		}
+	    }
+	}
+    }
+    // Deuxièmme passage pour les élements de fin oublié
+     for(i = 299; i >= 0; i--){
+   	for(j = 299; j >= 0; j--){
+	    for(k = 299; k >= 0; k--){
+		if(distance[i][k] + distance[k][j] < distance[i][j]){
+		    distance[i][j] = distance[i][k] + distance[k][j];
+		    distance[j][i] = distance[i][k] + distance[k][j];
 		}
 	    }
 	}
     }
     
     END = temps_CPU();
-    printf("\tCPU time : %.4f s\n", END-START);
+    printf("\tTemps de lancement : %.4f s\n", END-START);
+    
     // Affichage du programme
-    Menu1(toutes_les_lignes,  *toutes_les_stations, voisin, distance);
+    Menu1(toutes_les_lignes,  *toutes_les_stations, distance);
     
     return EXIT_SUCCESS;
 }

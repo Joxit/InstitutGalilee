@@ -1,8 +1,11 @@
 /* ______________________________________________________________________________
 	Projet A.S.D.L par MAGLOIRE Jones 11000369 et DELCOURT Rémi 11002398
 	Lignes RATP de paris
-    
- 	Vendredi 1 Avril 2011	
+	
+	Ce fichier contient toutes les fonctions nécessaires aux 
+	menux utilisateur et agent RATP
+	
+	Dernière modification : Mardi 19 Avril 2011		
 	
 	pour plus d'information sur les fonctions voir projet_adsl.h
 ______________________________________________________________________________ */
@@ -11,7 +14,8 @@ ______________________________________________________________________________ *
 	#include <string.h>
 	#include "projet_asdl.h"
 
-void Menu1(liste_pStations_t** toutes_les_lignes, liste_pStations_t toutes_les_stations, int** voisin, int** distance)
+// Menu principal
+void Menu1(liste_pStations_t** toutes_les_lignes, liste_pStations_t toutes_les_stations, int** distance)
 {
 	    int  choix = 0, choix2=0;
 	char* mot_de_passe = malloc(40*sizeof(char*));
@@ -20,7 +24,7 @@ void Menu1(liste_pStations_t** toutes_les_lignes, liste_pStations_t toutes_les_s
 	char* depart = malloc(100*sizeof(char*));
 	char* arriver = malloc(100*sizeof(char*));
 		puts("_____________________________________________________________");
-		puts("|                       Itineraire RATP                      |");
+		puts("|                   \033[35mBienvenue chez la RATP\033[0m                   |");
 		puts("|                                                            |");
 		puts("|     1) Itineraire                                          |");
 		puts("|     2) Infos Lignes                                        |");
@@ -44,7 +48,7 @@ void Menu1(liste_pStations_t** toutes_les_lignes, liste_pStations_t toutes_les_s
 				arriver = get_choix_station( choix2, toutes_les_stations);
 				choix2 = get_id(arriver, toutes_les_stations);
 				
-				recherche_intineraires(choix, choix2, voisin, distance, toutes_les_lignes, toutes_les_stations);
+				recherche_intineraires(choix, choix2, distance, toutes_les_lignes, toutes_les_stations);
 				break;
 		    case 2:
 				Info_Ligne(toutes_les_lignes, toutes_les_stations);
@@ -67,15 +71,16 @@ void Menu1(liste_pStations_t** toutes_les_lignes, liste_pStations_t toutes_les_s
 	    default :
 		puts("Choix incorrecte!");
 	    }
-	Menu1(toutes_les_lignes, toutes_les_stations, voisin, distance);
+	Menu1(toutes_les_lignes, toutes_les_stations, distance);
 }
 
+//Menu de l'agent RATP
 void Menu2(liste_pStations_t** toutes_les_lignes, liste_pStations_t toutes_les_stations)
 {
 	int choix = 0;
 	
 		puts("_____________________________________________________________");
-		puts("|            Fonction Avancées d'Agent RATP                  |");
+		puts("|            \033[34mFonction Avancees d'Agent RATP\033[0m                  |");
 		puts("|                                                            |");
 		puts("|     1) Actions sur Lignes                                  |");
 		puts("|     2) Actions sur Stations                                |");		
@@ -108,12 +113,13 @@ void Menu2(liste_pStations_t** toutes_les_lignes, liste_pStations_t toutes_les_s
 	Menu2(toutes_les_lignes, toutes_les_stations);
 }
 
+// Sous menu d'information sur les lignes
 void Info_Ligne(liste_pStations_t** toutes_les_lignes, liste_pStations_t toutes_les_stations)
 {
     int choix = 0;
 	puts("Quelles sont les Informations que vous voulez?");
 	puts("\t 1) Toutes les stations dans la ligne");
-	puts("\t 2) Ligne ouverte ou fermée");
+	puts("\t 2) Ligne ouverte ou fermee");
 	puts("\t 3) Toutes les lignes de la R.A.T.P");
 	puts("\t 4) Retour");
 	scanf("%d", &choix);
@@ -121,8 +127,10 @@ void Info_Ligne(liste_pStations_t** toutes_les_lignes, liste_pStations_t toutes_
 	switch(choix)
 	{
 	   case 1: 
-		printf("Quel ligne voulez vous voir? 1-14 : ");
+		printf("Quelle ligne voulez vous voir? 1-14 : ");
 		choix = get_choix(choix);
+		
+		// Vérification d'un cas complexe avec les lignes à plusieurs branches
 		switch(choix)
 		{
 		    case 7:
@@ -149,23 +157,25 @@ void Info_Ligne(liste_pStations_t** toutes_les_lignes, liste_pStations_t toutes_
 		}
 		return ;
 	    case 2:
-		printf("Quel ligne voulez vous voir? 1-14 : ");		
+		printf("Quelle ligne voulez vous voir? 1-14 : ");		
 		choix = get_choix(choix);		
 		printf("La ligne %d est ", choix);
+		
+		// Vérification d'un cas complexe avec les lignes à plusieurs branches
 		switch(choix)
 		{
 		    case 7:
 			if(ligne_ouverte( *toutes_les_lignes[6]))
 			    printf("ouverte ");
 			else
-			    printf("fermée ");
+			    printf("fermee ");
 			printf("directon Villejuif et ");
 			
 			
 			if(ligne_ouverte( *toutes_les_lignes[7]))
 			    printf("ouverte ");
 			else
-			    printf("fermée ");
+			    printf("fermee ");
 			puts("directon Ivry");
 			return;
 			
@@ -173,13 +183,13 @@ void Info_Ligne(liste_pStations_t** toutes_les_lignes, liste_pStations_t toutes_
 			if(ligne_ouverte( *toutes_les_lignes[10]))
 			    printf("ouverte ");
 			else
-			    printf("fermée ");
+			    printf("fermee ");
 			printf("directon Boulogne et ");
 			
 			if(ligne_ouverte( *toutes_les_lignes[11]))
 			    printf("ouverte ");
 			else
-			    printf("fermée ");
+			    printf("fermee ");
 			puts("directon Gare d'Austerlitz");
 			return;
 			
@@ -187,13 +197,13 @@ void Info_Ligne(liste_pStations_t** toutes_les_lignes, liste_pStations_t toutes_
 			if(ligne_ouverte( *toutes_les_lignes[14]))
 			    printf("ouverte ");
 			else
-			    printf("fermée ");
+			    printf("fermee ");
 			printf("directon Saint Denis et ");
 			
 			if(ligne_ouverte( *toutes_les_lignes[15]))
 			    printf("ouverte ");
 			else
-			    printf("fermée ");
+			    printf("fermee ");
 			puts("directon Gennevilliers");
 			return;
 			
@@ -201,7 +211,7 @@ void Info_Ligne(liste_pStations_t** toutes_les_lignes, liste_pStations_t toutes_
 			if(ligne_ouverte( *toutes_les_lignes[choix_num_ligne(choix)]))
 			    puts("ouverte");
 			else
-			    puts("fermée");
+			    puts("fermee");
 			return;
 		}
 	    case 3: 
@@ -214,25 +224,27 @@ void Info_Ligne(liste_pStations_t** toutes_les_lignes, liste_pStations_t toutes_
 	}
 		Info_Ligne(toutes_les_lignes, toutes_les_stations);
 }
+
+// Sous menu d'information sur les stations
 void Info_Station(liste_pStations_t** toutes_les_lignes, liste_pStations_t toutes_les_stations)
 {
 	int choix = 0;
 	char* nom_station = (char*)malloc(100*sizeof(char));
 	puts("Quelles sont les Informations que vous voulez?");
 	puts("\t 1) Toutes les lignes dans la station");
-	puts("\t 2) Station ouverte ou fermée");
+	puts("\t 2) Station ouverte ou fermee");
 	puts("\t 3) Retour");
 	scanf("%d", &choix);
 	purger ();
 	switch(choix)
 	{
 	    case 1: 
-			printf("Quel Station voulez vous voir? : ");
+			printf("Quelle Station voulez vous voir? : ");
 			nom_station = get_choix_station( choix, toutes_les_stations);
 			ligne_station(nom_station, toutes_les_lignes);
 			return ;
 	    case 2:
-			printf("Quel Station voulez vous voir? : ");
+			printf("Quelle Station voulez vous voir? : ");
 			nom_station = get_choix_station( choix, toutes_les_stations);
 			get_station_ouverte(nom_station, toutes_les_lignes);
 			return ;
@@ -243,6 +255,8 @@ void Info_Station(liste_pStations_t** toutes_les_lignes, liste_pStations_t toute
 	}
 	Info_Station(toutes_les_lignes, toutes_les_stations);	
 }
+
+// Sous menu d'action sur les lignes
 void Action_Ligne(liste_pStations_t** toutes_les_lignes, liste_pStations_t toutes_les_stations)
 {
     int choix = 0;
@@ -252,22 +266,89 @@ void Action_Ligne(liste_pStations_t** toutes_les_lignes, liste_pStations_t toute
     puts("\t 3) Retour");
 	scanf("%d", &choix);
 	purger ();
+	
 	switch(choix)
 	{
 	    case 1: 
 		printf("Quel est le numero de la ligne que vous voulez fermer ? : ");
 		choix = get_choix(choix);
 		purger ();
-		if(choix_num_ligne(choix) != -1)
-		    toutes_les_lignes[choix_num_ligne(choix)] = fermer_ligne(toutes_les_lignes[choix_num_ligne(choix)]);
-		    return ;
+		
+		// Vérification d'un cas complexe avec les lignes à plusieurs branches
+		switch(choix)
+		{
+		    case 7:
+			printf("Sur quele directon?  %s tapez 1 ", toutes_les_lignes[6]->s->nom);
+			printf("directon  %s tapez 2\n", toutes_les_lignes[7]->s->nom);
+			choix = get_choix(choix);
+			    if(choix == 1)
+				toutes_les_lignes[6] = fermer_ligne(toutes_les_lignes[6]); 
+			    else
+				toutes_les_lignes[7] = fermer_ligne(toutes_les_lignes[7]); 
+			break;
+		    case 10:
+			printf("Sur quele directon? %s tapez 1 ", toutes_les_lignes[10]->s->nom);
+			printf("directon %s tapez 2\n", toutes_les_lignes[11]->s->nom);
+			choix = get_choix(choix);
+			    if(choix == 1)
+				toutes_les_lignes[10] = fermer_ligne(toutes_les_lignes[10]); 
+			    else
+				toutes_les_lignes[11] = fermer_ligne(toutes_les_lignes[11]); 
+			break;
+		    case 13:
+			printf("Sur quele directon? Saint Denis tapez 1 ");
+			puts("directon Gennevilliers tapez 2");
+			choix = get_choix(choix);
+			    if(choix == 1)
+				toutes_les_lignes[14] = fermer_ligne(toutes_les_lignes[14]); 
+			    else
+				toutes_les_lignes[15] = fermer_ligne(toutes_les_lignes[15]); 
+			break;
+		    default :
+			toutes_les_lignes[choix_num_ligne(choix)] = fermer_ligne(toutes_les_lignes[choix_num_ligne(choix)]); 
+			break;
+		}
+		 return ;
 	    case 2:
 		printf("Quel est le numero de la ligne que vous voulez ouvrir ? : ");
 		choix = get_choix(choix);
 		purger ();
-		if(choix_num_ligne(choix) != -1)
-		   toutes_les_lignes[choix_num_ligne(choix)] = ouvrir_ligne(toutes_les_lignes[choix_num_ligne(choix)]); 
-		    return ;
+		
+		// Vérification d'un cas complexe avec les lignes à plusieurs branches
+		switch(choix)
+		{
+		    case 7:
+			printf("Sur quelle directon?  %s tapez 1 ", toutes_les_lignes[6]->s->nom);
+			printf("directon  %s tapez 2\n", toutes_les_lignes[7]->s->nom);
+			choix = get_choix(choix);
+			    if(choix == 1)
+				toutes_les_lignes[6] = ouvrir_ligne(toutes_les_lignes[6]); 
+			    else
+				toutes_les_lignes[7] = ouvrir_ligne(toutes_les_lignes[7]); 
+			break;
+		    case 10:
+			printf("Sur quelle directon? %s tapez 1 ", toutes_les_lignes[10]->s->nom);
+			printf("directon %s tapez 2\n", toutes_les_lignes[11]->s->nom);
+			choix = get_choix(choix);
+			    if(choix == 1)
+				toutes_les_lignes[10] = ouvrir_ligne(toutes_les_lignes[10]); 
+			    else
+				toutes_les_lignes[11] = ouvrir_ligne(toutes_les_lignes[11]); 
+			break;
+		    case 13:
+			printf("Sur quelle directon? Saint Denis tapez 1 ");
+			puts("directon Gennevilliers tapez 2");
+			choix = get_choix(choix);
+			    if(choix == 1)
+				toutes_les_lignes[14] = ouvrir_ligne(toutes_les_lignes[14]); 
+			    else
+				toutes_les_lignes[15] = ouvrir_ligne(toutes_les_lignes[15]); 
+			break;
+		    default :
+			toutes_les_lignes[choix_num_ligne(choix)] = ouvrir_ligne(toutes_les_lignes[choix_num_ligne(choix)]); 
+			break;
+		}
+		return ;
 	    case 3: 
 		    return ;
 	    default :
@@ -275,6 +356,8 @@ void Action_Ligne(liste_pStations_t** toutes_les_lignes, liste_pStations_t toute
 	}
 	Action_Ligne(toutes_les_lignes, toutes_les_stations); 
 }
+
+// Sous menu d'action sur les stations
 void Action_Station(liste_pStations_t** toutes_les_lignes, liste_pStations_t toutes_les_stations)
 {
     int choix = 0;
@@ -298,10 +381,12 @@ void Action_Station(liste_pStations_t** toutes_les_lignes, liste_pStations_t tou
 		printf("Quel est le numero de la ligne de %s que vous voulez ajouter ? : ", nom_station);
 		choix = get_choix(choix);
 		purger ();
+		
+		// Vérification d'un cas complexe avec les lignes à plusieurs branches
 		switch(choix)
 		{
 		    case 7:
-			printf("Sur quel directon?  %s tapez 1 ", toutes_les_lignes[6]->s->nom);
+			printf("Sur quelle directon?  %s tapez 1 ", toutes_les_lignes[6]->s->nom);
 			printf("directon  %s tapez 2\n", toutes_les_lignes[7]->s->nom);
 			choix = get_choix(choix);
 			    if(choix == 1)
@@ -310,7 +395,7 @@ void Action_Station(liste_pStations_t** toutes_les_lignes, liste_pStations_t tou
 				toutes_les_lignes[7] = ajout_station(nom_station, toutes_les_lignes[7]); 
 			break;
 		    case 10:
-			printf("Sur quel directon? %s tapez 1 ", toutes_les_lignes[10]->s->nom);
+			printf("Sur quelle directon? %s tapez 1 ", toutes_les_lignes[10]->s->nom);
 			printf("directon %s tapez 2\n", toutes_les_lignes[11]->s->nom);
 			choix = get_choix(choix);
 			    if(choix == 1)
@@ -319,7 +404,7 @@ void Action_Station(liste_pStations_t** toutes_les_lignes, liste_pStations_t tou
 				toutes_les_lignes[11] = ajout_station(nom_station, toutes_les_lignes[11]); 
 			break;
 		    case 13:
-			printf("Sur quel directon? Saint Denis tapez 1 ");
+			printf("Sur quelle directon? Saint Denis tapez 1 ");
 			puts("directon Gennevilliers tapez 2");
 			choix = get_choix(choix);
 			    if(choix == 1)
@@ -338,10 +423,12 @@ void Action_Station(liste_pStations_t** toutes_les_lignes, liste_pStations_t tou
 		printf("Quel est le numero de la ligne de %s que vous voulez supprimer ? : ", nom_station);
 		choix = get_choix(choix);
 		purger ();
+		
+		// Vérification d'un cas complexe avec les lignes à plusieurs branches
 		switch(choix)
 		{
 		    case 7:
-			printf("Sur quel directon?  %s tapez 1 ", toutes_les_lignes[6]->s->nom);
+			printf("Sur quelle directon?  %s tapez 1 ", toutes_les_lignes[6]->s->nom);
 			printf("directon  %s tapez 2\n", toutes_les_lignes[7]->s->nom);
 			choix = get_choix(choix);
 			    if(choix == 1)
@@ -350,7 +437,7 @@ void Action_Station(liste_pStations_t** toutes_les_lignes, liste_pStations_t tou
 				toutes_les_lignes[7] = retirer_station(nom_station, toutes_les_lignes[7]); 
 			break;
 		    case 10:
-			printf("Sur quel directon? %s tapez 1 ", toutes_les_lignes[10]->s->nom);
+			printf("Sur quelle directon? %s tapez 1 ", toutes_les_lignes[10]->s->nom);
 			printf("directon %s tapez 2\n", toutes_les_lignes[11]->s->nom);
 			choix = get_choix(choix);
 			    if(choix == 1)
@@ -359,7 +446,7 @@ void Action_Station(liste_pStations_t** toutes_les_lignes, liste_pStations_t tou
 				toutes_les_lignes[11] = retirer_station(nom_station, toutes_les_lignes[11]); 
 			break;
 		    case 13:
-			printf("Sur quel directon? Saint Denis tapez 1 ");
+			printf("Sur quelle directon? Saint Denis tapez 1 ");
 			puts("directon Gennevilliers tapez 2");
 			choix = get_choix(choix);
 			    if(choix == 1)
@@ -378,10 +465,12 @@ void Action_Station(liste_pStations_t** toutes_les_lignes, liste_pStations_t tou
 		printf("Quel est le numero de la ligne de %s que vous voulez Ouvrir ? : ", nom_station);
 		choix = get_choix(choix);
 		purger ();
+		
+		// Vérification d'un cas complexe avec les lignes à plusieurs branches
 		switch(choix)
 		{
 		    case 7:
-			printf("Sur quel directon?  %s tapez 1 ", toutes_les_lignes[6]->s->nom);
+			printf("Sur quelle directon?  %s tapez 1 ", toutes_les_lignes[6]->s->nom);
 			printf("directon  %s tapez 2\n", toutes_les_lignes[7]->s->nom);
 			choix = get_choix(choix);
 			    if(choix == 1)
@@ -390,7 +479,7 @@ void Action_Station(liste_pStations_t** toutes_les_lignes, liste_pStations_t tou
 				ouvrir_station(nom_station, toutes_les_lignes[7]); 
 			break;
 		    case 10:
-			printf("Sur quel directon? %s tapez 1 ", toutes_les_lignes[10]->s->nom);
+			printf("Sur quelle directon? %s tapez 1 ", toutes_les_lignes[10]->s->nom);
 			printf("directon %s tapez 2\n", toutes_les_lignes[11]->s->nom);
 			choix = get_choix(choix);
 			    if(choix == 1)
@@ -399,7 +488,7 @@ void Action_Station(liste_pStations_t** toutes_les_lignes, liste_pStations_t tou
 				ouvrir_station(nom_station, toutes_les_lignes[11]); 
 			break;
 		    case 13:
-			printf("Sur quel directon? Saint Denis tapez 1 ");
+			printf("Sur quelle directon? Saint Denis tapez 1 ");
 			puts("directon Gennevilliers tapez 2");
 			choix = get_choix(choix);
 			    if(choix == 1)
@@ -418,10 +507,12 @@ void Action_Station(liste_pStations_t** toutes_les_lignes, liste_pStations_t tou
 		printf("Quel est le numero de la ligne de %s que vous voulez Fermer ? : ", nom_station);
 		choix = get_choix(choix);
 		purger ();
+		
+		// Vérification d'un cas complexe avec les lignes à plusieurs branches
 		switch(choix)
 		{
 		    case 7:
-			printf("Sur quel directon?  %s tapez 1 ", toutes_les_lignes[6]->s->nom);
+			printf("Sur quelle directon?  %s tapez 1 ", toutes_les_lignes[6]->s->nom);
 			printf("directon  %s tapez 2\n", toutes_les_lignes[7]->s->nom);
 			choix = get_choix(choix);
 			    if(choix == 1)
@@ -430,7 +521,7 @@ void Action_Station(liste_pStations_t** toutes_les_lignes, liste_pStations_t tou
 				fermer_station(nom_station, toutes_les_lignes[7]); 
 			break;
 		    case 10:
-			printf("Sur quel directon? %s tapez 1 ", toutes_les_lignes[10]->s->nom);
+			printf("Sur quelle directon? %s tapez 1 ", toutes_les_lignes[10]->s->nom);
 			printf("directon %s tapez 2\n", toutes_les_lignes[11]->s->nom);
 			choix = get_choix(choix);
 			    if(choix == 1)
@@ -439,7 +530,7 @@ void Action_Station(liste_pStations_t** toutes_les_lignes, liste_pStations_t tou
 				fermer_station(nom_station, toutes_les_lignes[11]); 
 			break;
 		    case 13:
-			printf("Sur quel directon? Saint Denis tapez 1 ");
+			printf("Sur quelle directon? Saint Denis tapez 1 ");
 			puts("directon Gennevilliers tapez 2");
 			choix = get_choix(choix);
 			    if(choix == 1)
