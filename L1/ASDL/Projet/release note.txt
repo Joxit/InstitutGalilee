@@ -58,6 +58,18 @@
 				- retirer_station_carte : plantait quand il ne trouvait pas de stations
 				- distance[][] : ne donnait pas toutes les distances de toutes les stations
 						doit repasser de la fin jusqu'au début pour compléter le tableau (CPU Time +0.5)
+	Version 1.5 :
+			- est_voisin :
+				- refonte de la fonction voisin, (CPU Time /2) on utilise plus la fonction + les boucles, 
+						la fonction donne directement les voisins à une matrice initialisée, (prend en compte des stations fermées)
+			- Menu2 :
+				- Ajout de l'option "Sauvegarder" après avoir modifier les lignes
+			- Creation  de fonctions :
+				- set_distance dans action.c qui applique les distances et les stations voisines aux matrices voisin[][] et distance[][]
+				- is_open renvoie TRUE si la station est ouverte, FALSE sinon -1 si elle n'existe pas
+			- Fix ::
+				- Quand l'Agent modifie une station, il peut enregistrer ses changements qui se repercutront sur les itineraires
+				- Reduction des allocations memoire dans les menus, les char* ne sont pas tout le temps necessaires...
 	
 	Jeudi 28 Avril 2011	
 	

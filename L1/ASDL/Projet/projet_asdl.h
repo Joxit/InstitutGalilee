@@ -42,10 +42,14 @@ ______________________________________________________________________________ *
 	liste_pStations_t* ajout_ligne(int numero_ligne, liste_pStations_t* toutes_les_lignes,FILE* adt);
 	// Création de la liste de totues les stations
 	liste_pStations_t*  liste_station(liste_pStations_t* toutes_les_stations, liste_pStations_t** toutes_les_lignes); 
-	// Création de voisin[][] : fonction qui renvoie TRUE si les stations son voisines FALSE sinon et -1 si c'est les memes id
-	int est_voisin(int id1, int id2, liste_pStations_t** toutes_les_lignes);
+	
+	void est_voisin(int id1, int id2, liste_pStations_t** toutes_les_lignes,int** voisin,int**  distance);
+	
 	// Affecte à toutes les stations de toutes_les_lignes leurs id
 	void set_id(liste_pStations_t** toutes_les_lignes);
+	
+	void set_distance(liste_pStations_t* toutes_les_lignes[], int** voisin, int** distance);
+	
 	
 	    /* ********************* *
 	     * Fonctionalitees pour  *
@@ -132,9 +136,9 @@ ______________________________________________________________________________ *
 	    * ************************** */
 	    
 	// demande le choix de la ligne a l'utilisateur
-	int get_choix(int choix);
+	int get_choix();
 	// Demande le choix du nom de la station a l'utilisateur
-	char* get_choix_station(int choix, liste_pStations_t toutes_les_stations);
+	char* get_choix_station(liste_pStations_t toutes_les_stations);
 	
 	    /* ***************************** *
 	    * Fonctions de retranscription   *
@@ -146,7 +150,7 @@ ______________________________________________________________________________ *
 	// Prend en argument le vrais numero_ligne et renvoie la valeur pour le tableau toutes_les_lignes 
 	int choix_num_ligne(int i);
 	
-
+	int is_open(liste_pStations_t ligne);
 	
 	/* *************************** *
 	 * DEFINITIONS DANS : menu.c   *
@@ -155,8 +159,8 @@ ______________________________________________________________________________ *
 	 * *************************** */ 
 	
 	// Menu principal et de l'agent R.A.T.P
-	void Menu1(liste_pStations_t** toutes_les_lignes, liste_pStations_t toutes_les_stations, int**);
-	void Menu2(liste_pStations_t** toutes_les_lignes, liste_pStations_t toutes_les_stations);
+	void Menu1(liste_pStations_t** toutes_les_lignes, liste_pStations_t toutes_les_stations, int** voisin, int** distance);
+	void Menu2(liste_pStations_t** toutes_les_lignes, liste_pStations_t toutes_les_stations, int** voisin, int** distance);
 	// Sous-Menus Info et Action (R.A.T.P) pour les lignes et stations
 	void Info_Ligne(liste_pStations_t** toutes_les_lignes, liste_pStations_t toutes_les_stations);
 	void Info_Station(liste_pStations_t** toutes_les_lignes, liste_pStations_t toutes_les_stations);
