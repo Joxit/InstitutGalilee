@@ -17,14 +17,31 @@ void construire(ctr_s* ctr)
 {
 	int i,j;
 	char *pch, Tour_Joueur[40];
-	/* Creation des noms des joueurs */
-	strcpy(ctr->nom_joueur1, "Joueur 1");
-	strcpy(ctr->nom_joueur2, "Joueur 2");
+	FILE* adt;
+	if((adt = fopen("users.dat", "r")) == NULL)
+	{
+		perror("Fichier non ouvert");
+		exit (-1);
+	}
+	/* Creation des noms des joueurs */	
+	fseek(adt, 0, SEEK_SET);
+	fscanf(adt, "%s", JOUEUR_1->nom);
+	fscanf(adt, "%d", &JOUEUR_1->score);
+	if(JOUEUR_1->nom == NULL)
+	{
+		strcpy(JOUEUR_1->nom, "Joueur_1");
+		JOUEUR_1->score = 0;
+	}
+		
+	fscanf(adt, "%s", JOUEUR_2->nom);
+	fscanf(adt, "%d", &JOUEUR_2->score);
+	if(JOUEUR_2->nom == NULL)
+	{
+		strcpy(JOUEUR_2->nom, "Joueur_2");
+		JOUEUR_2->score = 0;
+	}
 	
-	/* Initialisation des Scores */
-	ctr->score_joueur1 = 0;
-	ctr->score_joueur2 = 0;
-	
+	fclose(adt);
 	/* CREATION DE LA FENETRE PRINCIPALE */
 	/* Initialisation  Fenetre */ 
 	if( (ENV->Fenetre = malloc(20*sizeof(GtkWindow))) == NULL)	
@@ -98,8 +115,9 @@ void construire(ctr_s* ctr)
 	
 	/* Mise en place du Label Tour_Joueur */
 	strcpy(Tour_Joueur, "Au tour de : ");
+	/* on utilise pch pour pointer la fin de la phrase */
 	pch = &Tour_Joueur[ strlen(Tour_Joueur) ];
-	strcpy(pch, ctr->nom_joueur1);
+	strcpy(pch, JOUEUR_1->nom);
 	ENV->Label = gtk_label_new (Tour_Joueur);
 	
 	/* MENU DE LA FENETRE PRINCIPALE */
@@ -124,18 +142,28 @@ void construire(ctr_s* ctr)
 	ENV->Option = gtk_menu_item_new_with_label("Option");
 	gtk_menu_shell_append(GTK_MENU_SHELL( ENV->Partie), ENV->Option);
 	
+	/* creation de l'objet option attaché a Partie*/
+	ENV->Liste = gtk_menu_item_new_with_label("Top 5");
+	gtk_menu_shell_append(GTK_MENU_SHELL( ENV->Partie), ENV->Liste);
+	
 	/* creation de l'objet Score attaché a Partie*/
 	ENV->Score = gtk_menu_item_new_with_label("Score");
 	gtk_menu_shell_append(GTK_MENU_SHELL( ENV->Partie), ENV->Score);
+	
+	/* creation de l'objet Save attaché a Partie*/
+	ENV->Save = gtk_menu_item_new_with_label("Sauvegarder score");
+	gtk_menu_shell_append(GTK_MENU_SHELL( ENV->Partie), ENV->Save);
 	
 	/* creation de l'objet Quitter attaché a Partie*/
 	ENV->Quitter = gtk_menu_item_new_with_label("Quitter");
 	gtk_menu_shell_append(GTK_MENU_SHELL( ENV->Partie), ENV->Quitter);
 	
-	/* Connection des objets a leurs fonctions */
+	/* Connection des objets a leurs fonctions toutes definies dans menu.c sauf Quitter*/
 	gtk_signal_connect(GTK_OBJECT(ENV->New), "activate", G_CALLBACK(nouvelle_partie), ctr);
 	gtk_signal_connect(GTK_OBJECT(ENV->Option), "activate", G_CALLBACK(set_option), ctr);
+	gtk_signal_connect(GTK_OBJECT(ENV->Liste), "activate", G_CALLBACK(Top_5), ctr);
 	gtk_signal_connect(GTK_OBJECT(ENV->Score), "activate", G_CALLBACK(get_score), ctr);
+	gtk_signal_connect(GTK_OBJECT(ENV->Save), "activate", G_CALLBACK(sauvegarder_score), ctr);
 	gtk_signal_connect(GTK_OBJECT(ENV->Quitter), "activate", G_CALLBACK(confirmation), ctr);
 	
 	
@@ -169,11 +197,11 @@ void gtk_jouer_colonne(GtkWidget* button, ctr_s *ctr)
 	for(colonne = 0; colonne < NB_COL_JEU_DEFAULT; colonne++)
 		if(button == ENV->Bouton[colonne])
 			break;
-	
-	
-	
-	/* On joue le coup */
-	ligne = partie_jouer_colonne(PARTIE, colonne);
+		
+		
+		
+		/* On joue le coup */
+		ligne = partie_jouer_colonne(PARTIE, colonne);
 	
 	/* On remplace l'image de la case joue en fonction du tour actuel joueur */
 	if(partie_get_tourjoueur(PARTIE) == CASE_ETAT_JOUEUR_1)
@@ -196,9 +224,9 @@ void gtk_jouer_colonne(GtkWidget* button, ctr_s *ctr)
 		pch = &Tour_Joueur[ strlen(Tour_Joueur) ];
 		
 		if(partie_get_tourjoueur(PARTIE) == CASE_ETAT_JOUEUR_1)
-			strcpy(pch, ctr->nom_joueur1);
+			strcpy(pch, JOUEUR_1->nom);
 		else
-			strcpy(pch, ctr->nom_joueur2);
+			strcpy(pch, JOUEUR_2->nom);
 		gtk_label_set_text (GTK_LABEL(ENV->Label), Tour_Joueur);
 	}
 	
@@ -230,34 +258,34 @@ void continuer(int res, ctr_s *ctr)
 	ENV->dBout[0] = gtk_dialog_add_button(GTK_DIALOG(ENV->Dialog), GTK_STOCK_YES, GTK_RESPONSE_YES);
 	ENV->dBout[1] = gtk_dialog_add_button(GTK_DIALOG(ENV->Dialog), GTK_STOCK_NO, GTK_RESPONSE_CLOSE);
 	
-	/* match nul*/
-	if(res == 0)
-		ENV->Question = gtk_label_new ("Match nul!\nVoulez-vous continuer?\0");
 	
 	/* joueur 1 a gagne */
 	if(res == 1) 
 	{
 		/* Incrementation du score du joueur */
-		ctr->score_joueur1 = ctr->score_joueur1 + 1;
+		JOUEUR_1->score = JOUEUR_1->score + 1;
 		/* On copie le nom du joueur dans la variable pour la question de la boite de Dialog */
-		strcpy(Question, ctr->nom_joueur1);
+		strcpy(Question, JOUEUR_1->nom);
 		/* On pointe la fin du nom du joueur mis dans la question */
-		pch=&Question[strlen(ctr->nom_joueur1)];
+		pch=&Question[strlen(JOUEUR_1->nom)];
 	}
 	
 	/* joueur 2 a gagne */
 	if(res == 2) 
 	{
 		/* Incrementation du score du joueur */
-		ctr->score_joueur2 = ctr->score_joueur2 + 1;
+		JOUEUR_2->score = JOUEUR_2->score + 1;
 		/* On copie le nom du joueur dans la variable pour la question de la boite de Dialog */
-		strcpy(Question, ctr->nom_joueur2);
+		strcpy(Question, JOUEUR_2->nom);
 		/* On pointe la fin du nom du joueur mis dans la question */
-		pch=&Question[strlen(ctr->nom_joueur2)];
+		pch=&Question[strlen(JOUEUR_2->nom)];
 	}
-	
-	/* On copie la fin de la question a l'endroit pointe */
-	strcpy(pch, " a gagne!\n""Voulez-vous continuer?\0");
+	/* match nul*/
+	if(res == 0)
+		strcpy(Question, "\tMatch nul!\nVoulez-vous continuer?\0");
+	else
+		/* Sinon on copie la fin de la question a l'endroit pointe */
+		strcpy(pch, " a gagne!\n""Voulez-vous continuer?\0");
 	/* On met la question dans le label Question */
 	ENV->Question = gtk_label_new (Question);
 	/* On fusionne le Label dans la vBox */
@@ -302,7 +330,7 @@ void reinit(ctr_s* ctr)
 		
 		
 		
-	gtk_window_set_title((GtkWindow*)ENV->Fenetre, "Le jeu du Puissance 4 : partie en cours");
+		gtk_window_set_title((GtkWindow*)ENV->Fenetre, "Le jeu du Puissance 4 : partie en cours");
 	partie_nouvelle_partie(PARTIE);
 	
 	/* reinitialisation du Label de tour */
@@ -310,9 +338,9 @@ void reinit(ctr_s* ctr)
 	pch = &Tour_Joueur[ strlen(Tour_Joueur) ];
 	
 	if(partie_get_tourjoueur(PARTIE) == CASE_ETAT_JOUEUR_1)
-		strcpy(pch, ctr->nom_joueur1);
+		strcpy(pch, JOUEUR_1->nom);
 	else
-		strcpy(pch, ctr->nom_joueur2);
+		strcpy(pch, JOUEUR_2->nom);
 	
 	gtk_label_set_text (GTK_LABEL(ENV->Label), Tour_Joueur);
 	
@@ -321,22 +349,23 @@ void reinit(ctr_s* ctr)
 void confirmation(GtkWidget* fenetre, ctr_s* ctr)
 {
 	gtk_widget_set_sensitive(ENV->Fenetre, FALSE);
-	/* Initialisation de la boite de Dialog */
+	/* Initialisation de la boite de Dialogue */
 	ENV->reponse = GTK_RESPONSE_NONE;
-	ENV->Question = gtk_message_dialog_new(NULL, GTK_DIALOG_MODAL, GTK_MESSAGE_WARNING, GTK_BUTTONS_YES_NO, "Vous etes sur le point de quitter le jeu.\n\tVoulez vous vraiment le faire?");
-	gtk_window_set_title((GtkWindow*)ENV->Question, "Quitter");
+	ENV->Dialog = gtk_message_dialog_new(NULL, GTK_DIALOG_MODAL, GTK_MESSAGE_WARNING, GTK_BUTTONS_YES_NO, "Vous etes sur le point de quitter le jeu.\n\tVoulez vous vraiment le faire?");
+	gtk_window_set_title((GtkWindow*)ENV->Dialog, "Quitter");
 	
 	/* Connection du bouton Destroy pour retourner au jeu */
-	gtk_signal_connect(GTK_OBJECT(ENV->Question), "destroy", G_CALLBACK(afficher_fenetre), ctr);
-		
+	gtk_signal_connect(GTK_OBJECT(ENV->Dialog), "destroy", G_CALLBACK(afficher_fenetre), ctr);
+	
 	/* Boucle d'attente de reponse */
 	while(ENV->reponse == GTK_RESPONSE_NONE)
-		ENV->reponse = gtk_dialog_run(GTK_DIALOG(ENV->Question));
+		ENV->reponse = gtk_dialog_run(GTK_DIALOG(ENV->Dialog));
 	
 	/* Si les joueurs veulent fermer le jeu, on libere la partie */
 	if(ENV->reponse == GTK_RESPONSE_YES)
 	{
-		gtk_widget_destroy(ENV->Question);	
+		gtk_widget_destroy(ENV->Dialog);	
+		sauvegarder_score( fenetre, ctr);
 		partie_free(&PARTIE);
 		free_gtk(ctr);
 	}
@@ -344,190 +373,28 @@ void confirmation(GtkWidget* fenetre, ctr_s* ctr)
 	if(ENV->reponse == GTK_RESPONSE_NO)
 	{
 		gtk_widget_set_sensitive(ENV->Fenetre, TRUE);
-		gtk_widget_destroy(ENV->Question);			
+		gtk_widget_destroy(ENV->Dialog);			
 	}
 }
 
-void set_option(GtkWidget* MenuItem, ctr_s *ctr)
-{
-	
-	gtk_widget_set_sensitive(ENV->Fenetre, FALSE);
-	
-	ENV->Menu = gtk_window_new(GTK_WINDOW_TOPLEVEL);
-	ENV->MenuvBox = gtk_vbox_new(FALSE, 0);
-	ENV->MenuhBox[0] = gtk_hbox_new(TRUE, 0);
-	ENV->MenuhBox[1] = gtk_hbox_new(TRUE, 0);
-	gtk_window_set_position(GTK_WINDOW(ENV->Menu), GTK_WIN_POS_CENTER_ALWAYS);	
-	
-	
-	
-	gtk_window_set_title((GtkWindow*)ENV->Menu, "Option");
-	
-	ENV->MenuLabel[0] = gtk_label_new("Choisissez votre nouveau nom de joueur");
-	
-	/* Affichage du nom du joueur 1 dans le label mise dans MenuhBox */ 
-	ENV->MenuLabel[1] = gtk_label_new(ctr->nom_joueur1);
-	gtk_box_pack_start(GTK_BOX((ENV->MenuhBox[0])), ENV->MenuLabel[1], TRUE, TRUE, 0);
-	/* Creation de la boite de saisie avec 24 lettres max mise dans MenuhBox */ 
-	ENV->MenuEntry[0] = gtk_entry_new_with_max_length(24);
-	gtk_box_pack_start(GTK_BOX((ENV->MenuhBox[0])), ENV->MenuEntry[0], TRUE, TRUE, 0);
-	ENV->dBout[0] = gtk_button_new_with_mnemonic(" Ok ");
-	gtk_box_pack_start(GTK_BOX((ENV->MenuhBox[0])), ENV->dBout[0], FALSE, FALSE, 5);
-	
-	/* Affichage du nom du joueur 2 dans le label mise dans MenuhBox */ 
-	ENV->MenuLabel[2] = gtk_label_new(ctr->nom_joueur2);
-	gtk_box_pack_start(GTK_BOX((ENV->MenuhBox[1])), ENV->MenuLabel[2], TRUE, TRUE, 0);
-	/* Creation de la boite de saisie avec 24 lettres max mise dans MenuhBox */ 
-	ENV->MenuEntry[1] = gtk_entry_new_with_max_length(24);
-	gtk_box_pack_start(GTK_BOX((ENV->MenuhBox[1])), ENV->MenuEntry[1], TRUE, TRUE, 0);
-	ENV->dBout[1] = gtk_button_new_with_mnemonic(" Ok ");
-	gtk_box_pack_start(GTK_BOX((ENV->MenuhBox[1])), ENV->dBout[1], FALSE, FALSE, 5);
-	
-	
-	/* Fusions des Widgets dans la MenuvBox */
-	gtk_box_pack_start(GTK_BOX((ENV->MenuvBox)), ENV->MenuLabel[0], TRUE, TRUE, 10);
-	gtk_box_pack_start(GTK_BOX((ENV->MenuvBox)), ENV->MenuhBox[0], TRUE, TRUE, 10);
-	gtk_box_pack_start(GTK_BOX((ENV->MenuvBox)), ENV->MenuhBox[1], TRUE, TRUE, 10);
-	
-	/* Fusion MenuvBox dans la Fenetre */
-	gtk_container_add(GTK_CONTAINER(ENV->Menu), ENV->MenuvBox);
-	
-	gtk_widget_show_all(ENV->Menu);
-	
-	/* Connection des Boites de saisie avec la fonction changer nom et du bouton Destroy */
-	gtk_signal_connect(GTK_OBJECT(ENV->Menu), "destroy", G_CALLBACK(afficher_fenetre), ctr);
-	gtk_signal_connect(GTK_OBJECT(ENV->MenuEntry[0]), "activate", G_CALLBACK(changer_nom), ctr);
-	gtk_signal_connect(GTK_OBJECT(ENV->MenuEntry[1]), "activate", G_CALLBACK(changer_nom), ctr);
-	gtk_signal_connect(GTK_OBJECT(ENV->dBout[0]), "clicked", G_CALLBACK(changer_nom), ctr);
-	gtk_signal_connect(GTK_OBJECT(ENV->dBout[1]), "clicked", G_CALLBACK(changer_nom), ctr);
-	
-}
-
-void changer_nom(GtkWidget* Item, ctr_s *ctr)
-{
-	const gchar* nom;
-	/* On cherche quel est la boite de saisie activee 
-	 * On met son resultat dans la variable nom
-	 * Puis on copie dans la variable nom_joueur correspondant */
-	if(Item == ENV->MenuEntry[0] || Item == ENV->dBout[0])
-	{
-		nom = gtk_entry_get_text(GTK_ENTRY(ENV->MenuEntry[0]));
-		/* un pseudo superieur a 4 lettre */
-		if(4 < strlen(nom))
-			strcpy(ctr->nom_joueur1, nom);
-	}
-	
-	if(Item == ENV->MenuEntry[1] || Item == ENV->dBout[1])
-	{
-		nom = gtk_entry_get_text(GTK_ENTRY(ENV->MenuEntry[1]));
-		/* un pseudo superieur a 4 lettre */
-		if(4 < strlen(nom))
-			strcpy(ctr->nom_joueur2, nom);
-	}
-	
-	gtk_widget_destroy(ENV->Menu);
-	set_option(ENV->Menu, ctr);
-	
-}
-
-void get_score(GtkWidget* MenuItem, ctr_s *ctr)
-{
-	char score_joueur1[100], score_joueur2[100];
-	
-	gtk_widget_set_sensitive(ENV->Fenetre, FALSE);
-	
-	ENV->Menu = gtk_window_new(GTK_WINDOW_TOPLEVEL);
-	ENV->MenuvBox = gtk_vbox_new(TRUE, 0);
-	ENV->MenuhBox[0] = gtk_hbox_new(TRUE, 0);
-	ENV->MenuhBox[1] = gtk_hbox_new(TRUE, 0);
-	gtk_window_set_position(GTK_WINDOW(ENV->Menu), GTK_WIN_POS_CENTER_ALWAYS);	
-	
-	gtk_window_set_title((GtkWindow*)ENV->Menu, "Score");
-	
-	ENV->MenuLabel[0] = gtk_label_new("Score des matchs :");
-	
-	/* Affichage du nom du joueur 1 et son score a mettre dans son label */ 
-	sprintf(score_joueur1, "%s : \t %d", ctr->nom_joueur1, ctr->score_joueur1);
-	ENV->MenuLabel[1] = gtk_label_new(score_joueur1);
-	/* Fusion du label dans sa box */
-	gtk_box_pack_start(GTK_BOX((ENV->MenuhBox[0])), ENV->MenuLabel[1], TRUE, TRUE, 30);
-	
-	/* Affichage du nom du joueur 2 et son score a mettre dans son label */ 
-	sprintf(score_joueur2, "%s : \t %d", ctr->nom_joueur2, ctr->score_joueur2);
-	ENV->MenuLabel[2] = gtk_label_new(score_joueur2);
-	/* Fusion du label dans sa box */
-	gtk_box_pack_start(GTK_BOX((ENV->MenuhBox[1])), ENV->MenuLabel[2], TRUE, TRUE, 30);
-	
-	
-	/* Fusions des Widgets dans la MenuvBox */
-	gtk_box_pack_start(GTK_BOX((ENV->MenuvBox)), ENV->MenuLabel[0], TRUE, TRUE, 10);
-	gtk_box_pack_start(GTK_BOX((ENV->MenuvBox)), ENV->MenuhBox[0], TRUE, TRUE, 10);
-	gtk_box_pack_start(GTK_BOX((ENV->MenuvBox)), ENV->MenuhBox[1], TRUE, TRUE, 10);
-	
-	/* Fusion MenuvBox dans la Fenetre */
-	gtk_container_add(GTK_CONTAINER(ENV->Menu), ENV->MenuvBox);
-	
-	gtk_widget_show_all(ENV->Menu);
-	
-	/* Connection du bouton destroy a afficher_fenetre */
-	gtk_signal_connect(GTK_OBJECT(ENV->Menu), "destroy", G_CALLBACK(afficher_fenetre), ctr);
-	
-	
-	
-}
-
-void nouvelle_partie(GtkWidget* MenuItem, ctr_s *ctr)
-{
-	
-	gtk_widget_set_sensitive(ENV->Fenetre, FALSE);
-	/* Initialisation de la boite de Dialog */
-	ENV->reponse = GTK_RESPONSE_NONE;
-	ENV->Question = gtk_message_dialog_new(NULL, 
-					       GTK_DIALOG_MODAL, 
-					       GTK_MESSAGE_WARNING, 
-					       GTK_BUTTONS_YES_NO, 
-					       "Vous etes sur le point de commencer une nouvelle partie.\n"
-					       "\t\tVoulez vous vraiment le faire?\n"
-					       "\t\t\t%s : %d points\n"
-					       "\t\t\t%s : %d points",
-					       ctr->nom_joueur1, ctr->score_joueur1,
-					       ctr->nom_joueur2, ctr->score_joueur2 );
-	gtk_window_set_title((GtkWindow*)ENV->Question, "Nouvelle Partie");
-	
-	/* Connection du bouton Destroy pour retourner au jeu */
-	gtk_signal_connect(GTK_OBJECT(ENV->Question), "destroy", G_CALLBACK(afficher_fenetre), ctr);
-		
-	/* Boucle d'attente de reponse */
-	while(ENV->reponse == GTK_RESPONSE_NONE)
-		ENV->reponse = gtk_dialog_run(GTK_DIALOG(ENV->Question));
-	
-	/* Si les joueurs veulent fermer le jeu, on libere la partie */
-	if(ENV->reponse == GTK_RESPONSE_YES)
-	{
-		gtk_widget_destroy(ENV->Question);	
-		partie_free(&PARTIE);
-		free_gtk(ctr);
-	}
-	/* S'ils veulent continuer on ferme la boite */
-	if(ENV->reponse == GTK_RESPONSE_NO)
-	{
-		gtk_widget_set_sensitive(ENV->Fenetre, TRUE);
-		gtk_widget_destroy(ENV->Question);			
-	}
-}
-
-/* Detrui l'Objet et active la Fenetre principale */
+/* Detruit l'Objet et active la Fenetre principale */
 void afficher_fenetre(GtkWidget* Item, ctr_s *ctr)
 {
-	gtk_widget_destroy(Item);
+	if(Item == ENV->dBout[2])
+		gtk_widget_destroy(ENV->Menu);
+	else
+		gtk_widget_destroy(Item);
 	gtk_widget_set_sensitive(ENV->Fenetre, TRUE);
 }
 
+/* Libere l'environnement GTK+ */
 void free_gtk(ctr_s *ctr)
 {
 	
 	free(ENV);
 	free(ctr);
+	free(JOUEUR_1);
+	free(JOUEUR_2);
 	
 	gtk_main_quit();
 }
