@@ -13,7 +13,7 @@
 # include "gtk_puissance4.h"	/* modèle de la chasse au trésor en GTK(constantes symboliques, types, déclaration des fonctions)*/
 # include "partie.h"
 
-void set_option(GtkWidget* MenuItem, ctr_s *ctr)
+void menu_nom(GtkWidget* MenuItem, ctr_s *ctr)
 {
 	
 	gtk_widget_set_sensitive(ENV->Fenetre, FALSE);
@@ -26,7 +26,7 @@ void set_option(GtkWidget* MenuItem, ctr_s *ctr)
 	
 	
 	
-	gtk_window_set_title((GtkWindow*)ENV->Menu, "Option");
+	gtk_window_set_title((GtkWindow*)ENV->Menu, "Changer les pseudo");
 	
 	ENV->MenuLabel[0] = gtk_label_new("Choisissez votre nouveau nom de joueur");
 	
@@ -107,7 +107,7 @@ void changer_nom(GtkWidget* Item, ctr_s *ctr)
 					JOUEUR_1->score = joueur->score;
 					free(joueur);
 					gtk_widget_destroy(ENV->Menu);
-					set_option(ENV->Menu, ctr);
+					menu_nom(ENV->Menu, ctr);
 					/* si on le trouve on sort directement */
 					return;
 				}
@@ -134,7 +134,7 @@ void changer_nom(GtkWidget* Item, ctr_s *ctr)
 					
 					free(joueur);
 					gtk_widget_destroy(ENV->Menu);
-					set_option(ENV->Menu, ctr);
+					menu_nom(ENV->Menu, ctr);
 					/* si on le trouve on sort directement */
 					return;
 				}
@@ -145,7 +145,7 @@ void changer_nom(GtkWidget* Item, ctr_s *ctr)
 	/* on libere la memoire de joueur */
 	free(joueur);
 	gtk_widget_destroy(ENV->Menu);
-	set_option(ENV->Menu, ctr);
+	menu_nom(ENV->Menu, ctr);
 	return;
 	
 }
@@ -394,4 +394,181 @@ void sauvegarder_score(GtkWidget* Item, ctr_s* ctr)
 	/* on supprime l'ancier fichier et renome le nouveau */
 	remove("users.dat");
 	rename("tmp", "users.dat");
+}
+
+/* Menu Option pour change les dimentions du jeu */
+void menu_dim(GtkWidget* MenuItem, ctr_s *ctr)
+{
+	gtk_widget_set_sensitive(ENV->Fenetre, FALSE);
+	
+	ENV->Menu = gtk_window_new(GTK_WINDOW_TOPLEVEL);
+	ENV->MenuvBox = gtk_vbox_new(FALSE, 0);
+	ENV->MenuhBox[0] = gtk_hbox_new(TRUE, 0);
+	ENV->MenuhBox[1] = gtk_hbox_new(TRUE, 0);
+	gtk_window_set_position(GTK_WINDOW(ENV->Menu), GTK_WIN_POS_CENTER_ALWAYS);	
+	
+	
+	
+	gtk_window_set_title((GtkWindow*)ENV->Menu, "Changer la dimension du jeu");
+	
+	ENV->MenuLabel[0] = gtk_label_new("Choisissez les nouvelles dimensions du jeu");
+	
+	/* Affichage du nom du joueur 1 dans le label mise dans MenuhBox */ 
+	ENV->MenuLabel[1] = gtk_label_new("Nombre de lignes");
+	gtk_box_pack_start(GTK_BOX((ENV->MenuhBox[0])), ENV->MenuLabel[1], TRUE, TRUE, 0);
+	/* Creation de la boite de saisie avec 24 lettres max mise dans MenuhBox */ 
+	ENV->MenuEntry[0] = gtk_entry_new_with_max_length(20);
+	gtk_box_pack_start(GTK_BOX((ENV->MenuhBox[0])), ENV->MenuEntry[0], TRUE, TRUE, 0);
+	ENV->dBout[0] = gtk_button_new_with_mnemonic(" Ok ");
+	gtk_box_pack_start(GTK_BOX((ENV->MenuhBox[0])), ENV->dBout[0], FALSE, FALSE, 5);
+	
+	/* Affichage du nom du joueur 2 dans le label mise dans MenuhBox */ 
+	ENV->MenuLabel[2] = gtk_label_new("Nombre de colonnes");
+	gtk_box_pack_start(GTK_BOX((ENV->MenuhBox[1])), ENV->MenuLabel[2], TRUE, TRUE, 0);
+	/* Creation de la boite de saisie avec 24 lettres max mise dans MenuhBox */ 
+	ENV->MenuEntry[1] = gtk_entry_new_with_max_length(20);
+	gtk_box_pack_start(GTK_BOX((ENV->MenuhBox[1])), ENV->MenuEntry[1], TRUE, TRUE, 0);
+	ENV->dBout[1] = gtk_button_new_with_mnemonic(" Ok ");
+	gtk_box_pack_start(GTK_BOX((ENV->MenuhBox[1])), ENV->dBout[1], FALSE, FALSE, 5);
+	
+	ENV->dBout[2] = gtk_button_new_with_mnemonic(" Sortir ");
+	
+	/* Fusions des Widgets dans la MenuvBox */
+	gtk_box_pack_start(GTK_BOX((ENV->MenuvBox)), ENV->MenuLabel[0], TRUE, TRUE, 10);
+	gtk_box_pack_start(GTK_BOX((ENV->MenuvBox)), ENV->MenuhBox[0], TRUE, TRUE, 10);
+	gtk_box_pack_start(GTK_BOX((ENV->MenuvBox)), ENV->MenuhBox[1], TRUE, TRUE, 10);
+	gtk_box_pack_start(GTK_BOX((ENV->MenuvBox)), ENV->dBout[2], FALSE, FALSE, 10);
+	
+	/* Fusion MenuvBox dans la Fenetre */
+	gtk_container_add(GTK_CONTAINER(ENV->Menu), ENV->MenuvBox);
+	
+	gtk_widget_show_all(ENV->Menu);
+	
+	/* Connection des Boites de saisie avec la fonction changer nom et du bouton Destroy */
+	gtk_signal_connect(GTK_OBJECT(ENV->Menu), "destroy", G_CALLBACK(afficher_fenetre), ctr);
+	gtk_signal_connect(GTK_OBJECT(ENV->MenuEntry[0]), "activate", G_CALLBACK(changer_dim), ctr);
+	gtk_signal_connect(GTK_OBJECT(ENV->MenuEntry[1]), "activate", G_CALLBACK(changer_dim), ctr);
+	gtk_signal_connect(GTK_OBJECT(ENV->dBout[0]), "clicked", G_CALLBACK(changer_dim), ctr);
+	gtk_signal_connect(GTK_OBJECT(ENV->dBout[1]), "clicked", G_CALLBACK(changer_dim), ctr);
+	gtk_signal_connect(GTK_OBJECT(ENV->dBout[2]), "clicked", G_CALLBACK(afficher_fenetre), ctr);
+}
+
+/* Action des Widgets entry pour changer les dimensions du jeu */
+void changer_dim(GtkWidget* Item, ctr_s *ctr)
+{
+	const gchar* str_dim;
+	/* On cherche quel est la boite de saisie activee 
+	 * On met son resultat dans la variable nom
+	 * Puis on copie dans la variable nom_joueur correspondante */
+	 /** Premiere zone de saisie **/
+	if(Item == ENV->MenuEntry[0] || Item == ENV->dBout[0])
+	{
+		str_dim = gtk_entry_get_text(GTK_ENTRY(ENV->MenuEntry[0]));
+		DIM->row = atoi(str_dim);
+		/* un pseudo superieur a 4 lettre */
+		if(DIM->row < 4)
+		{
+			gtk_widget_destroy(ENV->Menu);
+			menu_dim(ENV->Menu, ctr);
+			return;
+		}
+		
+	}
+	
+	 /** Seconde zone de saisie **/
+	if(Item == ENV->MenuEntry[1] || Item == ENV->dBout[1])
+	{
+		str_dim = gtk_entry_get_text(GTK_ENTRY(ENV->MenuEntry[1]));
+		DIM->col = atoi(str_dim);
+		/* un pseudo superieur a 4 lettre */
+		if(DIM->col < 4)
+		{
+			gtk_widget_destroy(ENV->Menu);
+			menu_dim(ENV->Menu, ctr);
+			return;
+		}
+		
+	}
+	
+	printf("%d %d\n", DIM->col, DIM->row);
+	construire(ctr);
+	
+	gtk_widget_destroy(ENV->Menu);
+	menu_dim(ENV->Menu, ctr);
+	return;
+}
+
+void menu_IA(GtkWidget* MenuItem, ctr_s *ctr)
+{
+	
+	gtk_widget_set_sensitive(ENV->Fenetre, FALSE);
+	/* Initialisation de la boite de Dialog */
+	if(ctr->IA == 0)
+	{
+		ENV->reponse = GTK_RESPONSE_NONE;
+		ENV->Dialog = gtk_message_dialog_new(NULL, 
+						     GTK_DIALOG_MODAL, 
+						     GTK_MESSAGE_INFO, 
+						     GTK_BUTTONS_YES_NO, 
+						     "Beta : Intelligence Artificielle.\n"
+						     "Voulez vous jouer contre l'ordinateur?\n");
+		gtk_window_set_title((GtkWindow*)ENV->Dialog, "Beta Intelligence Artificielle");
+		
+		/* Connection du bouton Destroy pour retourner au jeu */
+		gtk_signal_connect(GTK_OBJECT(ENV->Dialog), "destroy", G_CALLBACK(afficher_fenetre), ctr);
+		
+		/* Boucle d'attente de reponse */
+		while(ENV->reponse == GTK_RESPONSE_NONE)
+			ENV->reponse = gtk_dialog_run(GTK_DIALOG(ENV->Dialog));
+		
+		/* Si les joueurs veulent commencer un nouveau jeu */
+		if(ENV->reponse == GTK_RESPONSE_YES)
+		{
+			gtk_widget_destroy(ENV->Dialog);	
+			reinit( ctr);
+			ctr->IA = 1;
+		}
+		/* S'ils veulent continuer on ferme la boite */
+		if(ENV->reponse == GTK_RESPONSE_NO)
+		{
+			gtk_widget_set_sensitive(ENV->Fenetre, TRUE);
+			gtk_widget_destroy(ENV->Dialog);
+			ctr->IA = 0;			
+		}
+	}
+	else
+	if(ctr->IA == 1)
+	{
+		ENV->reponse = GTK_RESPONSE_NONE;
+		ENV->Dialog = gtk_message_dialog_new(NULL, 
+						     GTK_DIALOG_MODAL, 
+						     GTK_MESSAGE_INFO, 
+						     GTK_BUTTONS_YES_NO, 
+						     "Beta : Intelligence Artificielle.\n"
+						     "Voulez vous arreter de jouer contre l'ordinateur?\n");
+		gtk_window_set_title((GtkWindow*)ENV->Dialog, "Beta Intelligence Artificielle");
+		
+		/* Connection du bouton Destroy pour retourner au jeu */
+		gtk_signal_connect(GTK_OBJECT(ENV->Dialog), "destroy", G_CALLBACK(afficher_fenetre), ctr);
+		
+		/* Boucle d'attente de reponse */
+		while(ENV->reponse == GTK_RESPONSE_NONE)
+			ENV->reponse = gtk_dialog_run(GTK_DIALOG(ENV->Dialog));
+		
+		/* Si les joueurs veulent commencer un nouveau jeu */
+		if(ENV->reponse == GTK_RESPONSE_YES)
+		{
+			gtk_widget_destroy(ENV->Dialog);	
+			reinit( ctr);
+			ctr->IA = 0;
+		}
+		/* S'ils veulent continuer on ferme la boite */
+		if(ENV->reponse == GTK_RESPONSE_NO)
+		{
+			gtk_widget_set_sensitive(ENV->Fenetre, TRUE);
+			gtk_widget_destroy(ENV->Dialog);
+			ctr->IA = 1;
+		}
+	}
+	
 }

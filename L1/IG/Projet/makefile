@@ -2,8 +2,8 @@
 # jeu de puissance4
 # _________________
 
-projet: gtk_puissance4.o partie.o dim.o case.o main.o menu.o
-	gcc gtk_puissance4.o menu.o partie.o dim.o case.o main.o `pkg-config --cflags --libs gtk+-2.0` -o projet
+projet: gtk_puissance4.o partie.o dim.o case.o main.o menu.o IA.o
+	gcc gtk_puissance4.o menu.o partie.o dim.o case.o IA.o main.o `pkg-config --cflags --libs gtk+-2.0` -o projet
 # _________________
 # modèle
 case.h: 
@@ -39,6 +39,10 @@ main.o: gtk_init.c
 	gcc -c gtk_init.c `pkg-config --cflags --libs gtk+-2.0` -o main.o -Wall --pedantic
 
 
+int_art.c: partie.h gtk_puissance4.h
+IA.o: int_art.c
+	gcc -c int_art.c `pkg-config --cflags --libs gtk+-2.0` -o IA.o -Wall --pedantic
+	
 # nettoyage
 clean: 
 	rm *.o

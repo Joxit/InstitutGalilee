@@ -48,7 +48,13 @@ int main(int argc, char** argv)
 		perror("Memoire Joueur2 non alloué");
 		exit (-1);
 	}
-	
+	if( (DIM = (dim_s*)malloc(5*sizeof(dim_s))) == NULL)
+	{
+		perror("Memoire Joueur2 non alloué");
+		exit (-1);
+	}
+	DIM->row = NB_ROW_JEU_DEFAULT;
+	DIM->col = NB_COL_JEU_DEFAULT;
 	gtk_init(&argc, &argv);
 	construire(ctr);
 	PARTIE = partie_new(NB_COL_JEU_DEFAULT, NB_ROW_JEU_DEFAULT, NB_WIN_JEU_DEFAULT, &statut_succes);

@@ -15,6 +15,7 @@
 #define PARTIE ctr->partie
 #define JOUEUR_1 ctr->Joueur1
 #define JOUEUR_2 ctr->Joueur2
+#define DIM ctr->dim
 /* Constantes symboliques pour les Boites GTK+ */
 #define NB_HBOX NB_COL_JEU_DEFAULT+1
 #define NB_VBOX 2
@@ -29,9 +30,8 @@ typedef struct gtk_s
 	/* WIDGETS POUR LA FENETRE PRINCIPALE!!!! */
 	/*Widgets pour la fenetre */
 	GtkWidget* Fenetre;		/* Fenetre principale*/	
-	/* 0 < NB_COL_JEU_DEFAULT : Box pour les cases
-	 * NB_COL_JEU_DEFAULT : Box pour les boutons 
-	 * NB_COL_JEU_DEFAULT+1 : Box du label */	
+	GtkWidget* Tableau;
+	/* NB_COL_JEU_DEFAULT+1 : Box du label */	
 	GtkWidget* hBox[NB_HBOX];	
 	/* 0 : vBox de la fenetre 
 	 * 1 : inutilise*/
@@ -40,19 +40,23 @@ typedef struct gtk_s
 	GtkWidget* Label;
 	
 	/* Widgets pour les bouttons*/
-	GtkWidget* Bouton[NB_COL_JEU_DEFAULT];		 /* Bouttons pour jouer une colonne */
-	GtkWidget* Image[NB_COL_JEU_DEFAULT][NB_ROW_JEU_DEFAULT];	/* 	Images des Cases */
+	GtkWidget* Bouton[16];		 /* Bouttons pour jouer une colonne */
+	GtkWidget* Image[16][16];	/* 	Images des Cases */
 	
 	/* WIDGETS POUR LE MENU */
 	GtkWidget* BarMenu;
 	GtkWidget* MenuPartie;
 	GtkWidget* Partie;
 	GtkWidget* New;
-	GtkWidget* Option;
 	GtkWidget* Liste;
 	GtkWidget* Score;
 	GtkWidget* Save;
 	GtkWidget* Quitter;
+	GtkWidget* MenuOption;
+	GtkWidget* Option;
+	GtkWidget* ChangerNom;
+	GtkWidget* ChangerDim;
+	GtkWidget* JouerIA;
 	
 	/* WIDGETS POUR LE FENETRE MENU */
 	GtkWidget* Menu;				/* Fenetre pour les menus */
@@ -82,13 +86,21 @@ typedef struct joueur_s
 }
 joueur_s;
 
+typedef struct dimensions_s
+{
+	int col;
+	int row;
+}
+dim_s;
+
 typedef struct controlleur_s
 {
 	struct gtk_s* env;
 	struct S_PARTIE* partie;
 	struct joueur_s* Joueur1;
 	struct joueur_s* Joueur2;
-	
+	struct dimensions_s* dim;
+	int IA;
 }
 ctr_s;
 
@@ -114,7 +126,7 @@ void free_gtk(ctr_s *ctr);
 /* Action des Widgets entry pour changer le nom d'un joueur */
 void nouvelle_partie(GtkWidget* MenuItem, ctr_s *ctr);
 /* Menu Option pour change les noms des joueurs */
-void set_option(GtkWidget* MenuItem, ctr_s *ctr);
+void menu_nom(GtkWidget* MenuItem, ctr_s *ctr);
 /* Action des Widgets entry pour changer le nom d'un joueur */
 void changer_nom(GtkWidget* Item, ctr_s *ctr);
 /* Menu Liste pour afficher les noms des joueurs */
@@ -123,6 +135,19 @@ void Top_5(GtkWidget* MenuItem, ctr_s *ctr);
 void get_score(GtkWidget* MenuItem, ctr_s *ctr);
 /* Sauvegare les scores des joueurs actifs */
 void sauvegarder_score(GtkWidget* Item, ctr_s* ctr);
+/* Menu Option pour change les dimensions du jeu */
+void menu_dim(GtkWidget* MenuItem, ctr_s *ctr);
+/* Action des Widgets entry pour changer les dimensions du jeu */
+void changer_dim(GtkWidget* Item, ctr_s *ctr);
+void menu_IA(GtkWidget* MenuItem, ctr_s *ctr);
 
+/** IA **/
+static int IA_tester_ligne(s_partie* partie, int i, int j);
+
+ int IA_tester_colonne(s_partie* partie, int i, int j);
+ int IA_tester_diagonale_NO_SE(s_partie* partie, int i, int j);
+ int IA_tester_diagonale_NE_SO(s_partie* partie, int i, int j);
+
+void IA_jouer(ctr_s* ctr, int i, int j);
 #endif
 
