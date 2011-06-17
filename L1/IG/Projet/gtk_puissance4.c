@@ -1,7 +1,7 @@
 /* _____________________________________________________________________________
- * Jeu Puissance 4 :: fichier Définitions
+ * Jeu Puissance 4 :: fichier Définitions des fonctions du jeu
  *												
- * Mardi 4 Mai 2011.													
+ * Mardi 17 Mai 2011.													
  * 
  * Pour plus de détails, consulter les fichier d'entête						
  * _____________________________________________________________________________ */
@@ -40,10 +40,10 @@ void construire(ctr_s* ctr)
 		strcpy(JOUEUR_2->nom, "Joueur_2");
 		JOUEUR_2->score = 0;
 	}
-	ctr->IA = 1;
+	ctr->IA = TRUE;
 	fclose(adt);
-	/* CREATION DE LA FENETRE PRINCIPALE */
-	/* Initialisation  Fenetre */ 
+	/** CREATION DE LA FENETRE PRINCIPALE **/
+	/* Initialisation : Fenetre */ 
 	if( (ENV->Fenetre = malloc(20*sizeof(GtkWindow))) == NULL)	
 	{
 		perror("Memoire Fenetre non alloue");
@@ -53,40 +53,21 @@ void construire(ctr_s* ctr)
 	gtk_window_set_title((GtkWindow*)ENV->Fenetre, "Le jeu du Puissance 4 : partie en cours");
 	gtk_window_set_resizable(GTK_WINDOW(ENV->Fenetre), FALSE);
 	gtk_window_set_position(GTK_WINDOW(ENV->Fenetre), GTK_WIN_POS_CENTER_ALWAYS);	
-	
-	/* Initialisation : hBoxs */ 
-	for( i = 0; i < NB_HBOX; i++)
-	{
-		if( ((ENV->hBox)[i] = (GtkWidget*)malloc(4*sizeof(GtkWidget))) == NULL)
-		{
-			printf("Memoire hBox[%d] ", i);
-			perror("non alloue");
-			exit (-1);
-		}
-		(ENV->hBox)[i] = gtk_hbox_new(FALSE, 0);	
-	}
-	
+		
 	/* Initialisation : vBox */ 
-	for( i = 0; i < NB_VBOX; i++)
-	{
-		if( ((ENV->vBox)[i] = (GtkWidget*)malloc(4*sizeof(GtkWidget))) == NULL)
-		{
-			printf("Memoire vBox[%d] ", i);
-			perror("non alloue");
-			exit (-1);
-		}
-		(ENV->vBox)[i] = gtk_vbox_new(FALSE, 0);
-	}
+	ENV->vBox = gtk_vbox_new(FALSE, 0);
+	
 	
 	/* Initialisation du jeu : image des pions et boutons a mettre dans le tableau*/
-	ENV->Tableau = gtk_table_new(DIM->row +2, DIM->col +2, 0);
-	for(i=0; i< DIM->col; i++)
+	ENV->Tableau = gtk_table_new(NB_ROW_JEU_DEFAULT + 2, NB_COL_JEU_DEFAULT, 0);
+	for(i = 0; i < NB_COL_JEU_DEFAULT; i++)
 	{
-		for(j=0; j< DIM->row; j++)
+		for(j = 0; j < NB_ROW_JEU_DEFAULT; j++)
 		{
 			/* Creation des Widget Image en leurs donnant le fichier de depart bleu.gif */
 			(ENV->Image)[i][j] = gtk_image_new_from_file(BLEU);
 			gtk_table_attach_defaults(GTK_TABLE(ENV->Tableau), (ENV->Image)[i][j], i, i+1, j+1, j+2);
+			/**gtk_signal_connect(GTK_OBJECT((ENV->Image)[i][j]), "activate", G_CALLBACK(gtk_jouer_colonne), ctr);**/
 		}
 		
 		/* Initialisation : Boutons */  
@@ -94,7 +75,7 @@ void construire(ctr_s* ctr)
 		/* Connection des boutons a leurs fonctions */
 		gtk_signal_connect(GTK_OBJECT(ENV->Bouton[i]), "clicked", G_CALLBACK(gtk_jouer_colonne), ctr);
 		/*Fusion des Boutons dans la hBox*/
-		gtk_table_attach_defaults(GTK_TABLE(ENV->Tableau), ENV->Bouton[i], i, i+1, DIM->row+1, DIM->row+2);
+		gtk_table_attach_defaults(GTK_TABLE(ENV->Tableau), ENV->Bouton[i], i, i+1, NB_ROW_JEU_DEFAULT+1, NB_ROW_JEU_DEFAULT+2);
 	}
 	
 	/* Mise en place du Label Tour_Joueur */
@@ -108,7 +89,7 @@ void construire(ctr_s* ctr)
 	/** BARRE DE MENU **/
 	/* Creation de la barre de menu attaché a Fenetre */
 	ENV->BarMenu = gtk_menu_bar_new();
-	gtk_box_pack_start(GTK_BOX((ENV->vBox)[0]), ENV->BarMenu, TRUE, TRUE, 0);
+	gtk_box_pack_start(GTK_BOX((ENV->vBox)), ENV->BarMenu, TRUE, TRUE, 0);
 	
 	/** SOUS MENU PARTIE **/
 	/* Creation de l'objets MenuPartie attache a BarMenu */
@@ -140,24 +121,21 @@ void construire(ctr_s* ctr)
 	gtk_menu_shell_append(GTK_MENU_SHELL( ENV->Partie), ENV->Quitter);
 	
 	/** SOUS MENU OPTION **/
-	/* creation de l'objet option attaché a Partie*/
+	/* creation de l'objet MenuOption attaché a BarMenu*/
 	ENV->MenuOption = gtk_menu_item_new_with_label("Option");
 	gtk_menu_shell_append(GTK_MENU_SHELL( ENV->BarMenu), ENV->MenuOption);
 	
-	/* creation du sous menu Partie attache a l'objet MenuPartie*/
+	/* creation du sous menu Option attache a l'objet MenuOption*/
 	ENV->Option = gtk_menu_new();
 	gtk_menu_item_set_submenu(GTK_MENU_ITEM(ENV->MenuOption), ENV->Option);
 	
-	/* creation de l'objet option attaché a Partie*/
+	/* creation de l'objet ChangerNom attaché a Option*/
 	ENV->ChangerNom = gtk_menu_item_new_with_label("Changer Pseudo");
 	gtk_menu_shell_append(GTK_MENU_SHELL( ENV->Option), ENV->ChangerNom);
 	
-	/* creation de l'objet option attaché a Partie*/
-	ENV->ChangerDim = gtk_menu_item_new_with_label("Changer la dimension");
-	gtk_menu_shell_append(GTK_MENU_SHELL( ENV->Option), ENV->ChangerDim);
 	
-	/* creation de l'objet option attaché a Partie*/
-	ENV->JouerIA = gtk_menu_item_new_with_label("Intelligence Artificielle");
+	/* creation de l'objet JouerIA attaché a Option*/
+	ENV->JouerIA = gtk_menu_item_new_with_label("Joueur Artificiel");
 	gtk_menu_shell_append(GTK_MENU_SHELL( ENV->Option), ENV->JouerIA);
 	
 	
@@ -168,21 +146,15 @@ void construire(ctr_s* ctr)
 	gtk_signal_connect(GTK_OBJECT(ENV->Score), "activate", G_CALLBACK(get_score), ctr);
 	gtk_signal_connect(GTK_OBJECT(ENV->Save), "activate", G_CALLBACK(sauvegarder_score), ctr);
 	gtk_signal_connect(GTK_OBJECT(ENV->Quitter), "activate", G_CALLBACK(confirmation), ctr);
-	gtk_signal_connect(GTK_OBJECT(ENV->ChangerDim), "activate", G_CALLBACK(menu_dim), ctr);
 	gtk_signal_connect(GTK_OBJECT(ENV->JouerIA), "activate", G_CALLBACK(menu_IA), ctr);
 	
-	
-	
-	/* Fusion Label et hBox - vBox
-	 * hBox[i] avec i de 0 a NB_ROW_JEU_DEFAULT-1 : Box des Images
-	 * hBox[NB_ROW_JEU_DEFAULT] : Box des Boutons */
-	gtk_table_attach_defaults(GTK_TABLE(ENV->Tableau), ENV->Label, 0, DIM->col+2, 0, 1);
-		gtk_box_pack_start(GTK_BOX((ENV->vBox)[0]), (ENV->Tableau), TRUE, TRUE, 0);	
+	/* Attachement Table - Label */
+	gtk_table_attach_defaults(GTK_TABLE(ENV->Tableau), ENV->Label, 0, NB_COL_JEU_DEFAULT+2, 0, 1);
+	/*Fusion Table - vBox */
+	gtk_box_pack_start(GTK_BOX((ENV->vBox)), (ENV->Tableau), TRUE, TRUE, 0);	
 	
 	/* Fusion vBox - Fenetre */
-	gtk_container_add(GTK_CONTAINER(ENV->Fenetre), (ENV->vBox)[0]);
-	
-	
+	gtk_container_add(GTK_CONTAINER(ENV->Fenetre), (ENV->vBox));
 	
 	/* Show all*/
 	gtk_widget_show_all(ENV->Fenetre);
@@ -191,16 +163,16 @@ void construire(ctr_s* ctr)
 
 void gtk_jouer_colonne(GtkWidget* button, ctr_s *ctr)
 {
-	int ligne=0,colonne;
+	int ligne=0,colonne/*, i*/;
 	char *pch, Tour_Joueur[40];
 	
 	/* On cherche le Bouton qui a ete active */
 	for(colonne = 0; colonne < NB_COL_JEU_DEFAULT; colonne++)
-		if(button == ENV->Bouton[colonne])
-			break;
-		
-		
-		
+	{
+		/**for(i = 0; i < NB_ROW_JEU_DEFAULT; i++)**/
+			if(button == ENV->Bouton[colonne] /*|| button == (ENV->Image)[i][colonne]*/)
+				break;
+	}	
 		/* On joue le coup */
 		ligne = partie_jouer_colonne(PARTIE, colonne);
 	
@@ -218,10 +190,11 @@ void gtk_jouer_colonne(GtkWidget* button, ctr_s *ctr)
 	/* tour suivant */
 	if (partie_get_etat(PARTIE) == PARTIE_ETAT_ENCOURS )
 	{
-		if(ctr->IA == 0)
+		/* Si l'IA est active, c'est lui qui gère le tour suivant */
+		if(ctr->IA == FALSE)
 			partie_tour_suivant(PARTIE);
 		else
-			if (ctr->IA == 1)
+			if (ctr->IA == TRUE)
 			{
 				if(partie_get_tourjoueur(PARTIE) == CASE_ETAT_JOUEUR_1)
 					IA_jouer( ctr, ligne,  colonne);
@@ -238,38 +211,28 @@ void gtk_jouer_colonne(GtkWidget* button, ctr_s *ctr)
 			strcpy(pch, JOUEUR_2->nom);
 		gtk_label_set_text (GTK_LABEL(ENV->Label), Tour_Joueur);
 	}
-	
-	/* Si le jeu est fini il y a 3 possibilitees */
-	if (partie_get_etat(PARTIE) == PARTIE_ETAT_JOUEUR_12)
-		continuer(0,ctr);    
-	if (partie_get_etat(PARTIE) == PARTIE_ETAT_JOUEUR_1)
-		continuer(1,ctr);
-	if (partie_get_etat(PARTIE) == PARTIE_ETAT_JOUEUR_2)
-		continuer(2,ctr);
-	
-	
+	else
+		continuer(ctr);
 }
 
-void continuer(int res, ctr_s *ctr)
+/* Fin de jeu, demande aux joueurs s'ils continuent */
+void continuer( ctr_s *ctr)
 {
 	char Question[200];
 	char *pch;
 	
+	/* Mise a jour de la fenetre */
 	gtk_widget_set_sensitive(ENV->Fenetre, FALSE);
 	gtk_window_set_title((GtkWindow*)ENV->Fenetre, "Le jeu du Puissance 4 : partie en terminee");
 	
-	/* Initialisation Dialog */
+	/** Creation de la boite de Dialogue **/
 	ENV->Dialog = gtk_dialog_new();
 	ENV->reponse = GTK_RESPONSE_NONE;
 	ENV->dBox = (GTK_DIALOG(ENV->Dialog))->vbox;	
 	
-	/* Initialisation des Bouttons, 2 reponses possible Oui et Fermer */
-	ENV->dBout[0] = gtk_dialog_add_button(GTK_DIALOG(ENV->Dialog), GTK_STOCK_YES, GTK_RESPONSE_YES);
-	ENV->dBout[1] = gtk_dialog_add_button(GTK_DIALOG(ENV->Dialog), GTK_STOCK_NO, GTK_RESPONSE_CLOSE);
-	
-	
+	/** Premiere etage : choix du Label de la question **/
 	/* joueur 1 a gagne */
-	if(res == 1) 
+	if(partie_get_etat(PARTIE) == PARTIE_ETAT_JOUEUR_1)
 	{
 		/* Incrementation du score du joueur */
 		JOUEUR_1->score = JOUEUR_1->score + 1;
@@ -277,13 +240,12 @@ void continuer(int res, ctr_s *ctr)
 		strcpy(Question, JOUEUR_1->nom);
 		/* On pointe la fin du nom du joueur mis dans la question */
 		pch=&Question[strlen(JOUEUR_1->nom)];
-		if(ctr->IA == 1)
+		if(ctr->IA == TRUE)
 			partie_tour_suivant(PARTIE);
-			
 	}
 	
 	/* joueur 2 a gagne */
-	if(res == 2) 
+	if(partie_get_etat(PARTIE) == PARTIE_ETAT_JOUEUR_2) 
 	{
 		/* Incrementation du score du joueur */
 		JOUEUR_2->score = JOUEUR_2->score + 1;
@@ -293,18 +255,27 @@ void continuer(int res, ctr_s *ctr)
 		pch=&Question[strlen(JOUEUR_2->nom)];
 	}
 	/* match nul*/
-	if(res == 0)
+	if(partie_get_etat(PARTIE) == PARTIE_ETAT_JOUEUR_12)
 		strcpy(Question, "\tMatch nul!\nVoulez-vous continuer?\0");
 	else
 		/* Sinon on copie la fin de la question a l'endroit pointe */
 		strcpy(pch, " a gagne!\n""Voulez-vous continuer?\0");
+	
 	/* On met la question dans le label Question */
 	ENV->Question = gtk_label_new (Question);
+	
+	/** Deuxieme etage : les boutons **/
+	/* Initialisation des Bouttons, 2 reponses possible Oui et Fermer */
+	ENV->dBout[0] = gtk_dialog_add_button(GTK_DIALOG(ENV->Dialog), GTK_STOCK_YES, GTK_RESPONSE_YES);
+	ENV->dBout[1] = gtk_dialog_add_button(GTK_DIALOG(ENV->Dialog), GTK_STOCK_NO, GTK_RESPONSE_CLOSE);
+	
+	
 	/* On fusionne le Label dans la vBox */
 	gtk_box_pack_start(GTK_BOX(ENV->dBox), ENV->Question, TRUE, TRUE, 5);
 	
 	/* On affiche le tout */
 	gtk_widget_show_all(ENV->Dialog);
+	
 	/* Boucle d'attente de reponse */
 	while(ENV->reponse == GTK_RESPONSE_NONE)
 		ENV->reponse = gtk_dialog_run(GTK_DIALOG(ENV->Dialog));
@@ -314,10 +285,10 @@ void continuer(int res, ctr_s *ctr)
 	{
 		gtk_widget_destroy(ENV->Dialog);
 		reinit( ctr);
-		if(ctr->IA == 1 && partie_get_tourjoueur(PARTIE) == PARTIE_ETAT_JOUEUR_2)
+		if(ctr->IA == TRUE && partie_get_tourjoueur(PARTIE) == CASE_ETAT_JOUEUR_2)
 		{
+			/* Quand la partie est finie et que le l'IA a gagne, il joue le premier tour aleatoirement */
 			gtk_jouer_colonne( ENV->Bouton[rand()% dim_get_nbcol(&(PARTIE->dim))], ctr);
-			/*partie_tour_suivant(PARTIE);*/
 		}
 	}
 	/* S'ils ne veulent pas on demande confirmation de fermeture */
@@ -328,6 +299,7 @@ void continuer(int res, ctr_s *ctr)
 	}
 }
 
+/* Reinitialisation de la partie */
 void reinit(ctr_s* ctr)
 {
 	int i,j;
@@ -346,11 +318,11 @@ void reinit(ctr_s* ctr)
 			gtk_image_set_from_file(GTK_IMAGE((ENV->Image)[i][j]), BLEU);
 		
 		
-		
-		gtk_window_set_title((GtkWindow*)ENV->Fenetre, "Le jeu du Puissance 4 : partie en cours");
+	/* Reinitialisation de l'etat de la fenetre */	
+	gtk_window_set_title((GtkWindow*)ENV->Fenetre, "Le jeu du Puissance 4 : partie en cours");
 	partie_nouvelle_partie(PARTIE);
 	
-	/* reinitialisation du Label de tour */
+	/* Reinitialisation du Label de tour */
 	strcpy(Tour_Joueur, "Au tour de : ");
 	pch = &Tour_Joueur[ strlen(Tour_Joueur) ];
 	
@@ -363,10 +335,12 @@ void reinit(ctr_s* ctr)
 	
 }
 
+/* Confirmation aux joueurs s'ils veulent quitter le jeu */
 void confirmation(GtkWidget* fenetre, ctr_s* ctr)
 {
 	gtk_widget_set_sensitive(ENV->Fenetre, FALSE);
-	/* Initialisation de la boite de Dialogue */
+	
+	/** Creation de la boite de Dialogue **/
 	ENV->reponse = GTK_RESPONSE_NONE;
 	ENV->Dialog = gtk_message_dialog_new(NULL, GTK_DIALOG_MODAL, GTK_MESSAGE_WARNING, GTK_BUTTONS_YES_NO, "Vous etes sur le point de quitter le jeu.\n\tVoulez vous vraiment le faire?");
 	gtk_window_set_title((GtkWindow*)ENV->Dialog, "Quitter");
@@ -381,16 +355,14 @@ void confirmation(GtkWidget* fenetre, ctr_s* ctr)
 	/* Si les joueurs veulent fermer le jeu, on libere la partie */
 	if(ENV->reponse == GTK_RESPONSE_YES)
 	{
-		gtk_widget_destroy(ENV->Dialog);	
-		sauvegarder_score( fenetre, ctr);
+		gtk_widget_destroy(ENV->Dialog);
 		partie_free(&PARTIE);
 		free_gtk(ctr);
 	}
 	/* S'ils veulent continuer on ferme la boite */
 	if(ENV->reponse == GTK_RESPONSE_NO)
 	{
-		gtk_widget_set_sensitive(ENV->Fenetre, TRUE);
-		gtk_widget_destroy(ENV->Dialog);
+		afficher_fenetre(ENV->Dialog, ctr);
 		if(partie_get_etat(PARTIE) != PARTIE_ETAT_ENCOURS)
 			reinit(ctr);
 	}
@@ -399,6 +371,7 @@ void confirmation(GtkWidget* fenetre, ctr_s* ctr)
 /* Detruit l'Objet et active la Fenetre principale */
 void afficher_fenetre(GtkWidget* Item, ctr_s *ctr)
 {
+	/* Si le bouton est le bouton sortir on detruit le menu et pas le bouton, sinon l'item en argument */
 	if(Item == ENV->dBout[2])
 		gtk_widget_destroy(ENV->Menu);
 	else
