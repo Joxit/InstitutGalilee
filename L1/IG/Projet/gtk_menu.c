@@ -75,94 +75,6 @@ void menu_nom(GtkWidget* MenuItem, ctr_s *ctr)
 	gtk_signal_connect(GTK_OBJECT(ENV->dBout[0]), "clicked", G_CALLBACK(changer_nom), ctr);
 	
 }
-/* Action lors de la validation du pseudonyme */
-void changer_nom(GtkWidget* Item, ctr_s *ctr)
-{
-	const gchar* nom;
-	joueur_s *joueur1 = malloc(13*sizeof(joueur_s));
-	joueur_s *joueur2 = malloc(13*sizeof(joueur_s));
-	FILE* adt;
-	if((adt = fopen("users.dat", "r")) == NULL)
-	{
-		perror("Fichier users.dat non ouvert");
-		/* si l'utilisateur a supprime le fichier apres l'ouverture du programme on en cree un nouveau */
-		if((adt = fopen("users.dat", "w")) == NULL)
-		{
-			perror("Creation du fichier users.dat impossible");
-			exit (-1);
-		}
-		fclose(adt);
-		if((adt = fopen("users.dat", "r")) == NULL)
-		{
-			perror("Fichier unsers.dat non ouvert");
-			exit (-1);
-		}
-	}
-	fseek(adt, 0, SEEK_SET);
-	/* On cherche quel est la boite de saisie activee 
-	 * On met son resultat dans la variable nom
-	 * Puis on copie dans la variable nom_joueur correspondante */
-	 /** Premiere zone de saisie **/
-	if(Item == ENV->MenuEntry[0] || Item == ENV->dBout[0])
-	{
-		nom = gtk_entry_get_text(GTK_ENTRY(ENV->MenuEntry[0]));
-		/* un pseudo superieur a 4 lettre */
-		if(4 < strlen(nom))
-			strcpy(JOUEUR_1->nom, nom);
-		JOUEUR_1->score = 0;
-		/* Mode fichier : Cherche dans le fichier users.dat 
-		 * le nom du joueur qui vient d'etre entre
-		 * s'il existe deja, on recupere son score precedent
-		 * sinon on le met a 0 */
-		while(!feof(adt))
-		{
-			fscanf(adt, "%s", joueur1->nom);
-			fscanf(adt, "%d", &joueur1->score);
-			/* avant de commencer la recherche on verifie que le nom a bien ete pris */
-			if(JOUEUR_1->nom!=NULL && joueur1->nom != NULL)
-				if(strcmp(JOUEUR_1->nom, joueur1->nom) ==0)
-				{
-					 JOUEUR_1->score = joueur1->score;
-					/* si on le trouve on sort */
-					break;
-				}
-		}
-	}
-	
-	 /** Seconde zone de saisie **/
-	if(Item == ENV->MenuEntry[1] || Item == ENV->dBout[0])
-	{
-		nom = gtk_entry_get_text(GTK_ENTRY(ENV->MenuEntry[1]));
-		/* un pseudo superieur a 4 lettre */
-		if(4 < strlen(nom))
-			strcpy(JOUEUR_2->nom, nom);
-		JOUEUR_2->score = 0;
-		/** Mode fichier **/
-		while(!feof(adt))
-		{
-			fscanf(adt, "%s", joueur2->nom);
-			fscanf(adt, "%d", &joueur2->score);
-			if(JOUEUR_2->nom!=NULL && joueur2->nom != NULL)
-				if(strcmp(JOUEUR_2->nom, joueur2->nom) ==0)
-				{
-					JOUEUR_2->score = joueur2->score;
-					
-					/* si on le trouve on sort */
-					break;
-				}
-		}
-	}
-	
-	/* on libere la memoire de joueur */
-	free(joueur1);
-	free(joueur2);
-	gtk_widget_destroy(ENV->Menu);
-	if(Item != ENV->dBout[0])
-		menu_nom(ENV->Menu, ctr);
-	return;
-	
-}
-
 /* Fenetre de dialogue affichant le score des deux joueurs */
 void get_score(GtkWidget* MenuItem, ctr_s *ctr)
 {
@@ -348,91 +260,6 @@ void Top_5(GtkWidget* MenuItem, ctr_s *ctr)
 	free(joueur);
 }
 
-/* Fonctin qui sauvegarde les score des deux joueurs actuels dans le fichier*/
-void sauvegarder_score(GtkWidget* Item, ctr_s* ctr)
-{
-	FILE* adt1, *adt2;
-	char* pch;
-	joueur_s* joueur = malloc(13*sizeof(joueur_s));
-	
-	/* Fichier contenant les scores */
-	if((adt1 = fopen("users.dat", "r")) == NULL)
-	{
-		perror("Fichier unsers.dat non ouvert");
-		/* si l'utilisateur a supprime le fichier apres l'ouverture du programme on en cree un nouveau */
-		if((adt1 = fopen("users.dat", "w")) == NULL)
-		{
-			perror("Creation du fichier users.dat impossible");
-			exit (-1);
-		}
-		fclose(adt1);
-		if((adt1 = fopen("users.dat", "r")) == NULL)
-		{
-			perror("Fichier unsers.dat non ouvert");
-			exit (-1);
-		}
-	}
-	/* Fichier de substitution */
-	if((adt2 = fopen("tmp", "w")) == NULL)
-	{
-		perror("Fichier tmp non ouvert");
-		exit (-1);
-	}
-	
-		
-	/** On met le nom des joueurs au debut du fichier pour la prochaine partie
-	 ** Clean up du nom des joueurs saisi :
- 	 ** il ne faut pas d'espaces dans le fichier! **/
-	
-		/*  On pointe les espaces et on les remplaces par des '_' jusqu'a la fin de la chaine */
-		pch =strchr(JOUEUR_1->nom, ' ');
-		while(pch != NULL)
-		{
-			*pch = '_';
-			pch =strchr(JOUEUR_1->nom, ' ');
-		}
-		/* pui on ecrit dans le fichier */
-		fprintf(adt2, "%s %d\n", JOUEUR_1->nom, JOUEUR_1->score);
-	
-
-		/*  On pointe les espaces et on les remplaces par des '_' jusqu'a la fin de la chaine */
-		pch =strchr(JOUEUR_2->nom, ' ');
-		while(pch != NULL)
-		{
-			*pch = '_';
-			pch =strchr(JOUEUR_2->nom, ' ');
-		}
-		/* pui on ecrit dans le fichier */
-		fprintf(adt2, "%s %d\n", JOUEUR_2->nom, JOUEUR_2->score);
-	
-		
-	
-	while(!feof(adt1))
-	{
-		/* on lit le fichier actuel */
-		fscanf(adt1, "%s", joueur->nom);
-		fscanf(adt1, "%d", &joueur->score);
-		if(joueur->nom != NULL && !feof(adt1))
-		{
-			/* Comparaison si on tombe sur un joueur existant on ne l'ecrit pas */
-			if((strcmp(JOUEUR_1->nom, joueur->nom) !=0) && (strcmp(JOUEUR_2->nom, joueur->nom) !=0))
-			{
-					/* si le joueur lu n'est aucun des deux on reecrit son nom et son score passé */
-					fprintf(adt2, "%s %d\n", joueur->nom, joueur->score);
-			}
-		}
-	}
-	
-	/* on fini par un saut de ligne en plus et liberer la memoire des variables */
-	fprintf(adt2, "\n");
-	fclose(adt1);
-	fclose(adt2);
-	free(joueur);
-	/* on supprime l'ancien fichier et renome le nouveau */
-	remove("users.dat");
-	rename("tmp", "users.dat");
-}
-
 /* Menu pour activer ou desactiver le joueur artificiel */
 void menu_IA(GtkWidget* MenuItem, ctr_s *ctr)
 {
@@ -507,7 +334,7 @@ void menu_IA(GtkWidget* MenuItem, ctr_s *ctr)
 					fscanf(adt, "%s", JOUEUR_2->nom);
 					fscanf(adt, "%d", &JOUEUR_2->score);
 					if(JOUEUR_2->nom != NULL)
-						if(strcmp("Int._Art.", JOUEUR_2->nom) ==0)
+						if(strcmp("Int. Art.", JOUEUR_2->nom) ==0)
 						{
 							/* si on le trouve on sort */
 							break;
@@ -516,7 +343,7 @@ void menu_IA(GtkWidget* MenuItem, ctr_s *ctr)
 				
 				if(strcmp("Int. Art.", JOUEUR_2->nom) !=0)
 				{
-					strcpy(JOUEUR_2->nom, "Int._Art.");
+					strcpy(JOUEUR_2->nom, "Int. Art.");
 					JOUEUR_2->score = 0;
 				}
 				if(partie_get_tourjoueur(PARTIE) == CASE_ETAT_JOUEUR_2)

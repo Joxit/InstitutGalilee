@@ -133,6 +133,6 @@ int IA_tester_colonne(s_partie* partie, int i, int j);
 /* Fait jouer l'IA */
 void IA_jouer(ctr_s* ctr, int i, int j);
 
-int IA_jouer_ligne(s_partie* partie, int i, int j);
+int IA_jouer_ligne(s_partie* partie, int i, int j,  int jouer_colonne);
 #endif
 

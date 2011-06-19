@@ -90,11 +90,16 @@ int IA_tester_colonne(s_partie* partie, int i, int j)
 			return (nb_coup_joueur == dim_get_nbwin(&(partie->dim))-1 ? 1 : 0);
 }
 
-int IA_jouer_ligne(s_partie* partie, int i, int j)
+/* Prend en argument la partie, la ligne et la colonne teste et la variable jouer_colonne
+ * Renvoie la colonne qu'il faut jouer, si la ligne testé n'est pas prete de gagner, elle renvoie jouer_colonne de depart
+ *   Pré-conditions :
+ *       - partie instanciée (=> dont le tableau partie->plateau) et en cours
+ *       - la case de coordonnées (i,j) existe */
+int IA_jouer_ligne(s_partie* partie, int i, int j, int jouer_colonne)
 {
-	int jouer_colonne=j, colonne = j;
+	int colonne = j;
 	#if (PUISSANCE4_MODELE_DEBUG != 0)
-	printf("%s : IA_jouer_ligne IN partie == %p i == %d j == %d\n", PUISSANCE4_MODELE_TRACE, (void*)partie, i, j);
+	printf("%s : IA_jouer_ligne IN partie == %p i == %d j == %d jouer_colonne == %d\n", PUISSANCE4_MODELE_TRACE, (void*)partie, i, j, jouer_colonne);
 	#endif
 	if(j < dim_get_nbcol(&partie->dim))
 		for(colonne = j+1; colonne < dim_get_nbcol(&partie->dim) ; colonne ++ )
@@ -114,6 +119,8 @@ int IA_jouer_ligne(s_partie* partie, int i, int j)
 							jouer_colonne = colonne;
 						break;
 				}
+				else
+					break;
 			}
 			#if (PUISSANCE4_MODELE_DEBUG != 0)
 			printf("\tIA_tester_ligne 1 colonne == %d jouer_colonne == %d\n", colonne, jouer_colonne); 
@@ -138,6 +145,8 @@ int IA_jouer_ligne(s_partie* partie, int i, int j)
 								
 								break;
 						}
+						else
+							break;
 					}
 					#if (PUISSANCE4_MODELE_DEBUG != 0)
 					printf("\tIA_tester_ligne 2 colonne == %d jouer_colonne == %d\n", colonne, jouer_colonne); 
@@ -160,15 +169,14 @@ int IA_jouer_ligne(s_partie* partie, int i, int j)
 void IA_jouer(ctr_s* ctr, int i, int j)
 {
 	
-	int jouer_colonne=j, colonne = j, ind_col, ind_row;
+	int jouer_colonne = -1, colonne = j, ind_col, ind_row;
 	#if (PUISSANCE4_MODELE_DEBUG != 0)
 		printf("\n\tIA_jouer IN:: i == %d j== %d\n",i,j);
 	#endif
 	/* Premier test : sur la colonne, si vrai il verifie si la case du dessus est libre pour jouer */
-	if(IA_tester_colonne(PARTIE, i, j))
+	if(IA_tester_colonne(PARTIE, i, j) && (i > 0))
 	{
-		if(i+1 < dim_get_nbrow(&(PARTIE->dim)))
-			if (case_get_etat(PARTIE->plateau[GET_INDICE(dim_get_nbcol(&(PARTIE->dim)), i+1, j)]) == CASE_ETAT_JOUEUR_NONE)
+		if (case_get_etat(PARTIE->plateau[GET_INDICE(dim_get_nbcol(&(PARTIE->dim)), i-1, j)]) == CASE_ETAT_JOUEUR_NONE)
 				jouer_colonne = j;
 		#if (PUISSANCE4_MODELE_DEBUG != 0)
 			printf("\tIA_tester_colonne colonne == %d jouer_colonne == %d\n", colonne, jouer_colonne); 
@@ -177,10 +185,10 @@ void IA_jouer(ctr_s* ctr, int i, int j)
 	else
 		/* Deuxieme test : sur la ligne, si vrai, il regarde si la case de droite de la chaine est libre, si elle ne sort pas du plateau, et s'il y a une case prise en dessous  */
 		if (IA_tester_ligne(PARTIE, i, j))
-			jouer_colonne = IA_jouer_ligne(PARTIE, i, j);
+			jouer_colonne = IA_jouer_ligne(PARTIE, i, j, jouer_colonne);
 		
 		/* sinon on joue au hasard */
-		else
+		if(jouer_colonne == -1)
 		{
 			jouer_colonne = -1;
 			for(ind_row = dim_get_nbrow(&(PARTIE->dim)) - 1; ind_row >= 0 ; ind_row--)
@@ -188,34 +196,40 @@ void IA_jouer(ctr_s* ctr, int i, int j)
 					if (case_get_etat(PARTIE->plateau[GET_INDICE(dim_get_nbcol(&(PARTIE->dim)), ind_row, ind_col)]) == CASE_ETAT_JOUEUR_1)
 						if (IA_tester_ligne(PARTIE, ind_row, ind_col))
 						{
-							jouer_colonne = IA_jouer_ligne(PARTIE, ind_row, ind_col);
+							jouer_colonne = IA_jouer_ligne(PARTIE, ind_row, ind_col, jouer_colonne);
 							break;
 						}
 					
 			#if (PUISSANCE4_MODELE_DEBUG != 0)
-			printf("\tIA_jouer_ligne colonne == %d jouer_colonne == %d\n", colonne, jouer_colonne); 
+			printf("\tIA_jouer_ligne final jouer_colonne == %d\n", jouer_colonne); 
 			#endif
 			if(jouer_colonne == -1)
+			{
 				jouer_colonne = rand()% dim_get_nbcol(&(PARTIE->dim));
-			#if (PUISSANCE4_MODELE_DEBUG != 0)
-			printf("\tIA_random colonne == %d jouer_colonne == %d\n", colonne, jouer_colonne); 
-			#endif
+				#if (PUISSANCE4_MODELE_DEBUG != 0)
+					printf("\tIA_random colonne == %d jouer_colonne == %d\n", colonne, jouer_colonne); 
+				#endif
+			}
 		}
 		/* On donne la main a l'IA */
 		partie_tour_suivant(PARTIE);
+		
 		/* on verifie si le bouton est sensible et si on ne sort pas du plateau, s'il ne l'est pas l'IA peut pas jouer ici */
-		if(gtk_widget_get_sensitive(ENV->Bouton[jouer_colonne]) == TRUE && colonne < NB_COL_JEU_DEFAULT)
+		if(partie_est_colonne_pleine(PARTIE, jouer_colonne) == FALSE
+		&& jouer_colonne < NB_COL_JEU_DEFAULT && jouer_colonne >= 0)
 		{
 			#if (PUISSANCE4_MODELE_DEBUG != 0)
 			printf("\tIA_jouer OUT :: colonne == %d jouer_colonne == %d\n", colonne, jouer_colonne); 
 			#endif
 			gtk_jouer_colonne( ENV->Bouton[jouer_colonne], ctr);
 		}
+		
 		else
 		{
 			/* sinon on va chercher un autre nombre aleatoire */
 			jouer_colonne = 0;
-			while(gtk_widget_get_sensitive(ENV->Bouton[jouer_colonne]) == FALSE || colonne > NB_COL_JEU_DEFAULT)
+			while(partie_est_colonne_pleine(PARTIE, jouer_colonne) == TRUE
+				|| jouer_colonne > NB_COL_JEU_DEFAULT || jouer_colonne < 0)
 			{
 				jouer_colonne = rand()% dim_get_nbcol(&(PARTIE->dim));
 				

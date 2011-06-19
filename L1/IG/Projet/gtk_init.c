@@ -21,6 +21,7 @@ int main(int argc, char** argv)
 {
 	ctr_s* ctr;
 	int statut_succes;
+	FILE* adt;
 	/** Allocation memoire **/
 	/* Controlleur */
 	if( (ctr = malloc(6*sizeof(gtk*)+6*sizeof(s_partie*)+12*sizeof(joueur_s*))) == NULL)
@@ -52,6 +53,17 @@ int main(int argc, char** argv)
 		perror("Memoire Joueur2 non alloué");
 		exit (-1);
 	}
+	/* Si le fichier a ete supprime on en cree un nouveau */
+	if((adt = fopen("users.dat", "r")) == NULL)
+	{
+		perror("Fichier unsers.dat inexistant");
+		if((adt = fopen("users.dat", "w")) == NULL)
+		{
+			perror("Creation du fichier users.dat impossible");
+			exit (-1);
+		}
+	}
+	fclose(adt);
 	gtk_init(&argc, &argv);
 	/* Construction de l'environnement GTK */
 	construire(ctr);

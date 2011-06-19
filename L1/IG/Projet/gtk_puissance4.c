@@ -20,24 +20,44 @@ void construire(ctr_s* ctr)
 	FILE* adt;
 	if((adt = fopen("users.dat", "r")) == NULL)
 	{
-		perror("Fichier non ouvert");
-		exit (-1);
+		perror("Fichier users.dat non ouvert");
+		/* si l'utilisateur a supprime le fichier apres l'ouverture du programme on en cree un nouveau */
+		if((adt = fopen("users.dat", "w")) == NULL)
+		{
+			perror("Creation du fichier users.dat impossible");
+			exit (-1);
+		}
+		fclose(adt);
+		if((adt = fopen("users.dat", "r")) == NULL)
+		{
+			perror("Fichier unsers.dat non ouvert");
+			exit (-1);
+		}
 	}
 	/* Creation des noms des joueurs */	
 	fseek(adt, 0, SEEK_SET);
 	fscanf(adt, "%s", JOUEUR_1->nom);
 	fscanf(adt, "%d", &JOUEUR_1->score);
-	if(JOUEUR_1->nom == NULL)
+	if((JOUEUR_1->nom == NULL)|| strcmp(JOUEUR_1->nom, "") == 0)
 	{
 		strcpy(JOUEUR_1->nom, "Joueur_1");
 		JOUEUR_1->score = 0;
 	}
-		
-	fscanf(adt, "%s", JOUEUR_2->nom);
-	fscanf(adt, "%d", &JOUEUR_2->score);
-	if(JOUEUR_2->nom == NULL)
+	JOUEUR_2->score = 0;
+	while(!feof(adt))
 	{
-		strcpy(JOUEUR_2->nom, "Joueur_2");
+		fscanf(adt, "%s", JOUEUR_2->nom);
+		fscanf(adt, "%d", &JOUEUR_2->score);
+		if(JOUEUR_2->nom != NULL)
+			if(strcmp("Int._Art.", JOUEUR_2->nom) ==0)
+			{
+				/* si on le trouve on sort */
+				break;
+			}
+	}
+	if(strcmp("Int._Art.", JOUEUR_2->nom) !=0)
+	{
+		strcpy(JOUEUR_2->nom, "Int._Art.");
 		JOUEUR_2->score = 0;
 	}
 	ctr->IA = TRUE;
@@ -222,7 +242,6 @@ void continuer( ctr_s *ctr)
 	char *pch;
 	
 	/* Mise a jour de la fenetre */
-	gtk_widget_set_sensitive(ENV->Fenetre, FALSE);
 	gtk_window_set_title((GtkWindow*)ENV->Fenetre, "Le jeu du Puissance 4 : partie en terminee");
 	
 	/** Creation de la boite de Dialogue **/
