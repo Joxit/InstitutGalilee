@@ -85,6 +85,8 @@
 					- nouveaux pions
 			- Ajout :
 					- menu_about : dialogue des droits et compatibilitée
-
+	Version 1.6
+			- Ajout : 
+					- maj_pseudo qui met a jour la label du pseudo
 
  ______________________________________________________________________________*/ 

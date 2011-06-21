@@ -77,6 +77,8 @@ void changer_nom(GtkWidget* Item, ctr_s *ctr)
 		}
 	}
 	
+	maj_pseudo(ctr);
+	
 	/* on libere la memoire de joueur */
 	free(joueur1);
 	free(joueur2);

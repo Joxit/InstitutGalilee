@@ -141,7 +141,7 @@ void construire(ctr_s* ctr)
 	
 	
 	/* creation de l'objet JouerIA attaché a Option*/
-	ENV->JouerIA = gtk_menu_item_new_with_label("Joueur Artificiel");
+	ENV->JouerIA = gtk_menu_item_new_with_label("Joueur Artificiel : On");
 	gtk_menu_shell_append(GTK_MENU_SHELL( ENV->Option), ENV->JouerIA);
 	
 	/** SOUS MENU APROPOS */
@@ -185,7 +185,6 @@ void construire(ctr_s* ctr)
 void gtk_jouer_colonne(GtkWidget* button, ctr_s *ctr)
 {
 	int ligne=0,colonne/*, i*/;
-	char *pch, Tour_Joueur[40];
 	
 	/* On cherche le Bouton qui a ete active */
 	for(colonne = 0; colonne < NB_COL_JEU_DEFAULT; colonne++)
@@ -221,15 +220,7 @@ void gtk_jouer_colonne(GtkWidget* button, ctr_s *ctr)
 					IA_jouer( ctr, ligne,  colonne);
 			}
 			
-		/* Mise a jour du Label Tour Joueur */
-		strcpy(Tour_Joueur, "Au tour de : ");
-		pch = &Tour_Joueur[ strlen(Tour_Joueur) ];
-		
-		if(partie_get_tourjoueur(PARTIE) == CASE_ETAT_JOUEUR_1)
-			strcpy(pch, JOUEUR_1->nom);
-		else
-			strcpy(pch, JOUEUR_2->nom);
-		gtk_label_set_text (GTK_LABEL(ENV->Label), Tour_Joueur);
+		maj_pseudo(ctr);
 	}
 	else
 		continuer(ctr);
@@ -317,7 +308,7 @@ void continuer( ctr_s *ctr)
 void reinit(ctr_s* ctr)
 {
 	int i,j;
-	char *pch, Tour_Joueur[40];
+
 	gtk_widget_set_sensitive(ENV->Fenetre, TRUE);
 	
 	/* Boutons a nouveaux sensible */
@@ -336,16 +327,7 @@ void reinit(ctr_s* ctr)
 	gtk_window_set_title((GtkWindow*)ENV->Fenetre, "Le jeu du Puissance 4 : partie en cours");
 	partie_nouvelle_partie(PARTIE);
 	
-	/* Reinitialisation du Label de tour */
-	strcpy(Tour_Joueur, "Au tour de : ");
-	pch = &Tour_Joueur[ strlen(Tour_Joueur) ];
-	
-	if(partie_get_tourjoueur(PARTIE) == CASE_ETAT_JOUEUR_1)
-		strcpy(pch, JOUEUR_1->nom);
-	else
-		strcpy(pch, JOUEUR_2->nom);
-	
-	gtk_label_set_text (GTK_LABEL(ENV->Label), Tour_Joueur);
+	maj_pseudo(ctr);
 	
 }
 
@@ -403,4 +385,19 @@ void free_gtk(ctr_s *ctr)
 	free(JOUEUR_2);
 	
 	gtk_main_quit();
+}
+
+void maj_pseudo(ctr_s* ctr)
+{
+	char *pch, Tour_Joueur[40];
+	/* Reinitialisation du Label de tour */
+	strcpy(Tour_Joueur, "Au tour de : ");
+	pch = &Tour_Joueur[ strlen(Tour_Joueur) ];
+	
+	if(partie_get_tourjoueur(PARTIE) == CASE_ETAT_JOUEUR_1)
+		strcpy(pch, JOUEUR_1->nom);
+	else
+		strcpy(pch, JOUEUR_2->nom);
+	
+	gtk_label_set_text (GTK_LABEL(ENV->Label), Tour_Joueur);
 }

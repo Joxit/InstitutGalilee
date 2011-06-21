@@ -111,6 +111,8 @@ void afficher_fenetre();
 /* fin de partie on liber la memoire */
 void free_gtk(ctr_s *ctr);
 
+void maj_pseudo(ctr_s* ctr);
+
 
 /** Fonctions definies dans menu.c **/
 /* Action lors de la validation du pseudonyme */
@@ -137,8 +139,9 @@ void get_score(GtkWidget* MenuItem, ctr_s *ctr);
 void menu_IA(GtkWidget* MenuItem, ctr_s *ctr);
 /* menu A propos */
 void menu_about(GtkWidget* Item, ctr_s* ctr);
-
-
+/* definition de gtk_menu_item_set_label qui est arrivé apres GTK+ 2.16
+ * pour compatibilité avec GTK+ 2.10  */
+void gtk_menu_item_set_label (GtkMenuItem *menu_item, const gchar *label);
 
 /** Fonctions definies dans IA.c **/
 

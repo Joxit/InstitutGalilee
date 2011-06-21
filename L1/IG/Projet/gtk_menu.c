@@ -40,26 +40,27 @@ void menu_nom(GtkWidget* MenuItem, ctr_s *ctr)
 	ENV->MenuEntry[0] = gtk_entry_new_with_max_length(20);
 	gtk_box_pack_start(GTK_BOX((ENV->MenuhBox[0])), ENV->MenuEntry[0], TRUE, TRUE, 0);
 	
-	/** Troisieme etage **/
-	/* Affichage du nom du joueur 2 dans le label mise dans MenuhBox */ 
-	ENV->MenuLabel[2] = gtk_label_new(JOUEUR_2->nom);
-	gtk_box_pack_start(GTK_BOX((ENV->MenuhBox[1])), ENV->MenuLabel[2], TRUE, TRUE, 0);
-	/* Creation de la boite de saisie avec 20 lettres max mise dans MenuhBox */ 
-	ENV->MenuEntry[1] = gtk_entry_new_with_max_length(20);
-	gtk_box_pack_start(GTK_BOX((ENV->MenuhBox[1])), ENV->MenuEntry[1], TRUE, TRUE, 0);
+	if(ctr->IA == FALSE)
+	{
+		/** Troisieme etage **/
+		/* Affichage du nom du joueur 2 dans le label mise dans MenuhBox */ 
+		ENV->MenuLabel[2] = gtk_label_new(JOUEUR_2->nom);
+		gtk_box_pack_start(GTK_BOX((ENV->MenuhBox[1])), ENV->MenuLabel[2], TRUE, TRUE, 0);
+		/* Creation de la boite de saisie avec 20 lettres max mise dans MenuhBox */ 
+		ENV->MenuEntry[1] = gtk_entry_new_with_max_length(20);
+		gtk_box_pack_start(GTK_BOX((ENV->MenuhBox[1])), ENV->MenuEntry[1], TRUE, TRUE, 0);
+	}
 	
-	if(ctr->IA == TRUE)
-		gtk_widget_set_sensitive(ENV->MenuEntry[1], FALSE);
-	else
-		gtk_widget_set_sensitive(ENV->MenuEntry[1], TRUE);
+
 	/** Quatrieme etage **/
 	ENV->dBout[0] = gtk_button_new_with_mnemonic(" Enregistrer et Fermer ");
 	
 	/** Rassemblement **/
-	/* Fusions des Widgets dans la MenuvBox */
+	/* Fusions des Widgets dans la MenuvBox On ne peut pas changer le pseudo de l'IA */
 	gtk_box_pack_start(GTK_BOX((ENV->MenuvBox)), ENV->MenuLabel[0], TRUE, TRUE, 10);
 	gtk_box_pack_start(GTK_BOX((ENV->MenuvBox)), ENV->MenuhBox[0], TRUE, TRUE, 10);
-	gtk_box_pack_start(GTK_BOX((ENV->MenuvBox)), ENV->MenuhBox[1], TRUE, TRUE, 10);
+	if(ctr->IA == FALSE)
+		gtk_box_pack_start(GTK_BOX((ENV->MenuvBox)), ENV->MenuhBox[1], TRUE, TRUE, 10);
 	gtk_box_pack_start(GTK_BOX((ENV->MenuvBox)), ENV->dBout[0], FALSE, FALSE, 10);
 	
 	/* Fusion MenuvBox dans la Fenetre */
@@ -70,7 +71,8 @@ void menu_nom(GtkWidget* MenuItem, ctr_s *ctr)
 	/* Connection des Boites de saisie avec la fonction changer nom et du bouton Destroy */
 	gtk_signal_connect(GTK_OBJECT(ENV->Menu), "destroy", G_CALLBACK(afficher_fenetre), ctr);
 	gtk_signal_connect(GTK_OBJECT(ENV->MenuEntry[0]), "activate", G_CALLBACK(changer_nom), ctr);
-	gtk_signal_connect(GTK_OBJECT(ENV->MenuEntry[1]), "activate", G_CALLBACK(changer_nom), ctr);
+	if(ctr->IA == FALSE)
+		gtk_signal_connect(GTK_OBJECT(ENV->MenuEntry[1]), "activate", G_CALLBACK(changer_nom), ctr);
 	gtk_signal_connect(GTK_OBJECT(ENV->dBout[0]), "clicked", G_CALLBACK(changer_nom), ctr);
 	
 }
@@ -121,7 +123,7 @@ void nouvelle_partie(GtkWidget* MenuItem, ctr_s *ctr)
 	gtk_window_set_title((GtkWindow*)ENV->Dialog, "Nouvelle Partie");
 	
 	/* Connection du bouton Destroy pour retourner au jeu */
-	gtk_signal_connect(GTK_OBJECT(ENV->Dialog), "destroy", G_CALLBACK(afficher_fenetre), ctr);
+	g_signal_connect(G_OBJECT(ENV->Dialog), "destroy", G_CALLBACK(afficher_fenetre), ctr);
 	
 	/* Boucle d'attente de reponse */
 	while(ENV->reponse == GTK_RESPONSE_NONE)
@@ -228,6 +230,7 @@ void menu_IA(GtkWidget* MenuItem, ctr_s *ctr)
 			ctr->IA = !ctr->IA;
 			if(ctr->IA == TRUE)
 			{
+				gtk_menu_item_set_label(GTK_MENU_ITEM(ENV->JouerIA), "Joueur Artificiel : On");
 				JOUEUR_2->score = 0;
 				while(!feof(adt))
 				{
@@ -251,6 +254,7 @@ void menu_IA(GtkWidget* MenuItem, ctr_s *ctr)
 			}
 			if(ctr->IA == FALSE)
 			{
+				gtk_menu_item_set_label(GTK_MENU_ITEM(ENV->JouerIA), "Joueur Artificiel : Off");
 				sauvegarder_score(MenuItem, ctr);
 				/* Creation des noms des joueurs */	
 				/* joueur 1*/ 
@@ -295,7 +299,7 @@ void menu_about(GtkWidget* Item, ctr_s* ctr)
 						 "des Licences 1 de l'Institut Galilee,\n" 
 						 "Universite Paris 13, Villetaneuse\n"
 						 "http://www-galilee.univ-paris13.fr/\n\n"
-						 "Compatible GTK+ 2.10 et plus\n");
+						 "Compatible GTK+ 2.16 et plus\n");
 	gtk_window_set_title((GtkWindow*)ENV->Dialog, "A propos de puissance 4");
 	
 	/* Connection du bouton Destroy pour retourner au jeu */
@@ -308,4 +312,14 @@ void menu_about(GtkWidget* Item, ctr_s* ctr)
 	if(ENV->reponse == GTK_RESPONSE_CLOSE)
 		afficher_fenetre(ENV->Dialog, ctr);
 	
+}
+
+/* definition de gtk_menu_item_set_label qui est arrivé apres GTK+ 2.16
+ * pour compatibilité avec GTK+ 2.10  
+ * GTK_MENU_ITEM_GET_CLASS a verifier */
+void gtk_menu_item_set_label (GtkMenuItem *menu_item, const gchar *label)
+{
+  g_return_if_fail (GTK_IS_MENU_ITEM (menu_item));
+ 
+  GTK_MENU_ITEM_GET_CLASS (menu_item)->set_label (menu_item, label);
 }
