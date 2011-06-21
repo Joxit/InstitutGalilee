@@ -26,7 +26,7 @@
     #define PUISSANCE4_MODELE_TRACE "puissance4"
 
     /* constante symbolique indiquant le mode de compilation            */
-    #define PUISSANCE4_MODELE_DEBUG 1
+    #define PUISSANCE4_MODELE_DEBUG 0
 
 	/* constantes symboliques pour E/S                                  */
 	#define STR_PARTIE_PARAM_INCONNU "Valeur de paramètre non reconnue"

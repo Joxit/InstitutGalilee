@@ -12,7 +12,7 @@
 #include <stdio.h> /* Printf */	
 #include <gtk/gtk.h>	
 #include <time.h>		/*fonction 'time', utilisée pour la génération aléatoire*/
-#include "gtk_puissance4.h"	/* modèle de la chasse au trésor en GTK(constantes symboliques, types, déclaration des fonctions)*/
+#include "puissance4.h"	/* modèle de la chasse au trésor en GTK(constantes symboliques, types, déclaration des fonctions)*/
 #include "partie.h"
 
 /* Fonction principale */
@@ -75,9 +75,6 @@ int main(int argc, char** argv)
 	
 	/* nouvelle partie */
 	partie_nouvelle_partie(PARTIE);
-	
-	
-	
 	
 	/* DEMARRAGE DE LA BOUCLE*/
 	gtk_main();

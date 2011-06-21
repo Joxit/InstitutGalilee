@@ -60,16 +60,31 @@
 			- Ajout :
 					- securité lors de la recherche des pseudos, si le fichier a été supprimé, on en créé un autre
 			- Clean up du code
+			- Version envoyé aux professeurs
 	Version 1.4
 			- Mise à jour :
-					- Meilleure tenue de l'IA, il peut contrer les coups sur les lignes a tout moment, il verifie a chaques tour si le joueur n'a pasune serie de 3 pions sur lignes dans le jeu pret a gagner
+					- Meilleure tenue de l'IA, il peut contrer les coups sur les lignes a tout moment, 
+						il verifie a chaques tour si le joueur n'a pas une serie de 3 pions sur lignes dans le jeu
 					- Suppresion de gtk_widget_get_sensitive qui n'existe pas avant GTK+ 2.18
 					- enleve la sensibilité du 2eme GtkEntry contre l'IA
-					- 
 			- Ajout :
 					- fonction IA_jouer_ligne pour alleger IA_jouer
 					- nom Int. Art. pour l'IA, il aura ses scores
-			
+	Version 1.5
+			- Clean up :
+					- séparation de menu.c :
+							- gtk_menu.c contient toutes les fonctions de création GTK+
+							- menu.c contient toutes les fonctions qui n'utilise pas d'objet GTK+
+					- get_classement : qui renvoit la chaine de cararctère du classement (dans menu.c) utilisé par Top_5 (dans gtk_menu.c)
+					- file_open : renvoit l'adresse du fichier users.dat en ayant fait une vérification et création si besoin.
+			- Mise à jour :
+					- l'IA bloque dès que le joueur a 2 pions alignés pour anticiper avant qu'il en ait 3.
+					- l'IA cherche au debut s'il a 3 pions en colonne dans le plateau pour gagner
+					- avant de jouer aleatoirement, l'IA regarde s'il a +2 pions sur une ligne dans le plateau pour jouer
+					- remplacement des "jouer_colonne == -1" par "jouer_colonne < 0"
+					- nouveaux pions
+			- Ajout :
+					- menu_about : dialogue des droits et compatibilitée
 
 
  ______________________________________________________________________________*/ 

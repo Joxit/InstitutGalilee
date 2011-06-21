@@ -8,32 +8,18 @@
 
 # include <stdlib.h>		/* fonction 'rand' de génération aléatoire*/
 # include <gtk/gtk.h>
-#include <string.h>
-# include <time.h>	
-# include "gtk_puissance4.h"	/* modèle de la chasse au trésor en GTK(constantes symboliques, types, déclaration des fonctions)*/
+#include <string.h>	
+# include "puissance4.h"	/* modèle de la chasse au trésor en GTK(constantes symboliques, types, déclaration des fonctions)*/
 # include "partie.h"
 
 void construire(ctr_s* ctr)
 {
 	int i,j;
 	char *pch, Tour_Joueur[40];
-	FILE* adt;
-	if((adt = fopen("users.dat", "r")) == NULL)
-	{
-		perror("Fichier users.dat non ouvert");
-		/* si l'utilisateur a supprime le fichier apres l'ouverture du programme on en cree un nouveau */
-		if((adt = fopen("users.dat", "w")) == NULL)
-		{
-			perror("Creation du fichier users.dat impossible");
-			exit (-1);
-		}
-		fclose(adt);
-		if((adt = fopen("users.dat", "r")) == NULL)
-		{
-			perror("Fichier unsers.dat non ouvert");
-			exit (-1);
-		}
-	}
+	FILE* adt = NULL;
+	
+	adt = file_open(adt);
+	
 	/* Creation des noms des joueurs */	
 	fseek(adt, 0, SEEK_SET);
 	fscanf(adt, "%s", JOUEUR_1->nom);
@@ -158,6 +144,20 @@ void construire(ctr_s* ctr)
 	ENV->JouerIA = gtk_menu_item_new_with_label("Joueur Artificiel");
 	gtk_menu_shell_append(GTK_MENU_SHELL( ENV->Option), ENV->JouerIA);
 	
+	/** SOUS MENU APROPOS */
+	/* creation de l'objet MenuOption attaché a BarMenu*/
+	ENV->MenuHelp = gtk_menu_item_new_with_label("?");
+	gtk_menu_shell_append(GTK_MENU_SHELL( ENV->BarMenu), ENV->MenuHelp);
+	
+	/* creation du sous menu Option attache a l'objet MenuOption*/
+	ENV->Help = gtk_menu_new();
+	gtk_menu_item_set_submenu(GTK_MENU_ITEM(ENV->MenuHelp), ENV->Help);
+	
+	/* creation de l'objet MenuOption attaché a BarMenu*/
+	ENV->About = gtk_menu_item_new_with_label("A propos");
+	gtk_menu_shell_append(GTK_MENU_SHELL( ENV->Help), ENV->About);
+	
+	
 	
 	/* Connection des objets a leurs fonctions toutes definies dans menu.c sauf Quitter*/
 	gtk_signal_connect(GTK_OBJECT(ENV->New), "activate", G_CALLBACK(nouvelle_partie), ctr);
@@ -167,6 +167,7 @@ void construire(ctr_s* ctr)
 	gtk_signal_connect(GTK_OBJECT(ENV->Save), "activate", G_CALLBACK(sauvegarder_score), ctr);
 	gtk_signal_connect(GTK_OBJECT(ENV->Quitter), "activate", G_CALLBACK(confirmation), ctr);
 	gtk_signal_connect(GTK_OBJECT(ENV->JouerIA), "activate", G_CALLBACK(menu_IA), ctr);
+	gtk_signal_connect(GTK_OBJECT(ENV->About), "activate", G_CALLBACK(menu_about), ctr);
 	
 	/* Attachement Table - Label */
 	gtk_table_attach_defaults(GTK_TABLE(ENV->Tableau), ENV->Label, 0, NB_COL_JEU_DEFAULT+2, 0, 1);
@@ -218,7 +219,6 @@ void gtk_jouer_colonne(GtkWidget* button, ctr_s *ctr)
 			{
 				if(partie_get_tourjoueur(PARTIE) == CASE_ETAT_JOUEUR_1)
 					IA_jouer( ctr, ligne,  colonne);
-					
 			}
 			
 		/* Mise a jour du Label Tour Joueur */
@@ -304,11 +304,6 @@ void continuer( ctr_s *ctr)
 	{
 		gtk_widget_destroy(ENV->Dialog);
 		reinit( ctr);
-		if(ctr->IA == TRUE && partie_get_tourjoueur(PARTIE) == CASE_ETAT_JOUEUR_2)
-		{
-			/* Quand la partie est finie et que le l'IA a gagne, il joue le premier tour aleatoirement */
-			gtk_jouer_colonne( ENV->Bouton[rand()% dim_get_nbcol(&(PARTIE->dim))], ctr);
-		}
 	}
 	/* S'ils ne veulent pas on demande confirmation de fermeture */
 	if(ENV->reponse == GTK_RESPONSE_CLOSE)
@@ -391,7 +386,7 @@ void confirmation(GtkWidget* fenetre, ctr_s* ctr)
 void afficher_fenetre(GtkWidget* Item, ctr_s *ctr)
 {
 	/* Si le bouton est le bouton sortir on detruit le menu et pas le bouton, sinon l'item en argument */
-	if(Item == ENV->dBout[2])
+	if(Item == ENV->dBout[0])
 		gtk_widget_destroy(ENV->Menu);
 	else
 		gtk_widget_destroy(Item);

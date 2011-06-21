@@ -8,9 +8,8 @@
 
 # include <stdlib.h>		/* fonction 'rand' de génération aléatoire*/
 # include <gtk/gtk.h>
-#include <string.h>
-# include <time.h>	
-# include "gtk_puissance4.h"	/* modèle de la chasse au trésor en GTK(constantes symboliques, types, déclaration des fonctions)*/
+#include <string.h>	
+# include "puissance4.h"	/* modèle de la chasse au trésor en GTK(constantes symboliques, types, déclaration des fonctions)*/
 # include "partie.h"
 
 /* Menu pour le changement de pseudo des joueurs */
@@ -78,7 +77,6 @@ void menu_nom(GtkWidget* MenuItem, ctr_s *ctr)
 /* Fenetre de dialogue affichant le score des deux joueurs */
 void get_score(GtkWidget* MenuItem, ctr_s *ctr)
 {
-	
 	gtk_widget_set_sensitive(ENV->Fenetre, FALSE);
 	/* Initialisation de la boite de Dialog */
 	ENV->reponse = GTK_RESPONSE_NONE;
@@ -145,29 +143,6 @@ void nouvelle_partie(GtkWidget* MenuItem, ctr_s *ctr)
 /* Menu Top5 pour afficher les noms des 5 meilleurs joueurs */
 void Top_5(GtkWidget* MenuItem, ctr_s *ctr)
 {
-	FILE* adt = NULL;
-	char* pch, liste_classement[200];
-	int i = 0,j = 0, score[6];
-	joueur_s* joueur = malloc(13*sizeof(joueur_s));
-	
-	/* Fichier contenant les scores */
-	if((adt = fopen("users.dat", "r")) == NULL)
-	{
-		perror("Fichier users.dat non ouvert");
-		/* si l'utilisateur a supprime le fichier apres l'ouverture du programme on en cree un nouveau */
-		if((adt = fopen("users.dat", "w")) == NULL)
-		{
-			perror("Creation du fichier users.dat impossible");
-			exit (-1);
-		}
-		fclose(adt);
-		if((adt = fopen("users.dat", "r")) == NULL)
-		{
-			perror("Fichier unsers.dat non ouvert");
-			exit (-1);
-		}
-	}
-	
 	gtk_widget_set_sensitive(ENV->Fenetre, FALSE);
 	
 	/** Creation de la fenetre Menu Top_5 et ses composants **/
@@ -179,73 +154,17 @@ void Top_5(GtkWidget* MenuItem, ctr_s *ctr)
 	
 	/** Premiere etage **/
 	ENV->MenuLabel[0] = gtk_label_new("Liste des 5 meilleurs joueurs inscrit");
-	score[0] = 1000;
 	
-	/** Deuxieme etage **/
-	for(i = 1; i < 6; i = i + 1)
-	{
-		/* porte de sortie pour eviter que le meme score apparaisse jusqu'a la fin du tableau */
-		if(score[i] == score[i-2])
-			break;
-			/* on se place  au debut du fichier et on lit la premiere ligne et enregistre le score */
-		fseek(adt, 0, SEEK_SET);
-		score[i] = 0;
-		/* suite de la lecture jusqu'a la fin du fichier */
-		while(!feof(adt))
-		{
-			fscanf(adt, "%s", joueur->nom);
-			fscanf(adt, "%d", &joueur->score);
-			/** Verification : score[i] < joueur->score < score[i-1] pour trouver le vrai suivant 
-			 ** joueur->nom doit exister pour eviter les bugs **/
-			if(score[i] < joueur->score && score[i-1] > joueur->score && joueur->nom != NULL)
-				score[i] = joueur->score;
-		}
-	}
-	/* on initialise la variable qui contiendra la liste */
-	strcpy(liste_classement, "");
-	for(i = 1; i < 6; i = i + 1)
-	{
-		/* porte de sortie pour eviter l'affichage en plusieur exemplaire des joueurs au meme score */
-		if(score[i] == score[i-1])
-			break;
-		/* on se place au debut du fichier */
-		fseek(adt, 0, SEEK_SET);
-		while(!feof(adt))
-		{
-			/* lecture des lignes du fichier */
-			fscanf(adt, "%s", joueur->nom);
-			fscanf(adt, "%d", &joueur->score);
-			/* on cherche si le score lu correspond a clui qu'on veut afficher */
-			if(score[i] == joueur->score && !feof(adt) && joueur->nom != NULL)
-			{
-				pch = NULL;
-				/* on pointe la fin de la chaine de caractere liste_classement*/
-				pch = &liste_classement[ strlen(liste_classement) ];
-				/* et on ecrit le pseudo et le score du joueur */
-				sprintf(pch, "%s\t : \t %d\n", joueur->nom, joueur->score);
-				j = j + 1;
-			}
-			/* Quand on est a 5 joueurs affiche on sort des boucles brusquement*/
-			if(j == 5)
-			{
-				i = 6;
-				break;
-			}
-		}
-	}
-	#if (PUISSANCE4_MODELE_DEBUG != 0)
-		printf("\tTop_5  i == %d j == %d liste_classement : \n%sScore : %d; %d; %d; %d; %d; %d\n", i, j, liste_classement, score[0], score[1], score[2], score[3], score[4], score[5]); 
-	#endif
-	ENV->MenuLabel[1] = gtk_label_new(liste_classement);
+	ENV->MenuLabel[1] = gtk_label_new( get_classement() );
 	
 	/** Troisieme etage **/
-	ENV->dBout[2] = gtk_button_new_with_mnemonic(" Sortir ");
+	ENV->dBout[0] = gtk_button_new_with_mnemonic(" Sortir ");
 	
 	/** Rassemblement **/
 	/* Fusions des Widgets dans la MenuvBox */
 	gtk_box_pack_start(GTK_BOX((ENV->MenuvBox)), ENV->MenuLabel[0], TRUE, TRUE, 10);
 	gtk_box_pack_start(GTK_BOX((ENV->MenuvBox)), ENV->MenuLabel[1], TRUE, TRUE, 10);
-	gtk_box_pack_start(GTK_BOX((ENV->MenuvBox)), ENV->dBout[2], FALSE, FALSE, 10);
+	gtk_box_pack_start(GTK_BOX((ENV->MenuvBox)), ENV->dBout[0], FALSE, FALSE, 10);
 	
 	/* Fusion MenuvBox dans la Fenetre */
 	gtk_container_add(GTK_CONTAINER(ENV->Menu), ENV->MenuvBox);
@@ -254,36 +173,17 @@ void Top_5(GtkWidget* MenuItem, ctr_s *ctr)
 	
 	/* Connection du bouton et du bouton Destroy */
 	gtk_signal_connect(GTK_OBJECT(ENV->Menu), "destroy", G_CALLBACK(afficher_fenetre), ctr);
-	gtk_signal_connect(GTK_OBJECT(ENV->dBout[2]), "clicked", G_CALLBACK(afficher_fenetre), ctr);
+	gtk_signal_connect(GTK_OBJECT(ENV->dBout[0]), "clicked", G_CALLBACK(afficher_fenetre), ctr);
 	
-	fclose(adt);
-	free(joueur);
 }
 
 /* Menu pour activer ou desactiver le joueur artificiel */
 void menu_IA(GtkWidget* MenuItem, ctr_s *ctr)
 {
-	FILE* adt;
+	FILE* adt = NULL;
 	gtk_widget_set_sensitive(ENV->Fenetre, FALSE);
 	
-	if((adt = fopen("users.dat", "r")) == NULL)
-	{
-		perror("Fichier users.dat non ouvert");
-		/* si l'utilisateur a supprime le fichier apres l'ouverture du programme on en cree un nouveau */
-		if((adt = fopen("users.dat", "w")) == NULL)
-		{
-			perror("Creation du fichier users.dat impossible");
-			exit (-1);
-		}
-		fclose(adt);
-		if((adt = fopen("users.dat", "r")) == NULL)
-		{
-			perror("Fichier unsers.dat non ouvert");
-			exit (-1);
-		}
-	}
-	
-	
+	adt = file_open(adt);
 	
 		/* Initialisation de la boite de Dialog */
 		ENV->reponse = GTK_RESPONSE_NONE;
@@ -334,16 +234,16 @@ void menu_IA(GtkWidget* MenuItem, ctr_s *ctr)
 					fscanf(adt, "%s", JOUEUR_2->nom);
 					fscanf(adt, "%d", &JOUEUR_2->score);
 					if(JOUEUR_2->nom != NULL)
-						if(strcmp("Int. Art.", JOUEUR_2->nom) ==0)
+						if(strcmp("Int._Art.", JOUEUR_2->nom) ==0)
 						{
 							/* si on le trouve on sort */
 							break;
 						}
 				}
 				
-				if(strcmp("Int. Art.", JOUEUR_2->nom) !=0)
+				if(strcmp("Int._Art.", JOUEUR_2->nom) !=0)
 				{
-					strcpy(JOUEUR_2->nom, "Int. Art.");
+					strcpy(JOUEUR_2->nom, "Int._Art.");
 					JOUEUR_2->score = 0;
 				}
 				if(partie_get_tourjoueur(PARTIE) == CASE_ETAT_JOUEUR_2)
@@ -376,4 +276,36 @@ void menu_IA(GtkWidget* MenuItem, ctr_s *ctr)
 		}
 		fclose(adt);
 		
+}
+
+void menu_about(GtkWidget* Item, ctr_s* ctr)
+{
+	gtk_widget_set_sensitive(ENV->Fenetre, FALSE);
+	/* Initialisation de la boite de Dialog */
+	ENV->reponse = GTK_RESPONSE_NONE;
+	ENV->Dialog = gtk_message_dialog_new(NULL, 
+					       GTK_DIALOG_MODAL, 
+					       GTK_MESSAGE_INFO, 
+					       GTK_BUTTONS_CLOSE,
+					       "Puissance 4\n\n"
+						 "Version 1.5\n\n"
+						 "Copyright (C) 2011 Joxit. Tout droits reserves\n" 
+						 "Auteur : MAGLOIRE Jones\n"
+						 "Dans le cadre du projet d'interface graphique\n" 
+						 "des Licences 1 de l'Institut Galilee,\n" 
+						 "Universite Paris 13, Villetaneuse\n"
+						 "http://www-galilee.univ-paris13.fr/\n\n"
+						 "Compatible GTK+ 2.10 et plus\n");
+	gtk_window_set_title((GtkWindow*)ENV->Dialog, "A propos de puissance 4");
+	
+	/* Connection du bouton Destroy pour retourner au jeu */
+	gtk_signal_connect(GTK_OBJECT(ENV->Dialog), "destroy", G_CALLBACK(afficher_fenetre), ctr);
+	
+	/* Boucle d'attente de reponse */
+	while(ENV->reponse == GTK_RESPONSE_NONE)
+		ENV->reponse = gtk_dialog_run(GTK_DIALOG(ENV->Dialog));
+	
+	if(ENV->reponse == GTK_RESPONSE_CLOSE)
+		afficher_fenetre(ENV->Dialog, ctr);
+	
 }
