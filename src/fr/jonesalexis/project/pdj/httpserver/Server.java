@@ -8,7 +8,7 @@ import com.sun.net.httpserver.HttpServer;
 
 public class Server {
 	final private static int _portDeflaut = 1900;
-	final private static String _webPathDefault = "/var/www/";
+	final private static String _webPathDefault = "www/";
 	private static String webPath;
 	private static String error404 = "404.html";
 
