@@ -6,40 +6,46 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import fr.jonesalexis.project.pdj.Pizza;
+import fr.jonesalexis.project.pdj.httpserver.Server;
 
 public class PizzaHTMLPrinter {
 	private FileReader is;
+	private String htmlBegin = "pizzas.html";
+	private String htmlEnd = "pizzas_end.html";
 	private int index;
 	private final String lesPizzas;
+	HashMap<String, String> lesTypes;
 
 	public PizzaHTMLPrinter(ArrayList<Pizza> pizzas) {
 		try {
-			is = new FileReader("www" + File.separator + "pizzas.html");
+			is = new FileReader(Server.getWebPath() + File.separator
+					+ htmlBegin);
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		index = 0;
 		lesPizzas = pizzaListHTMLCreator(pizzas);
-		System.out.print(lesPizzas);
 	}
 
-	public PizzaHTMLPrinter(Pizza pizzas) {
+	public PizzaHTMLPrinter(Pizza pizzas, HashMap<String, String> lesTypes) {
 		try {
-			is = new FileReader("www" + File.separator + "pizzas.html");
+			is = new FileReader("www" + File.separator + htmlBegin);
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		index = 0;
+		this.lesTypes = lesTypes;
 		lesPizzas = pizzaInfoHTMLCreator(pizzas);
-		System.out.print(lesPizzas);
 	}
 
 	private String pizzaInfoHTMLCreator(Pizza p) {
-		String res = "<h1>" + p.getNom() + " " + p.getPrix() + " euros</h1></ br>";
+		String res = "<h1>" + p.getNom() + " " + lesTypes.get(p.getType())
+				+ " euros</h1></ br>";
 		res += "<p>" + p.getDescription() + "</p></ br>";
 
 		return res;
@@ -54,7 +60,8 @@ public class PizzaHTMLPrinter {
 	}
 
 	private String pizzaListHTMLCreator(Pizza p) {
-		String res = "<a href=\"lespizzas/" + p.toLink() + "\"><h2>" + p.getNom() + "</h2></ br>";
+		String res = "<a href=\"lespizzas/" + p.toLink() + "\"><h2>"
+				+ p.getNom() + "</h2></ br>";
 		res += "<p>" + p.getDescription() + "</p></a></ br>";
 		return res;
 	}
@@ -91,7 +98,8 @@ public class PizzaHTMLPrinter {
 			return res;
 		} else {
 			try {
-				is = new FileReader("www" + File.separator + "pizzas_end.html");
+				is = new FileReader(Server.getWebPath() + File.separator
+						+ htmlEnd);
 				return is.read();
 			} catch (IOException e) {
 				// TODO Auto-generated catch block

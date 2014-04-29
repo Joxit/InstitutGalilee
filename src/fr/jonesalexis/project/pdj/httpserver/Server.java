@@ -3,6 +3,7 @@ package fr.jonesalexis.project.pdj.httpserver;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.concurrent.Executors;
 
 import com.sun.net.httpserver.HttpServer;
@@ -15,21 +16,25 @@ public class Server {
 	private static String webPath;
 	private static String error404 = "404.html";
 	public static ArrayList<Pizza> lesPizzas;
+	public static HashMap<String, String> lesTypes;
 
-	public Server(ArrayList<Pizza> p) {
-		this(_portDeflaut, _webPathDefault, p);
+	public Server(ArrayList<Pizza> p, HashMap<String, String> lesTypes) {
+		this(_portDeflaut, _webPathDefault, p, lesTypes);
 	}
 
-	public Server(String webPath, ArrayList<Pizza> p) {
-		this(_portDeflaut, webPath + "/", p);
+	public Server(String webPath, ArrayList<Pizza> p,
+			HashMap<String, String> lesTypes) {
+		this(_portDeflaut, webPath + "/", p, lesTypes);
 	}
 
-	public Server(int port, ArrayList<Pizza> p) {
-		this(port, _webPathDefault, p);
+	public Server(int port, ArrayList<Pizza> p, HashMap<String, String> lesTypes) {
+		this(port, _webPathDefault, p, lesTypes);
 	}
 
-	public Server(int port, String webPath, ArrayList<Pizza> p) {
+	public Server(int port, String webPath, ArrayList<Pizza> p,
+			HashMap<String, String> types) {
 		lesPizzas = p;
+		lesTypes = types;
 		try {
 			InetSocketAddress addr = new InetSocketAddress(port);
 			HttpServer server;
@@ -38,7 +43,8 @@ public class Server {
 			server.createContext("/", new Handler());
 			server.setExecutor(Executors.newCachedThreadPool());
 			server.start();
-			System.out.println("Le serveur en ecoute sur le port: " + addr.getPort());
+			System.out.println("Le serveur en ecoute sur le port: "
+					+ addr.getPort());
 			System.out.println("Le serveur a comme dossier web : " + webPath);
 		} catch (IOException e) {
 			e.printStackTrace();

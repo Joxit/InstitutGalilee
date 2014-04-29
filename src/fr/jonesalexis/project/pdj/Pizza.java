@@ -3,7 +3,7 @@ package fr.jonesalexis.project.pdj;
 public class Pizza {
 	private String nom;
 	private String description;
-	private int type;
+	private String type;
 
 	public Pizza() {
 		setNom("");
@@ -28,34 +28,23 @@ public class Pizza {
 
 	@Override
 	public String toString() {
-		return "Pizza [nom=" + nom + ", description=" + description + ", type=" + type + "]";
+		return "Pizza [nom=" + nom + ", description=" + description + ", type="
+				+ type + "]";
 	}
 
-	public int getType() {
+	public String getType() {
 		return type;
 	}
 
-	public double getPrix() {
-		switch (type) {
-			case 1:
-				return 12;
-			case 2:
-				return 13;
-			case 3:
-				return 14;
-			default:
-				return 16;
-		}
-	}
-
-	public void setType(int type) {
+	public void setType(String type) {
 		this.type = type;
 	}
 
 	public String toLink() {
 		String res = "";
 		for (char c : nom.toCharArray()) {
-			if (((c >= 'a') && (c <= 'z')) || ((c >= 'A') && (c <= 'Z'))) {
+			if (((c >= 'a') && (c <= 'z')) || ((c >= 'A') && (c <= 'Z'))
+					|| ((c >= '0') && (c <= '9'))) {
 				res += c;
 			}
 		}

@@ -31,12 +31,15 @@ public class Handler implements HttpHandler {
 	}
 
 	public void printExchange(HttpExchange exchange) {
-		System.out.println("getHttpContext.getPath : " + exchange.getHttpContext().getPath());
-		System.out.println("getRequestHeaders : " + exchange.getRequestHeaders());
+		System.out.println("getHttpContext.getPath : "
+				+ exchange.getHttpContext().getPath());
+		System.out.println("getRequestHeaders : "
+				+ exchange.getRequestHeaders());
 		System.out.println("getRequestMethod : " + exchange.getRequestMethod());
 		System.out.println("getProtocol : " + exchange.getProtocol());
 		System.out.println("getLocalAddress : " + exchange.getLocalAddress());
-		System.out.println("getRequestURI.getPath : " + exchange.getRequestURI().getPath());
+		System.out.println("getRequestURI.getPath : "
+				+ exchange.getRequestURI().getPath());
 
 	}
 
@@ -62,7 +65,7 @@ public class Handler implements HttpHandler {
 				} else {
 					Pizza p = Server.getPizza(split[split.length - 1]);
 					if (p != null) {
-						php = new PizzaHTMLPrinter(p);
+						php = new PizzaHTMLPrinter(p, Server.lesTypes);
 					}
 				}
 				if (php != null) {
@@ -80,12 +83,14 @@ public class Handler implements HttpHandler {
 				f = new FileReader(Server.getWebPath() + path);
 				System.out.println("encoding : " + f.getEncoding());
 			} catch (FileNotFoundException e) {
-				System.out.println("404 File not Found : " + Server.getWebPath() + path);
+				System.out.println("404 File not Found : "
+						+ Server.getWebPath() + path);
 				try {
-					f = new FileReader(Server.getWebPath() + Server.getError404());
-				} catch (FileNotFoundException e2) {
-					System.out.println("404 File not Found : " + Server.getWebPath()
+					f = new FileReader(Server.getWebPath()
 							+ Server.getError404());
+				} catch (FileNotFoundException e2) {
+					System.out.println("404 File not Found : "
+							+ Server.getWebPath() + Server.getError404());
 				}
 			}
 			if (f != null) {
@@ -104,7 +109,8 @@ public class Handler implements HttpHandler {
 	public static String getMIMEType(String path) {
 		if (path.endsWith(".css")) {
 			return "text/css";
-		} else if (path.endsWith(".html") || path.endsWith(".htm") || path.endsWith(".php")) {
+		} else if (path.endsWith(".html") || path.endsWith(".htm")
+				|| path.endsWith(".php")) {
 			return "text/html";
 		} else if (path.endsWith(".png")) {
 			return "image/png";

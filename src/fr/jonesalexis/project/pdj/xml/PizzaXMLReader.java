@@ -7,7 +7,6 @@ import java.util.ArrayList;
 import org.xml.sax.*;
 import org.xml.sax.helpers.XMLReaderFactory;
 
-import fr.jonesalexis.project.pdj.Main;
 import fr.jonesalexis.project.pdj.Pizza;
 
 public class PizzaXMLReader implements ContentHandler {
@@ -43,7 +42,8 @@ public class PizzaXMLReader implements ContentHandler {
 	}
 
 	@Override
-	public void startPrefixMapping(String prefix, String uri) throws SAXException {
+	public void startPrefixMapping(String prefix, String uri)
+			throws SAXException {
 		// TODO Auto-generated method stub
 
 	}
@@ -59,27 +59,33 @@ public class PizzaXMLReader implements ContentHandler {
 	}
 
 	@Override
-	public void startElement(String uri, String localName, String qName, Attributes atts)
-			throws SAXException {
-		if (localName.equals("pizza")) {
+	public void startElement(String uri, String localName, String qName,
+			Attributes atts) throws SAXException {
+		if (localName.equalsIgnoreCase("pizza")) {
 			balise = Balises.PIZZA;
 			current = new Pizza();
-			current.setType(Integer.parseInt(atts.getValue("type")));
-		} else if (localName.equals("nom")) {
+			current.setType(atts.getValue("type"));
+		} else if (localName.equalsIgnoreCase("nom")) {
 			balise = Balises.NOM;
-		} else if (localName.equals("description")) {
+		} else if (localName.equalsIgnoreCase("description")) {
 			balise = Balises.DESC;
 		}
 	}
 
 	@Override
-	public void endElement(String uri, String localName, String qName) throws SAXException {
+	public void endElement(String uri, String localName, String qName)
+			throws SAXException {
 		// TODO Auto-generated method stub
-
+		if (localName.equalsIgnoreCase("description")) {
+			lesPizzas.add(current);
+			current = null;
+			balise = null;
+		}
 	}
 
 	@Override
-	public void characters(char[] ch, int start, int length) throws SAXException {
+	public void characters(char[] ch, int start, int length)
+			throws SAXException {
 		if (balise == Balises.PIZZA) {
 			balise = null;
 		} else if (balise == Balises.NOM) {
@@ -89,15 +95,13 @@ public class PizzaXMLReader implements ContentHandler {
 		} else if (balise == Balises.DESC) {
 			String desc = new String(ch, start, length);
 			current.setDescription(desc);
-			lesPizzas.add(current);
-			current = null;
-			balise = null;
 		}
 
 	}
 
 	@Override
-	public void ignorableWhitespace(char[] ch, int start, int length) throws SAXException {
+	public void ignorableWhitespace(char[] ch, int start, int length)
+			throws SAXException {
 		// TODO Auto-generated method stub
 
 	}
@@ -110,7 +114,8 @@ public class PizzaXMLReader implements ContentHandler {
 	}
 
 	@Override
-	public void processingInstruction(String target, String data) throws SAXException {
+	public void processingInstruction(String target, String data)
+			throws SAXException {
 		// TODO Auto-generated method stub
 
 	}
