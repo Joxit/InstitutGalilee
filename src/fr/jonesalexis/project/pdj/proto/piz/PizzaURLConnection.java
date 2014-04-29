@@ -10,7 +10,6 @@ public class PizzaURLConnection extends URLConnection {
 
 	public PizzaURLConnection(URL u) throws MalformedURLException {
 		super(u);
-		setContentHandlerFactory(new PizzaContentFactory());
 	}
 
 	@Override

@@ -5,12 +5,12 @@ import java.net.ContentHandler;
 import java.net.URL;
 import java.net.URLConnection;
 
+import fr.jonesalexis.project.pdj.httpserver.ServerHttp;
+
 public class PizzaContentHandler extends ContentHandler {
 
 	@Override
 	public Object getContent(URLConnection urlc) throws IOException {
-
-		// DnsURLConnection url = urlc;
 		URL url = urlc.getURL();
 		String requete = url.getQuery();
 		String queryValue;
@@ -19,47 +19,24 @@ public class PizzaContentHandler extends ContentHandler {
 		queryValue = url.getHost();
 
 		switch (requete) {
-		case "lol":
-			resultValue = requestIPtoH(queryValue);
-			return new PizzaEntry(requete, queryValue, resultValue);
-		case "HtoIP":
-			resultValue = requestHtoIP(queryValue);
-			return new PizzaEntry(requete, queryValue, resultValue);
-		case "DtoMX":
-			resultValue = requestDtoMX(queryValue);
-			return new PizzaEntry(requete, queryValue, resultValue);
-		default:
-			return null;
+			case "desc":
+				resultValue = ServerHttp.getPizza(queryValue).getDescription();
+				return new PizzaEntry(requete, queryValue, resultValue);
+			case "list":
+				resultValue = "pizza/type/prix";
+				if (queryValue.equals("pizza")) {
+					resultValue = ServerHttp.getAllPizzaLink();
+				} else if (queryValue.equals("type")) {
+					resultValue = ServerHttp.getAllTypes();
+				} else if (queryValue.equals("prix")) {
+					resultValue = ServerHttp.getAllPrices();
+				}
+				return new PizzaEntry(requete, queryValue, resultValue);
+			case "prix":
+				resultValue = ServerHttp.lesTypes.get(ServerHttp.getPizza(queryValue).getType());
+				return new PizzaEntry(requete, queryValue, resultValue);
+			default:
+				return null;
 		}
-	}
-
-	private String requestHtoIP(String queryValue) {
-		String command = "dig +short " + queryValue;
-		return executer(command);
-	}
-
-	private String requestIPtoH(String queryValue) {
-		String command = "dig +short -x " + queryValue;
-		return executer(command);
-	}
-
-	private String requestDtoMX(String queryValue) {
-		String command = "dig +short -t " + queryValue;
-
-		return executer(command);
-	}
-
-	private String executer(String command) {
-		String res = "";
-		try {
-			Process p = Runtime.getRuntime().exec(command);
-			int c;
-			while ((c = p.getInputStream().read()) != -1) {
-				res += (char) c;
-			}
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		return res;
 	}
 }

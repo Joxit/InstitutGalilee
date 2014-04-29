@@ -2,16 +2,24 @@ package fr.jonesalexis.project.pdj.proto;
 
 import java.io.IOException;
 import java.net.ServerSocket;
+import java.net.URLConnection;
+import java.util.ArrayList;
+import java.util.HashMap;
+
+import fr.jonesalexis.project.pdj.Pizza;
+import fr.jonesalexis.project.pdj.proto.piz.PizzaContentFactory;
 
 public class ServerPiz {
 	ServerSocket serverSocket = null;
-	private final static int nbThreads = 2;
+	private final static int nbThreads = 20;
 
 	public ServerPiz(int port) {
+		URLConnection.setContentHandlerFactory(new PizzaContentFactory());
 		try {
 			serverSocket = new ServerSocket(port, 1);
 		} catch (IOException e) {
 			e.printStackTrace();
+			System.exit(0);
 		}
 
 	}
@@ -31,4 +39,5 @@ public class ServerPiz {
 			System.err.println(e);
 		}
 	}
+
 }

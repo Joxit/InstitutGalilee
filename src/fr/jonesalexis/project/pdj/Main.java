@@ -12,13 +12,14 @@ import fr.jonesalexis.project.pdj.xml.PizzaXMLReader;
 import fr.jonesalexis.project.pdj.xml.TypeXMLReader;
 
 public class Main {
-	private String[] args;
+	private final String[] args;
 	private String db = "db" + File.separator + "pizzas.xml";
 	private String dt = "db" + File.separator + "types.xml";
 	private String www = null;
-	private String port = null;
-	private PizzaXMLReader pxr = new PizzaXMLReader();
-	private TypeXMLReader txr = new TypeXMLReader();
+	private String httpPort = null;
+	private final String pizPort = "2000";
+	private final PizzaXMLReader pxr = new PizzaXMLReader();
+	private final TypeXMLReader txr = new TypeXMLReader();
 
 	public Main(String[] args) {
 		this.args = args;
@@ -30,8 +31,8 @@ public class Main {
 	}
 
 	public void start() {
-		System.getProperties().put("java.protocol.handler.pkgs",
-				"fr.jonesalexis.project.pdj.proto");
+		System.getProperties()
+				.put("java.protocol.handler.pkgs", "fr.jonesalexis.project.pdj.proto");
 
 		analyseArgs();
 		parseXML();
@@ -41,8 +42,12 @@ public class Main {
 	}
 
 	private void startPizServer() {
-		ServerPiz s = new ServerPiz(2000);
-		s.start();
+		try {
+			ServerPiz s = new ServerPiz(Integer.parseInt(pizPort));
+			s.start();
+		} catch (NumberFormatException e) {
+			usage();
+		}
 	}
 
 	private void parseXML() {
@@ -58,21 +63,21 @@ public class Main {
 
 	private void startHttpServer() {
 		ServerHttp s = null;
-		if ((www == null) && (port == null)) {
+		if ((www == null) && (httpPort == null)) {
 			s = new ServerHttp(pxr.getLesPizzas(), txr.getLesTypes());
 		} else if (www == null) {
 			try {
-				s = new ServerHttp(Integer.parseInt(port), pxr.getLesPizzas(),
+				s = new ServerHttp(Integer.parseInt(httpPort), pxr.getLesPizzas(),
 						txr.getLesTypes());
 			} catch (NumberFormatException e) {
 				usage();
 			}
-		} else if (port == null) {
+		} else if (httpPort == null) {
 			s = new ServerHttp(www, pxr.getLesPizzas(), txr.getLesTypes());
 		} else {
 			try {
-				s = new ServerHttp(Integer.parseInt(port), www,
-						pxr.getLesPizzas(), txr.getLesTypes());
+				s = new ServerHttp(Integer.parseInt(httpPort), www, pxr.getLesPizzas(),
+						txr.getLesTypes());
 			} catch (NumberFormatException e) {
 				usage();
 				s = null;
@@ -92,9 +97,16 @@ public class Main {
 				} else {
 					usage();
 				}
-			} else if (args[i].equals("-p")) {
+			} else if (args[i].equals("-ph")) {
 				if ((i + 1) < args.length) {
-					port = args[i + 1];
+					httpPort = args[i + 1];
+					i++;
+				} else {
+					usage();
+				}
+			} else if (args[i].equals("-pp")) {
+				if ((i + 1) < args.length) {
+					httpPort = args[i + 1];
 					i++;
 				} else {
 					usage();
@@ -115,7 +127,6 @@ public class Main {
 				}
 			} else if (args[i].equals("-h")) {
 				usage();
-				System.exit(0);
 			}
 		}
 	}
@@ -125,11 +136,15 @@ public class Main {
 		System.out.println("java fr.jonesalexi.project.pdj.Main [Options]");
 		System.out.println("Les options : ");
 		System.out.println("-h affiche ce message");
-		System.out.println("-p [port]\n\tNumero de port; par defaut : 1900");
+		System.out
+				.println("-ph [port]\n\tNumero de port pour le serveur de requetes http; par defaut : 1900");
+		System.out
+				.println("-pp [port]\n\tNumero de port pour le serveur de requetes piz; par defaut : 2000");
 		System.out.println("-w [dossier web]\n\tDossier web; par defaut : www");
 		System.out
 				.println("-dp [fichier BdD pizzas]\n\tFichier Base de Donnees des pizzas; par defaut : db/pizzas.xml");
 		System.out
 				.println("-dt [fichier BdD types]\n\tFichier Base de Donnees des types; par defaut : db/types.xml");
+		System.exit(0);
 	}
 }

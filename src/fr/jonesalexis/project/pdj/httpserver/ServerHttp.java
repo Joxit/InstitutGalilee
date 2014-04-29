@@ -13,7 +13,7 @@ import fr.jonesalexis.project.pdj.Pizza;
 public class ServerHttp {
 	final private static int _portDeflaut = 1900;
 	final private static String _webPathDefault = "www/";
-	private int port;
+	private final int port;
 	private static String webPath;
 	private static String error404 = "404.html";
 	public static ArrayList<Pizza> lesPizzas;
@@ -23,18 +23,15 @@ public class ServerHttp {
 		this(_portDeflaut, _webPathDefault, p, lesTypes);
 	}
 
-	public ServerHttp(String webPath, ArrayList<Pizza> p,
-			HashMap<String, String> lesTypes) {
+	public ServerHttp(String webPath, ArrayList<Pizza> p, HashMap<String, String> lesTypes) {
 		this(_portDeflaut, webPath + "/", p, lesTypes);
 	}
 
-	public ServerHttp(int port, ArrayList<Pizza> p,
-			HashMap<String, String> lesTypes) {
+	public ServerHttp(int port, ArrayList<Pizza> p, HashMap<String, String> lesTypes) {
 		this(port, _webPathDefault, p, lesTypes);
 	}
 
-	public ServerHttp(int port, String webPath, ArrayList<Pizza> p,
-			HashMap<String, String> types) {
+	public ServerHttp(int port, String webPath, ArrayList<Pizza> p, HashMap<String, String> types) {
 		lesPizzas = p;
 		lesTypes = types;
 		this.port = port;
@@ -50,8 +47,7 @@ public class ServerHttp {
 			server.createContext("/", new Handler());
 			server.setExecutor(Executors.newCachedThreadPool());
 			server.start();
-			System.out.println("Le serveur en ecoute sur le port: "
-					+ addr.getPort());
+			System.out.println("Le serveur en ecoute sur le port: " + addr.getPort());
 			System.out.println("Le serveur a comme dossier web : " + webPath);
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -78,4 +74,29 @@ public class ServerHttp {
 		}
 		return null;
 	}
+
+	public static String getAllPizzaLink() {
+		String res = "";
+		for (Pizza p : lesPizzas) {
+			res += p.toLink() + ";";
+		}
+		return res;
+	}
+
+	public static String getAllTypes() {
+		String res = "";
+		for (String s : lesTypes.keySet()) {
+			res += s + ";";
+		}
+		return res;
+	}
+
+	public static String getAllPrices() {
+		String res = "";
+		for (String s : lesTypes.values()) {
+			res += s + ";";
+		}
+		return res;
+	}
+
 }

@@ -1,0 +1,23 @@
+\select@language {french}
+\contentsline {section}{\numberline {1}Installation de l'application}{2}
+\contentsline {paragraph}{Make}{2}
+\contentsline {paragraph}{Clean}{2}
+\contentsline {paragraph}{}{2}
+\contentsline {section}{\numberline {2}Administration de l'application}{2}
+\contentsline {subsection}{\numberline {2.1}Lancement et options}{2}
+\contentsline {paragraph}{Les serveurs HTTP et PIZ}{2}
+\contentsline {paragraph}{Les options}{2}
+\contentsline {subsection}{\numberline {2.2}Les arguments}{2}
+\contentsline {paragraph}{Dossier web}{2}
+\contentsline {paragraph}{Fichier de BdD pizzas}{3}
+\contentsline {paragraph}{Fichier de BdD types}{3}
+\contentsline {paragraph}{port}{3}
+\contentsline {subsection}{\numberline {2.3}Protocole http}{3}
+\contentsline {paragraph}{Fonctionnement}{3}
+\contentsline {subsection}{\numberline {2.4}Protocole piz}{3}
+\contentsline {paragraph}{Fonctionnement}{3}
+\contentsline {section}{\numberline {3}Utilisation de l'application}{4}
+\contentsline {subsection}{\numberline {3.1}Utilisation HTTP}{4}
+\contentsline {paragraph}{}{4}
+\contentsline {subsection}{\numberline {3.2}Utilisation PIZ}{4}
+\contentsline {paragraph}{}{4}

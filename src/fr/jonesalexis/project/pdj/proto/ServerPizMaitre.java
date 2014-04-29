@@ -7,14 +7,15 @@ import java.net.Socket;
 import java.util.ArrayList;
 
 public class ServerPizMaitre extends Thread {
-	private ArrayList<Socket> sockets;
-	private ServerSocket serverSocket;
+	private final ArrayList<Socket> sockets;
+	private final ServerSocket serverSocket;
 
 	public ServerPizMaitre(ServerSocket serverSocket) {
 		this.serverSocket = serverSocket;
 		sockets = new ArrayList<Socket>();
 	}
 
+	@Override
 	public void run() {
 		while (true) {
 			Socket socket = null;
@@ -22,17 +23,17 @@ public class ServerPizMaitre extends Thread {
 				socket = serverSocket.accept();
 				addIS(socket);
 				synchronized (this) {
-					notifyAll();
+					notify();
 				}
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			} /*
-			 * finally {
-			 * 
-			 * try { if (socket != null) { socket.close(); } } catch
-			 * (IOException e) { System.out.println(e); } }
-			 */
+				* finally {
+				* 
+				* try { if (socket != null) { socket.close(); } } catch
+				* (IOException e) { System.out.println(e); } }
+				*/
 		}
 	}
 

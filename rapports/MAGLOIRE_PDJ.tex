@@ -1,0 +1,146 @@
+\documentclass[a4paper,12pt]{article}
+
+\usepackage{multicol}
+\usepackage[francais]{babel}
+\usepackage[usenames]{color}
+\usepackage[latin1]{inputenc}
+% maths
+\usepackage{amsmath}
+\usepackage{amsfonts}
+
+\usepackage{calrsfs}
+\usepackage{comment}
+\usepackage{graphicx}
+\usepackage[T1]{fontenc}
+% pour les algos 
+\usepackage{vmargin}
+\usepackage{tikz}
+
+% footer & header Usage : \[l|c|r]head{} \[l|c|r]foot{} chose one letter
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+
+% landscape mod usage : \begin{landscape} something \end{landscape}
+\usepackage{pdflscape}
+
+%images
+\usepackage{float}
+\usepackage{caption}
+\usepackage{subcaption}
+\restylefloat{figure}
+
+%BibTex
+\usepackage{cite}
+\usepackage[nottoc, notlof, notlot]{tocbibind}
+
+\begin{document}
+% -------------------- Input du title --------------------
+	\input{header_joxit}
+% --------------------------------------------------------
+\chead{Jones \textsc{Magloire}, Master 1 Informatique}
+\rhead[]{}
+\lhead[]{}
+\cfoot{\thepage}
+\tableofcontents
+\newpage
+\section{Installation de l'application} 
+\paragraph{Make}
+Pour l'installation, entrez dans le fichier src, lancez la commande\\
+\indent \$ make
+
+\paragraph{Clean}
+Pour supprimer les fichiers de classe, lancez la commande \\
+\indent \$ make clean
+
+\paragraph{} Les dossiers qui sont fournis doivent être dans le dossier où sont les classes pour que le programme puisse y acceder.
+
+\section{Administration de l'application}
+\subsection{Lancement et options}
+\paragraph{Les serveurs HTTP et PIZ}
+Pour le lancement utilisez la commande : \\
+\indent \$ java fr.jonesalexis.project.pdj.Main [Options]
+
+\paragraph{Les options}
+\begin{itemize}
+	\item -ph [port]\\
+Numéro de port pour le serveur de requêtes http; par défaut : 1900
+	\item -pp [port]\\
+Numéro de port pour le serveur de requêtes piz; par défaut : 2000
+	\item -w [dossier web] \\
+	Dossier web; par defaut : www 
+	\item -dp [fichier BdD pizzas] \\
+	Fichier Base de Données des pizzas; par défaut : db/pizzas.xml 
+	\item -dt [fichier BdD types] \\
+	Fichier Base de Données des types; par défaut : db/types.xml 
+\end{itemize}
+
+\subsection{Les arguments}
+\paragraph{Dossier web}
+Dans le dossier web, il y a toutes les pages HTML du site de pizza. Il doit néanmoins obligatoirement contenir les fichiers \textbf{pizzas.html} et \textbf{pizzas\_end.html} où \textbf{pizzas.html} est le début du fichier html à envoyer et  \textbf{pizzas\_end.html} la fin. Entre ces deux parties, du code concernant les pizzas va être inséré sous la forme: 
+\begin{verbatim}
+<h1>header1</h1>< /br>
+<h1>header2</h1>< /br>
+<p>paragraphe</p>< /br>
+\end{verbatim}
+Vous pouvez donc modifier votre CSS en fonction de cela. Des fichiers HTMLs sont déjà fournis (HTML5 CSS3). 
+
+\paragraph{Fichier de BdD pizzas} 
+La liste des pizzas doit être sous la forme : 
+\begin{verbatim}
+<lesPizzas>
+    <pizza type="nom du type de la pizza">
+        <nom>nom de la pizza</nom>
+        <description>description de la pizza</description>
+    </pizza>
+    ...
+</lesPizzas>
+\end{verbatim}
+
+Dans la balise pizza, type correspond à l'identifiant d'un type dans le fichier des types.
+On met le nom de la Pizza entre les balises de nom et sa description entre les balises description. \\
+Il faut retenir que le \textbf{lien} d'une pizza qui est son nom en gardant que les lettres et les chiffres. \\
+Plusieurs pizzas peuvent avoir le même type, mais elles ne doivent pas avoir le même lien. Elles doivent toutes avoir un type existant dans la liste des types.\\
+
+\paragraph{Fichier de BdD types}
+La liste des types doit être sous la forme :
+\begin{verbatim}
+<lestypes>
+    <type id="nom du type">
+        <prix>prix pour ce type</prix>
+    </type>
+    ...
+</lestypes>
+\end{verbatim}
+
+Dans la balise type, id correspond à l'identifiant du type.
+On met le prix de la pizza entre les balises prix.
+Tous les types doivent avoir un identifiant différent.
+
+\paragraph{port} Les ports doivent être des entiers.
+
+\subsection{Protocole http}
+\paragraph{Fonctionnement} Le serveur HTTP va récupérer les requêtes HTTP de l'utilisateur et va lui renvoyer les pages html de la requête. Si une page n'existe pas, on envoie la page 404.html. Il y a uniquement les requêtes de type GET qui sont prises en charge.
+
+\subsection{Protocole piz}
+\paragraph{Fonctionnement} Le serveur PIZ va récupérer les requêtes PIZ de l'utilisateur et va lui renvoyer les informations qu'il demande. Le serveur est constitué d'un maître qui accepte les connexions et de plusieurs esclaves qui répondent. Les requêtes possibles sont : 
+\begin{itemize}
+\item  piz://pizza?list\textbackslash r\textbackslash n : liste tous les liens des pizzas du serveur.
+\item  piz://prix?list\textbackslash r\textbackslash n : liste tous les prix de pizza du serveur.
+\item  piz://type?list\textbackslash r\textbackslash n : liste tous les types de pizza du serveur.
+\item  piz://[lien de pizza]?desc\textbackslash r\textbackslash n : donne la description de la pizza demandé.
+\item  piz://[lien de pizza]?prix\textbackslash r\textbackslash n : donne le prix de la pizza demandé.
+\end{itemize}
+Il ne faut pas oublier les \textbackslash r\textbackslash n a la fin de la requête.
+
+\section{Utilisation de l'application}
+\subsection{Utilisation HTTP}
+\paragraph{} Ouvrez votre navigateur internet, tapez http://[IP serveur]:[port] par exemple\\
+ http://127.0.0.1:1900\\
+
+
+\subsection{Utilisation PIZ}
+\paragraph{} Pour avoir un aperçu du protocole, lancez le programme \\
+\indent \$ java fr.jonesalexis.project.pdj.ClientExample
+Il montre les requêtes possibles et leur résultat.
+
+\end{document}

@@ -5,6 +5,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 public class PizzaEntry {
+
 	private String type = "A";
 	private String queryValue;
 	private String resultValue;
@@ -44,4 +45,9 @@ public class PizzaEntry {
 		this.resultValue = resultValue;
 	}
 
+	@Override
+	public String toString() {
+		return "PizzaEntry [type=" + type + ", queryValue=" + queryValue + ", resultValue="
+				+ resultValue + "]";
+	}
 }
