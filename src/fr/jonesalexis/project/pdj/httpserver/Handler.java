@@ -1,17 +1,9 @@
 package fr.jonesalexis.project.pdj.httpserver;
 
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.net.URLConnection;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-
 import com.sun.net.httpserver.Headers;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
@@ -61,11 +53,11 @@ public class Handler implements HttpHandler {
 				String[] split = path.split("lespizzas/");
 				PizzaHTMLPrinter php = null;
 				if (split.length == 1) {
-					php = new PizzaHTMLPrinter(Server.lesPizzas);
+					php = new PizzaHTMLPrinter(ServerHttp.lesPizzas);
 				} else {
-					Pizza p = Server.getPizza(split[split.length - 1]);
+					Pizza p = ServerHttp.getPizza(split[split.length - 1]);
 					if (p != null) {
-						php = new PizzaHTMLPrinter(p, Server.lesTypes);
+						php = new PizzaHTMLPrinter(p, ServerHttp.lesTypes);
 					}
 				}
 				if (php != null) {
@@ -80,17 +72,17 @@ public class Handler implements HttpHandler {
 
 			FileReader f = null;
 			try {
-				f = new FileReader(Server.getWebPath() + path);
+				f = new FileReader(ServerHttp.getWebPath() + path);
 				System.out.println("encoding : " + f.getEncoding());
 			} catch (FileNotFoundException e) {
 				System.out.println("404 File not Found : "
-						+ Server.getWebPath() + path);
+						+ ServerHttp.getWebPath() + path);
 				try {
-					f = new FileReader(Server.getWebPath()
-							+ Server.getError404());
+					f = new FileReader(ServerHttp.getWebPath()
+							+ ServerHttp.getError404());
 				} catch (FileNotFoundException e2) {
 					System.out.println("404 File not Found : "
-							+ Server.getWebPath() + Server.getError404());
+							+ ServerHttp.getWebPath() + ServerHttp.getError404());
 				}
 			}
 			if (f != null) {

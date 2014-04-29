@@ -2,22 +2,88 @@ package fr.jonesalexis.project.pdj;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URL;
 
 import org.xml.sax.SAXException;
 
-import fr.jonesalexis.project.pdj.httpserver.Server;
+import fr.jonesalexis.project.pdj.httpserver.ServerHttp;
+import fr.jonesalexis.project.pdj.proto.ServerPiz;
 import fr.jonesalexis.project.pdj.xml.PizzaXMLReader;
 import fr.jonesalexis.project.pdj.xml.TypeXMLReader;
 
 public class Main {
-	public static void main(String[] args) throws IOException {
-		PizzaXMLReader pxr = new PizzaXMLReader();
-		TypeXMLReader txr = new TypeXMLReader();
-		String db = "db" + File.separator + "pizzas.xml";
-		String dt = "db" + File.separator + "types.xml";
-		String www = null;
-		String port = null;
+	private String[] args;
+	private String db = "db" + File.separator + "pizzas.xml";
+	private String dt = "db" + File.separator + "types.xml";
+	private String www = null;
+	private String port = null;
+	private PizzaXMLReader pxr = new PizzaXMLReader();
+	private TypeXMLReader txr = new TypeXMLReader();
 
+	public Main(String[] args) {
+		this.args = args;
+	}
+
+	public static void main(String[] args) {
+		Main m = new Main(args);
+		m.start();
+	}
+
+	public void start() {
+		System.getProperties().put("java.protocol.handler.pkgs",
+				"fr.jonesalexis.project.pdj.proto");
+
+		analyseArgs();
+		parseXML();
+		startHttpServer();
+		startPizServer();
+
+	}
+
+	private void startPizServer() {
+		ServerPiz s = new ServerPiz(2000);
+		s.start();
+	}
+
+	private void parseXML() {
+		try {
+			System.out.println("Chargement de " + db);
+			pxr.parse(db);
+			System.out.println("Chargement de " + dt);
+			txr.parse(dt);
+		} catch (SAXException | IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	private void startHttpServer() {
+		ServerHttp s = null;
+		if ((www == null) && (port == null)) {
+			s = new ServerHttp(pxr.getLesPizzas(), txr.getLesTypes());
+		} else if (www == null) {
+			try {
+				s = new ServerHttp(Integer.parseInt(port), pxr.getLesPizzas(),
+						txr.getLesTypes());
+			} catch (NumberFormatException e) {
+				usage();
+			}
+		} else if (port == null) {
+			s = new ServerHttp(www, pxr.getLesPizzas(), txr.getLesTypes());
+		} else {
+			try {
+				s = new ServerHttp(Integer.parseInt(port), www,
+						pxr.getLesPizzas(), txr.getLesTypes());
+			} catch (NumberFormatException e) {
+				usage();
+				s = null;
+			}
+		}
+		if (s != null) {
+			s.start();
+		}
+	}
+
+	private void analyseArgs() {
 		for (int i = 0; i < args.length; i++) {
 			if (args[i].equals("-w")) {
 				if ((i + 1) < args.length) {
@@ -52,39 +118,9 @@ public class Main {
 				System.exit(0);
 			}
 		}
-
-		try {
-			System.out.println("Chargement de " + db);
-			pxr.parse(db);
-			System.out.println("Chargement de " + dt);
-			txr.parse(dt);
-		} catch (SAXException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		Server s = null;
-		if ((www == null) && (port == null)) {
-			s = new Server(pxr.getLesPizzas(), txr.getLesTypes());
-		} else if (www == null) {
-			try {
-				s = new Server(Integer.parseInt(port), pxr.getLesPizzas(),
-						txr.getLesTypes());
-			} catch (NumberFormatException e) {
-				usage();
-			}
-		} else if (port == null) {
-			s = new Server(www, pxr.getLesPizzas(), txr.getLesTypes());
-		} else {
-			try {
-				s = new Server(Integer.parseInt(port), www, pxr.getLesPizzas(),
-						txr.getLesTypes());
-			} catch (NumberFormatException e) {
-				usage();
-			}
-		}
 	}
 
-	public static void usage() {
+	private void usage() {
 		System.out.println("Utilisation de l'application :");
 		System.out.println("java fr.jonesalexi.project.pdj.Main [Options]");
 		System.out.println("Les options : ");

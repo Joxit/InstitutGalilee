@@ -4,12 +4,11 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 
 import fr.jonesalexis.project.pdj.Pizza;
-import fr.jonesalexis.project.pdj.httpserver.Server;
+import fr.jonesalexis.project.pdj.httpserver.ServerHttp;
 
 public class PizzaHTMLPrinter {
 	private FileReader is;
@@ -21,7 +20,7 @@ public class PizzaHTMLPrinter {
 
 	public PizzaHTMLPrinter(ArrayList<Pizza> pizzas) {
 		try {
-			is = new FileReader(Server.getWebPath() + File.separator
+			is = new FileReader(ServerHttp.getWebPath() + File.separator
 					+ htmlBegin);
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
@@ -33,7 +32,8 @@ public class PizzaHTMLPrinter {
 
 	public PizzaHTMLPrinter(Pizza pizzas, HashMap<String, String> lesTypes) {
 		try {
-			is = new FileReader("www" + File.separator + htmlBegin);
+			is = new FileReader(ServerHttp.getWebPath() + File.separator
+					+ htmlBegin);
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -98,7 +98,7 @@ public class PizzaHTMLPrinter {
 			return res;
 		} else {
 			try {
-				is = new FileReader(Server.getWebPath() + File.separator
+				is = new FileReader(ServerHttp.getWebPath() + File.separator
 						+ htmlEnd);
 				return is.read();
 			} catch (IOException e) {
