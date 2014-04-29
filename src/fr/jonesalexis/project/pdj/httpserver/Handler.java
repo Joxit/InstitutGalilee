@@ -16,6 +16,9 @@ import com.sun.net.httpserver.Headers;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 
+import fr.jonesalexis.project.pdj.Pizza;
+import fr.jonesalexis.project.pdj.xml.PizzaHTMLPrinter;
+
 public class Handler implements HttpHandler {
 
 	@Override
@@ -50,6 +53,27 @@ public class Handler implements HttpHandler {
 			System.out.println("type : " + type);
 			reponseEntete.set("Content-Type", type);
 			exchange.sendResponseHeaders(200, 0);
+
+			if (path.contains("lespizzas")) {
+				String[] split = path.split("lespizzas/");
+				PizzaHTMLPrinter php = null;
+				if (split.length == 1) {
+					php = new PizzaHTMLPrinter(Server.lesPizzas);
+				} else {
+					Pizza p = Server.getPizza(split[split.length - 1]);
+					if (p != null) {
+						php = new PizzaHTMLPrinter(p);
+					}
+				}
+				if (php != null) {
+					while (php.ready()) {
+						reponse.write(php.read());
+					}
+					reponse.flush();
+					reponse.close();
+					return;
+				}
+			}
 
 			FileReader f = null;
 			try {
