@@ -1,0 +1,11 @@
+<lestypes>
+	<type id="1">
+		<prix>12</prix>
+	</type>
+	<type id="2">
+		<prix>13</prix>
+	</type>
+	<type id="3">
+		<prix>14</prix>
+	</type>
+</lestypes>
