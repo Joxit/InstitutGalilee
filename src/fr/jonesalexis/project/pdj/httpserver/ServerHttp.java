@@ -9,35 +9,62 @@ import java.util.concurrent.Executors;
 import com.sun.net.httpserver.HttpServer;
 
 import fr.jonesalexis.project.pdj.Pizza;
+import fr.jonesalexis.project.pdj.Server;
 
-public class ServerHttp {
+/**
+ * Classe pour demarrer le serveur HTTP. Il connait que les requetes GET
+ * @author Jones Magloire
+ * 
+ */
+public class ServerHttp extends Server {
 	final private static int _portDeflaut = 1900;
 	final private static String _webPathDefault = "www/";
 	private final int port;
 	private static String webPath;
 	private static String error404 = "404.html";
-	public static ArrayList<Pizza> lesPizzas;
-	public static HashMap<String, String> lesTypes;
 
-	public ServerHttp(ArrayList<Pizza> p, HashMap<String, String> lesTypes) {
-		this(_portDeflaut, _webPathDefault, p, lesTypes);
+	public ServerHttp(ArrayList<Pizza> lesPizzas, HashMap<String, String> lesTypes) {
+		this(_portDeflaut, _webPathDefault, lesPizzas, lesTypes);
 	}
 
-	public ServerHttp(String webPath, ArrayList<Pizza> p, HashMap<String, String> lesTypes) {
-		this(_portDeflaut, webPath + "/", p, lesTypes);
+	public ServerHttp(int port, ArrayList<Pizza> lesPizzas, HashMap<String, String> lesTypes) {
+		this(port, _webPathDefault, lesPizzas, lesTypes);
 	}
 
-	public ServerHttp(int port, ArrayList<Pizza> p, HashMap<String, String> lesTypes) {
-		this(port, _webPathDefault, p, lesTypes);
-	}
-
-	public ServerHttp(int port, String webPath, ArrayList<Pizza> p, HashMap<String, String> types) {
-		lesPizzas = p;
-		lesTypes = types;
+	public ServerHttp(int port, String webPath, ArrayList<Pizza> lesPizzas,
+			HashMap<String, String> types) {
+		super(lesPizzas, types);
 		this.port = port;
 		ServerHttp.webPath = webPath;
 	}
 
+	public ServerHttp(String webPath, ArrayList<Pizza> lesPizzas, HashMap<String, String> lesTypes) {
+		this(_portDeflaut, webPath + "/", lesPizzas, lesTypes);
+	}
+
+	/**
+	 * @return chemin du fichier de l'erreur 404
+	 */
+	public static String getError404() {
+		return error404;
+	}
+
+	/**
+	 * @return chemin du dossier des pages web
+	 */
+	public static String getWebPath() {
+		return webPath;
+	}
+
+	/**
+	 * Le fichier doit etre dans le dossier www
+	 * @param error404 chemin du fichier pour l'erreur 404
+	 */
+	public static void setError404(String error404) {
+		ServerHttp.error404 = error404;
+	}
+
+	@Override
 	public void start() {
 		try {
 			InetSocketAddress addr = new InetSocketAddress(port);
@@ -47,56 +74,11 @@ public class ServerHttp {
 			server.createContext("/", new Handler());
 			server.setExecutor(Executors.newCachedThreadPool());
 			server.start();
-			System.out.println("Le serveur en ecoute sur le port: " + addr.getPort());
-			System.out.println("Le serveur a comme dossier web : " + webPath);
+			System.out.println("Le serveur http en ecoute sur le port : " + addr.getPort());
+			System.out.println("Le serveur http a comme dossier web : " + webPath);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-	}
-
-	public static String getWebPath() {
-		return webPath;
-	}
-
-	public static String getError404() {
-		return error404;
-	}
-
-	public static void setError404(String error404) {
-		ServerHttp.error404 = error404;
-	}
-
-	public static Pizza getPizza(String link) {
-		for (Pizza p : lesPizzas) {
-			if (p.toLink().equals(link)) {
-				return p;
-			}
-		}
-		return null;
-	}
-
-	public static String getAllPizzaLink() {
-		String res = "";
-		for (Pizza p : lesPizzas) {
-			res += p.toLink() + ";";
-		}
-		return res;
-	}
-
-	public static String getAllTypes() {
-		String res = "";
-		for (String s : lesTypes.keySet()) {
-			res += s + ";";
-		}
-		return res;
-	}
-
-	public static String getAllPrices() {
-		String res = "";
-		for (String s : lesTypes.values()) {
-			res += s + ";";
-		}
-		return res;
 	}
 
 }

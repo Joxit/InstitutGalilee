@@ -1,5 +1,9 @@
 package fr.jonesalexis.project.pdj;
 
+/**
+ * Classe des pizzas, elles ont un nom, une description et un type.s
+ * @author Jones Magloire
+ */
 public class Pizza {
 	private String nom;
 	private String description;
@@ -10,36 +14,33 @@ public class Pizza {
 		setDescription("");
 	}
 
-	public String getNom() {
-		return nom;
-	}
-
-	public void setNom(String nom) {
-		this.nom = nom;
-	}
-
 	public String getDescription() {
 		return description;
 	}
 
-	public void setDescription(String description) {
-		this.description = description;
-	}
-
-	@Override
-	public String toString() {
-		return "Pizza [nom=" + nom + ", description=" + description + ", type="
-				+ type + "]";
+	public String getNom() {
+		return nom;
 	}
 
 	public String getType() {
 		return type;
 	}
 
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
+	public void setNom(String nom) {
+		this.nom = nom;
+	}
+
 	public void setType(String type) {
 		this.type = type;
 	}
 
+	/**
+	 * @return nom de la pizza avec uniquement ses chiffres et ses lettres
+	 */
 	public String toLink() {
 		String res = "";
 		for (char c : nom.toCharArray()) {
@@ -49,5 +50,10 @@ public class Pizza {
 			}
 		}
 		return res;
+	}
+
+	@Override
+	public String toString() {
+		return "Pizza [nom=" + nom + ", description=" + description + ", type=" + type + "]";
 	}
 }

@@ -13,8 +13,9 @@ public class PizzaURLConnection extends URLConnection {
 	}
 
 	@Override
-	public InputStream getInputStream() {
-		return null;
+	public void connect() throws IOException {
+		// TODO Auto-generated method stub
+
 	}
 
 	@Override
@@ -26,9 +27,8 @@ public class PizzaURLConnection extends URLConnection {
 	}
 
 	@Override
-	public void connect() throws IOException {
-		// TODO Auto-generated method stub
-
+	public InputStream getInputStream() {
+		return null;
 	}
 
 }

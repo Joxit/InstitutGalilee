@@ -2,7 +2,6 @@ package fr.jonesalexis.project.pdj;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.URL;
 
 import org.xml.sax.SAXException;
 
@@ -11,81 +10,30 @@ import fr.jonesalexis.project.pdj.proto.ServerPiz;
 import fr.jonesalexis.project.pdj.xml.PizzaXMLReader;
 import fr.jonesalexis.project.pdj.xml.TypeXMLReader;
 
+/**
+ * Classe contenant un main. Lance les serveurs HTTP et PIZ.
+ * @author Jones Magloire
+ * 
+ */
 public class Main {
-	private final String[] args;
-	private String db = "db" + File.separator + "pizzas.xml";
-	private String dt = "db" + File.separator + "types.xml";
-	private String www = null;
-	private String httpPort = null;
-	private final String pizPort = "2000";
-	private final PizzaXMLReader pxr = new PizzaXMLReader();
-	private final TypeXMLReader txr = new TypeXMLReader();
-
-	public Main(String[] args) {
-		this.args = args;
-	}
 
 	public static void main(String[] args) {
 		Main m = new Main(args);
 		m.start();
 	}
 
-	public void start() {
-		System.getProperties()
-				.put("java.protocol.handler.pkgs", "fr.jonesalexis.project.pdj.proto");
+	public static boolean debug = false;
+	private final String[] args;
+	private final String pizPort = "2000";
+	private final PizzaXMLReader pxr = new PizzaXMLReader();
+	private final TypeXMLReader txr = new TypeXMLReader();
+	private String db = "db" + File.separator + "pizzas.xml";
+	private String dt = "db" + File.separator + "types.xml";
+	private String www = null;
+	private String httpPort = null;
 
-		analyseArgs();
-		parseXML();
-		startHttpServer();
-		startPizServer();
-
-	}
-
-	private void startPizServer() {
-		try {
-			ServerPiz s = new ServerPiz(Integer.parseInt(pizPort));
-			s.start();
-		} catch (NumberFormatException e) {
-			usage();
-		}
-	}
-
-	private void parseXML() {
-		try {
-			System.out.println("Chargement de " + db);
-			pxr.parse(db);
-			System.out.println("Chargement de " + dt);
-			txr.parse(dt);
-		} catch (SAXException | IOException e) {
-			e.printStackTrace();
-		}
-	}
-
-	private void startHttpServer() {
-		ServerHttp s = null;
-		if ((www == null) && (httpPort == null)) {
-			s = new ServerHttp(pxr.getLesPizzas(), txr.getLesTypes());
-		} else if (www == null) {
-			try {
-				s = new ServerHttp(Integer.parseInt(httpPort), pxr.getLesPizzas(),
-						txr.getLesTypes());
-			} catch (NumberFormatException e) {
-				usage();
-			}
-		} else if (httpPort == null) {
-			s = new ServerHttp(www, pxr.getLesPizzas(), txr.getLesTypes());
-		} else {
-			try {
-				s = new ServerHttp(Integer.parseInt(httpPort), www, pxr.getLesPizzas(),
-						txr.getLesTypes());
-			} catch (NumberFormatException e) {
-				usage();
-				s = null;
-			}
-		}
-		if (s != null) {
-			s.start();
-		}
+	public Main(String[] args) {
+		this.args = args;
 	}
 
 	private void analyseArgs() {
@@ -127,7 +75,75 @@ public class Main {
 				}
 			} else if (args[i].equals("-h")) {
 				usage();
+			} else if (args[i].equals("-debug")) {
+				debug = true;
 			}
+		}
+	}
+
+	/**
+	 * Parse les deux fichiers XML, la BD pizza et la BD types.
+	 */
+	private void parseXML() {
+		try {
+			System.out.println("Chargement de " + db);
+			pxr.parse(db);
+			System.out.println("Chargement de " + dt);
+			txr.parse(dt);
+		} catch (SAXException | IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	/**
+	 * Initialise le protocole piz, analyse les arguments, parse les XML et
+	 * lance les serveurs.
+	 */
+	public void start() {
+		System.getProperties()
+				.put("java.protocol.handler.pkgs", "fr.jonesalexis.project.pdj.proto");
+
+		analyseArgs();
+		parseXML();
+		startHttpServer();
+		startPizServer();
+
+	}
+
+	private void startHttpServer() {
+		ServerHttp s = null;
+		if ((www == null) && (httpPort == null)) {
+			s = new ServerHttp(pxr.getLesPizzas(), txr.getLesTypes());
+		} else if (www == null) {
+			try {
+				s = new ServerHttp(Integer.parseInt(httpPort), pxr.getLesPizzas(),
+						txr.getLesTypes());
+			} catch (NumberFormatException e) {
+				usage();
+			}
+		} else if (httpPort == null) {
+			s = new ServerHttp(www, pxr.getLesPizzas(), txr.getLesTypes());
+		} else {
+			try {
+				s = new ServerHttp(Integer.parseInt(httpPort), www, pxr.getLesPizzas(),
+						txr.getLesTypes());
+			} catch (NumberFormatException e) {
+				usage();
+				s = null;
+			}
+		}
+		if (s != null) {
+			s.start();
+		}
+	}
+
+	private void startPizServer() {
+		try {
+			ServerPiz s = new ServerPiz(Integer.parseInt(pizPort), pxr.getLesPizzas(),
+					txr.getLesTypes());
+			s.start();
+		} catch (NumberFormatException e) {
+			usage();
 		}
 	}
 
@@ -145,6 +161,7 @@ public class Main {
 				.println("-dp [fichier BdD pizzas]\n\tFichier Base de Donnees des pizzas; par defaut : db/pizzas.xml");
 		System.out
 				.println("-dt [fichier BdD types]\n\tFichier Base de Donnees des types; par defaut : db/types.xml");
+		System.out.println("-debug\n\tAfficher des message pour le debug");
 		System.exit(0);
 	}
 }

@@ -1,22 +1,20 @@
 package fr.jonesalexis.project.pdj.proto;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
 import java.io.OutputStreamWriter;
-import java.io.Reader;
 import java.net.Socket;
 import java.net.URL;
-import java.security.DigestInputStream;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 
+import fr.jonesalexis.project.pdj.Main;
 import fr.jonesalexis.project.pdj.proto.piz.PizzaEntry;
 
+/**
+ * Thread esclave. Quand il est notifie par le serveur maitre, il traite la
+ * commande des nouveaux clients
+ * @author Jones Magloire
+ * 
+ */
 public class ServerPizEsclave extends Thread {
 	private final ServerPizMaitre server;
 
@@ -41,7 +39,9 @@ public class ServerPizEsclave extends Thread {
 					}
 					URL url = new URL(requete);
 					PizzaEntry content = ((PizzaEntry) url.getContent());
-					System.out.println(content);
+					if (Main.debug) {
+						System.out.println(content);
+					}
 					if (content != null) {
 						final OutputStreamWriter os = new OutputStreamWriter(s.getOutputStream());
 						os.write(content.getResultValue() + "\r\n");

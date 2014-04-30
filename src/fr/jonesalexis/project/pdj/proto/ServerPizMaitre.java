@@ -1,11 +1,17 @@
 package fr.jonesalexis.project.pdj.proto;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
 
+/**
+ * Thread du serveur maitre. Le serveur accepte les connexions, quand il en a
+ * une nouvelle il l'ajoute a sa liste et notifie ses esclaves pour qu'ils
+ * puissent traiter la demande.
+ * @author Jones Magloire
+ * 
+ */
 public class ServerPizMaitre extends Thread {
 	private final ArrayList<Socket> sockets;
 	private final ServerSocket serverSocket;
@@ -13,6 +19,19 @@ public class ServerPizMaitre extends Thread {
 	public ServerPizMaitre(ServerSocket serverSocket) {
 		this.serverSocket = serverSocket;
 		sockets = new ArrayList<Socket>();
+	}
+
+	public synchronized void addIS(Socket is) {
+		sockets.add(is);
+	}
+
+	public synchronized Socket getFirstIS() {
+		if (!sockets.isEmpty()) {
+			Socket is = sockets.get(0);
+			sockets.remove(0);
+			return is;
+		}
+		return null;
 	}
 
 	@Override
@@ -26,35 +45,8 @@ public class ServerPizMaitre extends Thread {
 					notify();
 				}
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
-			} /*
-				* finally {
-				* 
-				* try { if (socket != null) { socket.close(); } } catch
-				* (IOException e) { System.out.println(e); } }
-				*/
+			}
 		}
-	}
-
-	public synchronized void addIS(Socket is) {
-		sockets.add(is);
-	}
-
-	public synchronized void removeIS(Socket is) {
-		sockets.remove(is);
-	}
-
-	public synchronized Socket getFirstIS() {
-		if (!isEmptyIS()) {
-			Socket is = sockets.get(0);
-			sockets.remove(0);
-			return is;
-		}
-		return null;
-	}
-
-	public synchronized boolean isEmptyIS() {
-		return sockets.isEmpty();
 	}
 }

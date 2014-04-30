@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<lesPizzas>
+<pizza type="1">
+	<nom>Margherita</nom>
+	<description>Sauce tomate et mozzarella</description>
+</pizza>
+<pizza type="3">
+	<nom>4 Fromages</nom>
+	<description>Fourme d'Ambert AOP, Cantal, fromage de chevre, sauce tomate et mozzarella</description>
+</pizza>
+<pizza type="2">
+	<nom>La Reine</nom>
+	<description>Sauce tomate, Mozzarella, Jambon, Champignons</description>
+</pizza>
+<pizza type="2">
+	<nom>L'Orientale</nom>
+	<description>Sauce tomate, Mozzarella, Oignons, Merguez, Poivrons verts</description>
+</pizza>
+<pizza type="3">
+	<nom>La Savoyarde </nom>
+	<description>Creme fraiche legere, mozzarella, lardons fumes, pommes de terre, Reblochon</description>
+</pizza>
+</lesPizzas>

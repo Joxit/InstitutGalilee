@@ -6,6 +6,9 @@ all:
 	
 start:
 	java fr/jonesalexis/project/pdj/Main
+client:
+	java fr/jonesalexis/project/pdj/ClientExample
+
 	
 clean:
 	rm -f fr/jonesalexis/project/pdj/*.class 

@@ -5,12 +5,26 @@ import java.io.InputStream;
 import java.io.OutputStreamWriter;
 import java.net.Socket;
 
+/**
+ * Classe contenant un main pour executer des requetes de la part d'un client
+ * @author Jones Magloire
+ */
 public class ClientExample {
 
-	public ClientExample(String url, int port) {
-
+	public static void main(String args[]) {
+		sendRequest("piz://pizza?list\r\n", "127.0.0.1", 2000);
+		sendRequest("piz://type?list\r\n", "127.0.0.1", 2000);
+		sendRequest("piz://prix?list\r\n", "127.0.0.1", 2000);
+		sendRequest("piz://Margherita?prix\r\n", "127.0.0.1", 2000);
+		sendRequest("piz://Margherita?desc\r\n", "127.0.0.1", 2000);
 	}
 
+	/**
+	 * Envoie un requete a un serveur sur l'addr et le port
+	 * @param request a envoyer
+	 * @param addr du serveur
+	 * @param port du serveur
+	 */
 	public static void sendRequest(String request, String addr, int port) {
 		Socket socket = null;
 		try {
@@ -43,13 +57,5 @@ public class ClientExample {
 			}
 		}
 
-	}
-
-	public static void main(String args[]) {
-		sendRequest("piz://pizza?list\r\n", "127.0.0.1", 2000);
-		sendRequest("piz://type?list\r\n", "127.0.0.1", 2000);
-		sendRequest("piz://prix?list\r\n", "127.0.0.1", 2000);
-		sendRequest("piz://Margherita?prix\r\n", "127.0.0.1", 2000);
-		sendRequest("piz://Margherita?desc\r\n", "127.0.0.1", 2000);
 	}
 }
