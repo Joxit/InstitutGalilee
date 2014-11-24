@@ -11,7 +11,7 @@ import javax.persistence.PersistenceContext;
 
 /**
  *
- * @author 11000369
+ * @author joxit
  */
 @Stateless
 public class BureauxFacade extends AbstractFacade<Bureaux> implements BureauxFacadeLocal {

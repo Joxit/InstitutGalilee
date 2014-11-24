@@ -13,21 +13,22 @@ import javax.ejb.Local;
  * @author joxit
  */
 @Local
-public interface PersonnesFacadeLocal {
+public interface MessagesFacadeLocal {
 
-	void create(Personnes personnes);
+	void create(Messages messages);
 
-	void edit(Personnes personnes);
+	void edit(Messages messages);
 
-	void remove(Personnes personnes);
+	void remove(Messages messages);
 
-	Personnes find(Object id);
+	Messages find(Object id);
 
-	List<Personnes> findAll();
+	List<Messages> findAll();
 
-	List<Personnes> findRange(int[] range);
+	List<Messages> findRange(int[] range);
 
 	int count();
 
-	List<Personnes> findByBureau(Bureaux bureau);
+	public void create(int auteur, String msg);
+
 }

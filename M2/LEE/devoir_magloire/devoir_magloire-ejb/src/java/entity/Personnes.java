@@ -7,168 +7,197 @@ package entity;
 
 import java.io.Serializable;
 import java.util.Collection;
+import java.util.Date;
 import javax.persistence.Basic;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.JoinColumns;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
- * @author 11000369
+ * @author joxit
  */
 @Entity
 @Table(name = "PERSONNES")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "Personnes.findAll", query = "SELECT p FROM Personnes p"),
-    @NamedQuery(name = "Personnes.findByPersonneId",
-            query = "SELECT p FROM Personnes p WHERE p.personneId = :personneId"),
-    @NamedQuery(name = "Personnes.findByNom",
-            query = "SELECT p FROM Personnes p WHERE p.nom = :nom"),
-    @NamedQuery(name = "Personnes.findByPrenom",
-            query = "SELECT p FROM Personnes p WHERE p.prenom = :prenom"),
-    @NamedQuery(name = "Personnes.findByMail",
-            query = "SELECT p FROM Personnes p WHERE p.mail = :mail")})
+	@NamedQuery(name = "Personnes.findAll", query = "SELECT p FROM Personnes p"),
+	@NamedQuery(name = "Personnes.findByPersonneId", query = "SELECT p FROM Personnes p WHERE p.personneId = :personneId"),
+	@NamedQuery(name = "Personnes.findByNom", query = "SELECT p FROM Personnes p WHERE p.nom = :nom"),
+	@NamedQuery(name = "Personnes.findByPrenom", query = "SELECT p FROM Personnes p WHERE p.prenom = :prenom"),
+	@NamedQuery(name = "Personnes.findByMail", query = "SELECT p FROM Personnes p WHERE p.mail = :mail"),
+	@NamedQuery(name = "Personnes.findByDebut", query = "SELECT p FROM Personnes p WHERE p.debut = :debut"),
+	@NamedQuery(name = "Personnes.findByFin", query = "SELECT p FROM Personnes p WHERE p.fin = :fin")})
 public class Personnes implements Serializable {
-    private static final long serialVersionUID = 1L;
-    @Id
+	private static final long serialVersionUID = 1L;
+	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
     @Column(name = "PERSONNE_ID")
-    private Integer personneId;
-    @Size(max = 25)
+	private Integer personneId;
+	@Basic(optional = false)
+    @NotNull
+    @Size(min = 1, max = 25)
     @Column(name = "NOM")
-    private String nom;
-    @Size(max = 25)
+	private String nom;
+	@Basic(optional = false)
+    @NotNull
+    @Size(min = 1, max = 25)
     @Column(name = "PRENOM")
-    private String prenom;
-    @Size(max = 50)
+	private String prenom;
+	@Size(max = 50)
     @Column(name = "MAIL")
-    private String mail;
-    @OneToMany(mappedBy = "auteur")
-    private Collection<Message> messageCollection;
-    /* zone changé pour referencer toutes les cles primaires de bureaux au lieu
-     * du champs que j'ai créé pour facilité la lecture de la DB */
-    @JoinColumns({@JoinColumn(name = "BUREAU", referencedColumnName = "BATIMENT"),
-        @JoinColumn(name = "BUREAU", referencedColumnName = "ETAGE"),
-        @JoinColumn(name = "BUREAU", referencedColumnName = "NUMERO")})
+	private String mail;
+	@Column(name = "DEBUT")
+    @Temporal(TemporalType.DATE)
+	private Date debut;
+	@Column(name = "FIN")
+    @Temporal(TemporalType.DATE)
+	private Date fin;
+	@OneToMany(cascade = CascadeType.ALL, mappedBy = "personne")
+	private Collection<Responsables> responsablesCollection;
+	@JoinColumn(name = "BUREAU", referencedColumnName = "BUREAU_ID")
     @ManyToOne
-    private Bureaux bureau;
-    @JoinColumn(name = "EQUIPE", referencedColumnName = "EQUIPE_ID")
+	private Bureaux bureau;
+	@JoinColumn(name = "EQUIPE", referencedColumnName = "EQUIPE_ID")
     @ManyToOne
-    private Equipe equipe;
-    @OneToMany(mappedBy = "personne")
-    private Collection<Responsable> responsableCollection;
+	private Equipes equipe;
+	@OneToMany(cascade = CascadeType.ALL, mappedBy = "auteur")
+	private Collection<Messages> messagesCollection;
 
-    public Personnes() {
-    }
+	public Personnes() {
+	}
 
-    public Personnes(Integer personneId) {
-        this.personneId = personneId;
-    }
+	public Personnes(Integer personneId) {
+		this.personneId = personneId;
+	}
 
-    public Integer getPersonneId() {
-        return personneId;
-    }
+	public Personnes(Integer personneId, String nom, String prenom) {
+		this.personneId = personneId;
+		this.nom = nom;
+		this.prenom = prenom;
+	}
 
-    public void setPersonneId(Integer personneId) {
-        this.personneId = personneId;
-    }
+	public Integer getPersonneId() {
+		return personneId;
+	}
 
-    public String getNom() {
-        return nom;
-    }
+	public void setPersonneId(Integer personneId) {
+		this.personneId = personneId;
+	}
 
-    public void setNom(String nom) {
-        this.nom = nom;
-    }
+	public String getNom() {
+		return nom;
+	}
 
-    public String getPrenom() {
-        return prenom;
-    }
+	public void setNom(String nom) {
+		this.nom = nom;
+	}
 
-    public void setPrenom(String prenom) {
-        this.prenom = prenom;
-    }
+	public String getPrenom() {
+		return prenom;
+	}
 
-    public String getMail() {
-        return mail;
-    }
+	public void setPrenom(String prenom) {
+		this.prenom = prenom;
+	}
 
-    public void setMail(String mail) {
-        this.mail = mail;
-    }
+	public String getMail() {
+		return mail;
+	}
 
-    @XmlTransient
-    public Collection<Message> getMessageCollection() {
-        return messageCollection;
-    }
+	public void setMail(String mail) {
+		this.mail = mail;
+	}
 
-    public void setMessageCollection(Collection<Message> messageCollection) {
-        this.messageCollection = messageCollection;
-    }
+	public Date getDebut() {
+		return debut;
+	}
 
-    public Bureaux getBureau() {
-        return bureau;
-    }
+	public void setDebut(Date debut) {
+		this.debut = debut;
+	}
 
-    public void setBureau(Bureaux bureau) {
-        this.bureau = bureau;
-    }
+	public Date getFin() {
+		return fin;
+	}
 
-    public Equipe getEquipe() {
-        return equipe;
-    }
+	public void setFin(Date fin) {
+		this.fin = fin;
+	}
 
-    public void setEquipe(Equipe equipe) {
-        this.equipe = equipe;
-    }
+	@XmlTransient
+	public Collection<Responsables> getResponsablesCollection() {
+		return responsablesCollection;
+	}
 
-    @XmlTransient
-    public Collection<Responsable> getResponsableCollection() {
-        return responsableCollection;
-    }
+	public void setResponsablesCollection(Collection<Responsables> responsablesCollection) {
+		this.responsablesCollection = responsablesCollection;
+	}
 
-    public void setResponsableCollection(
-            Collection<Responsable> responsableCollection) {
-        this.responsableCollection = responsableCollection;
-    }
+	public Bureaux getBureau() {
+		return bureau;
+	}
 
-    @Override
-    public int hashCode() {
-        int hash = 0;
-        hash += (personneId != null ? personneId.hashCode() : 0);
-        return hash;
-    }
+	public void setBureau(Bureaux bureau) {
+		this.bureau = bureau;
+	}
 
-    @Override
-    public boolean equals(Object object) {
-        // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof Personnes)) {
-            return false;
-        }
-        Personnes other = (Personnes) object;
-        if ((this.personneId == null && other.personneId != null) || (this.personneId != null && !this.personneId.equals(other.personneId))) {
-            return false;
-        }
-        return true;
-    }
+	public Equipes getEquipe() {
+		return equipe;
+	}
 
-    @Override
-    public String toString() {
-        return "entity.Personnes[ personneId=" + personneId + " ]";
-    }
+	public void setEquipe(Equipes equipe) {
+		this.equipe = equipe;
+	}
+
+	@XmlTransient
+	public Collection<Messages> getMessagesCollection() {
+		return messagesCollection;
+	}
+
+	public void setMessagesCollection(Collection<Messages> messagesCollection) {
+		this.messagesCollection = messagesCollection;
+	}
+
+	@Override
+	public int hashCode() {
+		int hash = 0;
+		hash += (personneId != null ? personneId.hashCode() : 0);
+		return hash;
+	}
+
+	@Override
+	public boolean equals(Object object) {
+		// TODO: Warning - this method won't work in the case the id fields are not set
+		if (!(object instanceof Personnes)) {
+			return false;
+		}
+		Personnes other = (Personnes) object;
+		if ((this.personneId == null && other.personneId != null) || (this.personneId != null && !this.personneId.equals(other.personneId))) {
+			return false;
+		}
+		return true;
+	}
+
+	@Override
+	public String toString() {
+		return "entity.Personnes[ personneId=" + personneId + " ]";
+	}
 
 }

@@ -293,6 +293,25 @@ a:hover {
     text-decoration: underline;
 }
 
+.success {
+	color: #99CC00;
+	text-align: center;
+}
+
+.error {
+	color: #FF4444;
+	text-align: center;
+}
+
+table {
+    border-collapse: collapse;
+}
+
+.list td {
+    padding: 2px 5px;
+    border: 1px solid #33B5E5;
+}
+
 #mini {
     width: 620px;
     padding-top: 20px;

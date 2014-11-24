@@ -11,10 +11,10 @@ import javax.persistence.PersistenceContext;
 
 /**
  *
- * @author 11000369
+ * @author joxit
  */
 @Stateless
-public class EquipeFacade extends AbstractFacade<Equipe> implements EquipeFacadeLocal {
+public class ResponsablesFacade extends AbstractFacade<Responsables> implements ResponsablesFacadeLocal {
     @PersistenceContext(unitName = "devoir_magloire-ejbPU")
     private EntityManager em;
 
@@ -23,8 +23,8 @@ public class EquipeFacade extends AbstractFacade<Equipe> implements EquipeFacade
         return em;
     }
 
-    public EquipeFacade() {
-        super(Equipe.class);
+    public ResponsablesFacade() {
+        super(Responsables.class);
     }
 
 }

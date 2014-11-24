@@ -5,8 +5,6 @@
  */
 package entity;
 
-import java.util.List;
-import java.util.stream.Collectors;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -16,7 +14,7 @@ import javax.persistence.PersistenceContext;
  * @author joxit
  */
 @Stateless
-public class PersonnesFacade extends AbstractFacade<Personnes> implements PersonnesFacadeLocal {
+public class MessagesFacade extends AbstractFacade<Messages> implements MessagesFacadeLocal {
 
 	@PersistenceContext(unitName = "devoir_magloire-ejbPU")
 	private EntityManager em;
@@ -26,15 +24,15 @@ public class PersonnesFacade extends AbstractFacade<Personnes> implements Person
 		return em;
 	}
 
-	public PersonnesFacade() {
-		super(Personnes.class);
+	public MessagesFacade() {
+		super(Messages.class);
 	}
 
 	@Override
-	public List<Personnes> findByBureau(Bureaux bureau) {
-		return findAll().stream().parallel().filter(p -> {
-			return bureau.equals(p.getBureau());
-		}).collect(Collectors.toList());
+	public void create(int auteur, String msg) {
+		String s = "insert into messages(auteur,message) ";
+		s = s + "values (" + auteur + ",'" + msg.replaceAll("'", "''") + "')";
+		em.createNativeQuery(s).executeUpdate();
 	}
 
 }

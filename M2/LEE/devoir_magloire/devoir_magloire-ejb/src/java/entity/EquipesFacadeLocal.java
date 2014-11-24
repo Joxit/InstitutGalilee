@@ -10,22 +10,22 @@ import javax.ejb.Local;
 
 /**
  *
- * @author 11000369
+ * @author joxit
  */
 @Local
-public interface MessageFacadeLocal {
+public interface EquipesFacadeLocal {
 
-    void create(Message message);
+    void create(Equipes equipes);
 
-    void edit(Message message);
+    void edit(Equipes equipes);
 
-    void remove(Message message);
+    void remove(Equipes equipes);
 
-    Message find(Object id);
+    Equipes find(Object id);
 
-    List<Message> findAll();
+    List<Equipes> findAll();
 
-    List<Message> findRange(int[] range);
+    List<Equipes> findRange(int[] range);
 
     int count();
 

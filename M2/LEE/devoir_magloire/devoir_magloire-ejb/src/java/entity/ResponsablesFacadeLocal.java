@@ -13,19 +13,19 @@ import javax.ejb.Local;
  * @author joxit
  */
 @Local
-public interface BureauxFacadeLocal {
+public interface ResponsablesFacadeLocal {
 
-    void create(Bureaux bureaux);
+    void create(Responsables responsables);
 
-    void edit(Bureaux bureaux);
+    void edit(Responsables responsables);
 
-    void remove(Bureaux bureaux);
+    void remove(Responsables responsables);
 
-    Bureaux find(Object id);
+    Responsables find(Object id);
 
-    List<Bureaux> findAll();
+    List<Responsables> findAll();
 
-    List<Bureaux> findRange(int[] range);
+    List<Responsables> findRange(int[] range);
 
     int count();
 

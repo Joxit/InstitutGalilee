@@ -11,10 +11,10 @@ import javax.persistence.PersistenceContext;
 
 /**
  *
- * @author 11000369
+ * @author joxit
  */
 @Stateless
-public class MessageFacade extends AbstractFacade<Message> implements MessageFacadeLocal {
+public class EquipesFacade extends AbstractFacade<Equipes> implements EquipesFacadeLocal {
     @PersistenceContext(unitName = "devoir_magloire-ejbPU")
     private EntityManager em;
 
@@ -23,8 +23,8 @@ public class MessageFacade extends AbstractFacade<Message> implements MessageFac
         return em;
     }
 
-    public MessageFacade() {
-        super(Message.class);
+    public EquipesFacade() {
+        super(Equipes.class);
     }
 
 }
