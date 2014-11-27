@@ -26,51 +26,48 @@ public class Message extends HttpServlet {
 
 	@EJB
 	private MessagesFacadeLocal messagesFacade;
+	final private String subSendMsg = "subSendMsg";
+	final private String txtPersSendMsg = "txtPersSendMsg";
+	final private String txtTxtSendMsg = "txtTxtSendMsg";
 
 	/**
 	 * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
 	 * methods.
 	 *
-	 * @param request servlet request
+	 * @param request  servlet request
 	 * @param response servlet response
+	 *
 	 * @throws ServletException if a servlet-specific error occurs
-	 * @throws IOException if an I/O error occurs
+	 * @throws IOException      if an I/O error occurs
 	 */
 	protected void processRequest(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		response.setContentType("text/html;charset=UTF-8");
-		try (PrintWriter out = response.getWriter()) {
-			out.println("<!DOCTYPE html>");
-			out.println("<html>");
-			HtmlWriter.printHead(out);
-			out.println("<body>");
-			out.println("<div class=\"container\">");
-			HtmlWriter.printHeaderMenuClient(out);
-			if (request.getParameter(ClientHtmlWriter.subSendMsg) != null) {
-				try {
-					int persId = Integer.parseInt(request.getParameter(ClientHtmlWriter.txtPersSendMsg));
-					messagesFacade.create(persId, request.getParameter(ClientHtmlWriter.txtTxtSendMsg));
-					out.println("<h3 class='success'>Message envoyé</h3>");
-				} catch (Exception e) {
-					out.println("<h3 class='error'>Une erreur est survenue lors de l'envoie de votre message</h3>");
-				}
-			}
-			ClientHtmlWriter.printSendMsg(out);
 
-			out.println("</div>");
-			out.println("</body>");
-			out.println("</html>");
+		if (request.getParameter(subSendMsg) != null) {
+			try {
+				int persId = Integer.parseInt(request.getParameter(txtPersSendMsg));
+				messagesFacade.create(persId, request.getParameter(txtTxtSendMsg));
+				request.setAttribute("success", "Message envoyé");
+			} catch (Exception e) {
+				request.setAttribute("error", "Une erreur est survenue lors de l'envoie de votre message");
+			}
+
 		}
+		request.setAttribute("subSendMsg", "subSendMsg");
+		request.setAttribute("txtPersSendMsg", "txtPersSendMsg");
+		request.setAttribute("txtTxtSendMsg", "txtTxtSendMsg");
+		getServletContext().getRequestDispatcher("/WEB-INF/Client/message.jsp").forward(request, response);
 	}
 
 	// <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
 	/**
 	 * Handles the HTTP <code>GET</code> method.
 	 *
-	 * @param request servlet request
+	 * @param request  servlet request
 	 * @param response servlet response
+	 *
 	 * @throws ServletException if a servlet-specific error occurs
-	 * @throws IOException if an I/O error occurs
+	 * @throws IOException      if an I/O error occurs
 	 */
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -81,10 +78,11 @@ public class Message extends HttpServlet {
 	/**
 	 * Handles the HTTP <code>POST</code> method.
 	 *
-	 * @param request servlet request
+	 * @param request  servlet request
 	 * @param response servlet response
+	 *
 	 * @throws ServletException if a servlet-specific error occurs
-	 * @throws IOException if an I/O error occurs
+	 * @throws IOException      if an I/O error occurs
 	 */
 	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)

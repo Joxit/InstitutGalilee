@@ -6,6 +6,9 @@
 package utils;
 
 import entity.Bureaux;
+import java.text.ParseException;
+import java.util.Calendar;
+import java.util.Date;
 
 /**
  *
@@ -38,5 +41,28 @@ public class Utils {
 
 	public static String toThreeDigits(int n) {
 		return (n < 10 ? "00" + n : n < 100 ? "0" + n : n) + "";
+	}
+
+	public static boolean isMail(String mail) {
+		return mail.matches("[\\w.+-]+@[a-zA-Z0-9.-]+\\..*");
+	}
+
+	public static boolean isNullOrEmpty(String s) {
+		return s == null || s.isEmpty();
+	}
+
+	public static Date getDate(String s) throws ParseException {
+		if (!isDate(s)) {
+			throw new ParseException("Le format est : JJ/MM/YYYY ou JJ-MM-YYY", 0);
+		}
+		Calendar c = Calendar.getInstance();
+		String[] split = s.split("-|/");
+		c.set(Integer.parseInt(split[2]), Integer.parseInt(split[1]), Integer.parseInt(split[0]));
+
+		return c.getTime();
+	}
+
+	public static boolean isDate(String s) {
+		return s.matches("\\d{1,2}[/-]\\d{1,2}[/-]\\d{4}");
 	}
 }

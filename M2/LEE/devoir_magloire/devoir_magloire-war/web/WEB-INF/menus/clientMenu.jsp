@@ -6,10 +6,10 @@
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 
-<li class="border-bottom-transition"><a href="client.jsp">Client</a>
+<li class="border-bottom-transition"><a href="Client">Client</a>
 	<ul>
-		<li><a href="personnes.jsp">Les personnes</a></li>
-		<li><a href="affectations.jsp">Les Affectations</a></li>
-		<li><a href="message.jsp">Envoyer Message</a></li>
+		<li><a href="Utilisateurs">Les personnes</a></li>
+		<li><a href="Affectations">Les Affectations</a></li>
+		<li><a href="Message">Envoyer Message</a></li>
 	</ul>
 </li>

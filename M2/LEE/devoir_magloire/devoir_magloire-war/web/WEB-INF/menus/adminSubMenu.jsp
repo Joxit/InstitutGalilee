@@ -25,9 +25,9 @@
 	if (Authentification.hasCorrectPassword(c, responsablesFacade.findAll())) {
 		isLogged = true;%>
 <ul>
-	<li><a href="adminadduser.jsp">Ajouter personne</a></li>
-	<li><a href="adminadddesk.jsp">Ajouter Bureau</a></li>
-	<li><a href="adminaffect.jsp">Affecter Bureau</a></li>
-	<li><a href="adminreadmsg.jsp">Lire Messages</a></li>
+	<li><a href="Admin.Utilisateurs">Ajouter personne</a></li>
+	<li><a href="Admin.Bureaux">Ajouter Bureau</a></li>
+	<li><a href="Admin.Affectations">Affecter Bureau</a></li>
+	<li><a href="Admin.Message">Lire Messages</a></li>
 </ul>
 <%}%>

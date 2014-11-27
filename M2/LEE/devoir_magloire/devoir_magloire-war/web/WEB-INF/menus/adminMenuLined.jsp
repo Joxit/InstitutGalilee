@@ -6,6 +6,6 @@
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 
-<li class="border-bottom-line"><a href="adminlogin.jsp">Administrateur</a>
+<li class="border-bottom-line"><a href="Admin">Administrateur</a>
 	<%@include file="adminSubMenu.jsp" %>
 </li>

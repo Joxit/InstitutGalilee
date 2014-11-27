@@ -15,18 +15,17 @@ import javax.ejb.Local;
 @Local
 public interface BureauxFacadeLocal {
 
-    void create(Bureaux bureaux);
+	void create(Bureaux bureaux);
 
-    void edit(Bureaux bureaux);
+	void edit(Bureaux bureaux);
 
-    void remove(Bureaux bureaux);
+	void remove(Bureaux bureaux);
 
-    Bureaux find(Object id);
+	Bureaux find(Object id);
 
-    List<Bureaux> findAll();
+	List<Bureaux> findAll();
 
-    List<Bureaux> findRange(int[] range);
+	List<Bureaux> findRange(int[] range);
 
-    int count();
-
+	int count();
 }

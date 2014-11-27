@@ -60,10 +60,14 @@ public class Personnes implements Serializable {
     @Size(min = 1, max = 25)
     @Column(name = "PRENOM")
 	private String prenom;
-	@Size(max = 50)
+	@Basic(optional = false)
+    @NotNull
+    @Size(min = 1, max = 50)
     @Column(name = "MAIL")
 	private String mail;
-	@Column(name = "DEBUT")
+	@Basic(optional = false)
+    @NotNull
+    @Column(name = "DEBUT")
     @Temporal(TemporalType.DATE)
 	private Date debut;
 	@Column(name = "FIN")
@@ -75,7 +79,7 @@ public class Personnes implements Serializable {
     @ManyToOne
 	private Bureaux bureau;
 	@JoinColumn(name = "EQUIPE", referencedColumnName = "EQUIPE_ID")
-    @ManyToOne
+    @ManyToOne(optional = false)
 	private Equipes equipe;
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "auteur")
 	private Collection<Messages> messagesCollection;
@@ -87,10 +91,12 @@ public class Personnes implements Serializable {
 		this.personneId = personneId;
 	}
 
-	public Personnes(Integer personneId, String nom, String prenom) {
+	public Personnes(Integer personneId, String nom, String prenom, String mail, Date debut) {
 		this.personneId = personneId;
 		this.nom = nom;
 		this.prenom = prenom;
+		this.mail = mail;
+		this.debut = debut;
 	}
 
 	public Integer getPersonneId() {

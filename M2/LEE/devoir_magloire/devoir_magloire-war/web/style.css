@@ -310,6 +310,7 @@ table {
 .list td {
     padding: 2px 5px;
     border: 1px solid #33B5E5;
+	text-align: center;
 }
 
 #mini {

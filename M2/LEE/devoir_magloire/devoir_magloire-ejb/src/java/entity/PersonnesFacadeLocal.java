@@ -30,4 +30,6 @@ public interface PersonnesFacadeLocal {
 	int count();
 
 	List<Personnes> findByBureau(Bureaux bureau);
+
+	public List<Personnes> findAllSortedByName();
 }

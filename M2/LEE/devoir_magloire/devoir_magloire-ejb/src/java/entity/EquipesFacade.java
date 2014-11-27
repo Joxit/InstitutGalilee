@@ -15,16 +15,23 @@ import javax.persistence.PersistenceContext;
  */
 @Stateless
 public class EquipesFacade extends AbstractFacade<Equipes> implements EquipesFacadeLocal {
-    @PersistenceContext(unitName = "devoir_magloire-ejbPU")
-    private EntityManager em;
 
-    @Override
-    protected EntityManager getEntityManager() {
-        return em;
-    }
+	@PersistenceContext(unitName = "devoir_magloire-ejbPU")
+	private EntityManager em;
 
-    public EquipesFacade() {
-        super(Equipes.class);
-    }
+	@Override
+	protected EntityManager getEntityManager() {
+		return em;
+	}
+
+	public EquipesFacade() {
+		super(Equipes.class);
+	}
+
+	@Override
+	public void create(Equipes e) {
+		e.setEquipeId(e.getEquipeId().toUpperCase());
+		super.create(e);
+	}
 
 }

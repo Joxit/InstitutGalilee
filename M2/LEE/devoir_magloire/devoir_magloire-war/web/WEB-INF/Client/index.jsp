@@ -15,7 +15,7 @@
     </head>
     <body>
         <div class="container">
-			<%@include file="WEB-INF/menus/clientHeader.jsp" %>
+			<%@include file="../menus/clientHeader.jsp" %>
             <div id="body">
                 <h1>Bienvenue dans la partie client du logiciel</h1>
 				<h2>Que souhaitez vous faire ?</h2>

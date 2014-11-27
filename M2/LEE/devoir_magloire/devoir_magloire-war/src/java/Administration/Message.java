@@ -7,9 +7,12 @@ package Administration;
 
 import entity.Messages;
 import entity.MessagesFacadeLocal;
+import entity.Personnes;
 import entity.ResponsablesFacadeLocal;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.List;
 import javax.ejb.EJB;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -28,61 +31,63 @@ public class Message extends HttpServlet {
 
 	@EJB
 	private MessagesFacadeLocal messagesFacade;
-	@EJB
-	private ResponsablesFacadeLocal responsablesFacade;
+	private final String subMessageReaded = "subMessageReaded";
 
 	/**
 	 * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
 	 * methods.
 	 *
-	 * @param request servlet request
+	 * @param request  servlet request
 	 * @param response servlet response
+	 *
 	 * @throws ServletException if a servlet-specific error occurs
-	 * @throws IOException if an I/O error occurs
+	 * @throws IOException      if an I/O error occurs
 	 */
 	protected void processRequest(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		response.setContentType("text/html;charset=UTF-8");
-		try (PrintWriter out = response.getWriter()) {
-			out.println("<!DOCTYPE html>");
-			out.println("<html>");
-			HtmlWriter.printHead(out);
-			out.println("<body>");
-			out.println("<div class=\"container\">");
-			Cookie[] cookies = Authentification.getLoginAndPasswordCookie(request.getCookies());
-			if (Authentification.hasCorrectPassword(cookies, responsablesFacade.findAll())) {
-				HtmlWriter.printHeaderMenuAdminLogged(out);
-				String txt = request.getParameter(AdminHtmlWriter.subMessageReaded);
-				if (txt != null) {
-					try {
-						String[] split = txt.split("_");
-						int id = Integer.parseInt(split[1]);
-						Messages m = messagesFacade.find(id);
-						m.setEtat(Boolean.TRUE);
-						messagesFacade.edit(m);
-					} catch (Exception e) {
-						HtmlWriter.printH2Error(out, "Une erreur est survenue");
-					}
+		String[] txt = request.getParameterValues(subMessageReaded);
+		if (txt != null) {
+			try {
+				int id = utils.Utils.getFirstNumeric(txt);
+				Messages m = messagesFacade.find(id);
+				m.setEtat(Boolean.TRUE);
+				messagesFacade.edit(m);
+				Personnes p = m.getAuteur();
+				request.setAttribute("success", "Message de de " + p.getNom() + " " + p.getPrenom()
+						+ "(" + p.getPersonneId() + ") lu");
+			} catch (Exception e) {
+				request.setAttribute("error", "Une erreur est survenue");
 
-				}
-				AdminHtmlWriter.printMessages(out, messagesFacade.findAll());
-			} else {
-				response.sendRedirect(getServletContext().getContextPath() + "/Admin");
 			}
-			out.println("</div>");
-			out.println("</body>");
-			out.println("</html>");
+
 		}
+		List<Messages> readed = new ArrayList<>();
+		List<Messages> toRead = new ArrayList<>();
+		/* on veut les vieux messages tout en bas de la liste */
+		messagesFacade.findAll().stream().sorted((m1, m2) -> {
+			return m2.getEnvoie().compareTo(m1.getEnvoie());
+		}).forEach(m -> {
+			if (m.getEtat()) {
+				readed.add(m);
+			} else {
+				toRead.add(m);
+			}
+		});
+		request.setAttribute("readed", readed);
+		request.setAttribute("toRead", toRead);
+		request.setAttribute(subMessageReaded, subMessageReaded);
+		getServletContext().getRequestDispatcher("/WEB-INF/Administration/message.jsp").forward(request, response);
 	}
 
 	// <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
 	/**
 	 * Handles the HTTP <code>GET</code> method.
 	 *
-	 * @param request servlet request
+	 * @param request  servlet request
 	 * @param response servlet response
+	 *
 	 * @throws ServletException if a servlet-specific error occurs
-	 * @throws IOException if an I/O error occurs
+	 * @throws IOException      if an I/O error occurs
 	 */
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -93,10 +98,11 @@ public class Message extends HttpServlet {
 	/**
 	 * Handles the HTTP <code>POST</code> method.
 	 *
-	 * @param request servlet request
+	 * @param request  servlet request
 	 * @param response servlet response
+	 *
 	 * @throws ServletException if a servlet-specific error occurs
-	 * @throws IOException if an I/O error occurs
+	 * @throws IOException      if an I/O error occurs
 	 */
 	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)

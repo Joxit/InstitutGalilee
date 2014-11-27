@@ -6,6 +6,7 @@
 package web;
 
 import entity.Bureaux;
+import entity.Personnes;
 import java.io.PrintWriter;
 
 /**
@@ -103,6 +104,10 @@ public class HtmlWriter {
 		} else {
 			return "";
 		}
+	}
+
+	public static String personne(Personnes p) {
+		return p.getNom() + " " + p.getPrenom() + " (" + p.getPersonneId() + ")";
 	}
 
 	public static void printH2Success(PrintWriter out, String s) {
