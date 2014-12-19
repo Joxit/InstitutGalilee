@@ -6,17 +6,18 @@
 package Client;
 
 import java.io.IOException;
-import java.io.PrintWriter;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import web.HtmlWriter;
 
 /**
+ * Servlet controlant la page d'accueil de la partie clients. La jsp associée à
+ * cette servlet est /WEB-INF/Client/index.jsp
  *
- * @author joxit
+ * @author Jones Magloire
+ * @version 2 (2/12/14)
  */
 @WebServlet(name = "Client", urlPatterns = {"/Client"})
 public class Client extends HttpServlet {

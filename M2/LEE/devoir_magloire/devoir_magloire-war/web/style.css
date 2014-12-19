@@ -246,6 +246,7 @@ body {
 #body p {
     padding-left: 20px;
     font-weight: normal;
+	word-wrap: break-word;
 }
 
 #body p span {
@@ -305,13 +306,17 @@ a:hover {
 
 table {
     border-collapse: collapse;
+	overflow: scroll;
 }
 
 .list td {
     padding: 2px 5px;
     border: 1px solid #33B5E5;
 	text-align: center;
+	word-wrap: break-word;
+	max-width: 110px;
 }
+
 
 #mini {
     width: 620px;

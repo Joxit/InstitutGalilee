@@ -5,26 +5,44 @@
  */
 package Client;
 
-import entity.PersonnesFacadeLocal;
+import entity.MessagesFacadeLocal;
 import java.io.IOException;
-import java.io.PrintWriter;
 import javax.ejb.EJB;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import web.HtmlWriter;
 
 /**
+ * Servlet controlant la page d'envoie de message aux responsables du site.
+ * L'utilisateur devra mettre son identifiant et son message dans les champs. On
+ * verifie si l'identifiant est correct pui on créer le message. Il sera
+ * informer si une erreur arrive.
  *
- * @author joxit
+ * Les attributs final public static de cette classe sont référencés dans la jsp
+ * pour avoir une armonie dans les identifiants des parametres.
+ *
+ * @author Jones Magloire
+ * @version 2 (2/12/14)
  */
-@WebServlet(name = "Utilisateurs", urlPatterns = {"/Utilisateurs"})
-public class Utilisateurs extends HttpServlet {
+@WebServlet(name = "Message", urlPatterns = {"/Message"})
+public class WriteMessages extends HttpServlet {
 
 	@EJB
-	private PersonnesFacadeLocal personnesFacade;
+	private MessagesFacadeLocal messagesFacade;
+	/**
+	 * Identifiant du bouton submit pour l'envoie de message
+	 */
+	final public static String subSendMsg = "subSendMsg";
+	/**
+	 * Identifiant de la zone de texte contenant l'identifiant de l'utilisateur
+	 */
+	final public static String txtPersSendMsg = "txtPersSendMsg";
+	/**
+	 * Identifiant de la zone de texte contenant le corps du message
+	 */
+	final public static String txtTxtSendMsg = "txtTxtSendMsg";
 
 	/**
 	 * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -39,8 +57,16 @@ public class Utilisateurs extends HttpServlet {
 	protected void processRequest(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 
-		request.setAttribute("personnes", personnesFacade.findAll());
-		getServletContext().getRequestDispatcher("/WEB-INF/Client/personnes.jsp").forward(request, response);
+		if (request.getParameter(subSendMsg) != null) {
+			try {
+				int persId = Integer.parseInt(request.getParameter(txtPersSendMsg));
+				messagesFacade.create(persId, request.getParameter(txtTxtSendMsg));
+				request.setAttribute("success", "Message envoyé");
+			} catch (Exception e) {
+				request.setAttribute("error", "Une erreur est survenue lors de l'envoie de votre message");
+			}
+		}
+		getServletContext().getRequestDispatcher("/WEB-INF/Client/message.jsp").forward(request, response);
 	}
 
 	// <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

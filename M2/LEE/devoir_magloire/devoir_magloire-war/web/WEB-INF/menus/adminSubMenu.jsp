@@ -1,33 +1,17 @@
 <%--
     Document   : adminSubMenu
     Created on : 20 nov. 2014, 22:03:07
-    Author     : joxit
+    Author     : Jones Magloire
 --%>
 
-<%@page import="javax.naming.InitialContext"%>
-<%@page import="javax.naming.NamingException"%>
-<%@page import="javax.naming.Context"%>
 <%@page import="Administration.Authentification"%>
-<%@page import="entity.ResponsablesFacadeLocal"%>
-<%@page import="javax.ejb.EJB"%>
-<%! @EJB
-	private ResponsablesFacadeLocal responsablesFacade;
-	private boolean isLogged = false;
-%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
-<%  try {
-		Context c = new InitialContext();
-		responsablesFacade = (ResponsablesFacadeLocal) c.lookup("java:app/devoir_magloire-ejb/ResponsablesFacade!entity.ResponsablesFacadeLocal");
-	} catch (NamingException ne) {
-		throw new RuntimeException(ne);
-	}
-	Cookie[] c = Authentification.getLoginAndPasswordCookie(request.getCookies());
-	if (Authentification.hasCorrectPassword(c, responsablesFacade.findAll())) {
-		isLogged = true;%>
+<%if (Authentification.contains(request)) {%>
 <ul>
 	<li><a href="Admin.Utilisateurs">Ajouter personne</a></li>
 	<li><a href="Admin.Bureaux">Ajouter Bureau</a></li>
 	<li><a href="Admin.Affectations">Affecter Bureau</a></li>
 	<li><a href="Admin.Message">Lire Messages</a></li>
+	<li><a href="Admin.Deconnexion">Deconnexion</a></li>
 </ul>
 <%}%>

@@ -1,7 +1,7 @@
 <%--
-    Document   : newjsp
+    Document   : index
     Created on : 15 nov. 2014, 10:46:10
-    Author     : joxit
+    Author     : Jones Magloire
 --%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>

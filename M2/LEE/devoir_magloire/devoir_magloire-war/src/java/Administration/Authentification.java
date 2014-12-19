@@ -5,63 +5,40 @@
  */
 package Administration;
 
-import entity.Responsables;
-import java.util.List;
-import javax.servlet.http.Cookie;
+import java.util.ArrayList;
+import javax.servlet.http.HttpServletRequest;
 
 /**
+ * Classe gerant l'authentification des responsables. On stoque les identifiants
+ * des sessions dans la liste ici.
  *
- * @author joxit
+ * @author Jones Magloire
+ * @version 2 (2/12/14)
  */
 public class Authentification {
 
-	protected static final String cookieLogin = "login";
-	protected static final String cookiePassword = "password";
+	private static final ArrayList<String> lesSessions = new ArrayList<>();
 
-	protected static boolean hasLoginAndPasswordCookie(Cookie[] cookies) {
-		boolean log = false;
-		boolean pwd = false;
-		if (cookies != null) {
-			for (Cookie c : cookies) {
-				switch (c.getName()) {
-					case cookieLogin:
-						log = true;
-						break;
-					case cookiePassword:
-						pwd = true;
-						break;
-				}
-			}
-		}
-		return log && pwd;
+	/**
+	 * @param request On ajoute la session de cette requete a la liste
+	 */
+	public static void add(HttpServletRequest request) {
+		lesSessions.add(request.getSession().getId());
 	}
 
-	public static Cookie[] getLoginAndPasswordCookie(Cookie[] cookies) {
-		Cookie[] res = new Cookie[2];
-		if (cookies != null) {
-			for (Cookie c : cookies) {
-				switch (c.getName()) {
-					case cookieLogin:
-						res[0] = c;
-						break;
-					case cookiePassword:
-						res[1] = c;
-						break;
-				}
-			}
-		}
-		return res;
+	/**
+	 * @param request
+	 *
+	 * @return true si l'id de sessions de cette requete est dans la liste.
+	 */
+	public static boolean contains(HttpServletRequest request) {
+		return lesSessions.contains(request.getSession().getId());
 	}
 
-	public static boolean hasCorrectPassword(Cookie[] cookies, List<Responsables> lr) {
-		if (cookies != null && cookies[0] != null && cookies[1] != null) {
-			for (Responsables r : lr) {
-				if (r.getIdentifiant().equals(cookies[0].getValue())
-						&& r.getMotDePasse().equals(cookies[1].getValue())) {
-					return true;
-				}
-			}
-		}
-		return false;
+	/**
+	 * @param request supprimme cette session ID
+	 */
+	public static void remove(HttpServletRequest request) {
+		lesSessions.remove(request.getSession().getId());
 	}
 }

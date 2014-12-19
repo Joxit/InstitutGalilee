@@ -5,6 +5,7 @@
  */
 package entity;
 
+import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -41,6 +42,17 @@ public class BureauxFacade extends AbstractFacade<Bureaux> implements BureauxFac
 			throw new IllegalArgumentException("Les étages sont 1 2 et 3");
 		}
 		super.create(b);
+	}
+
+	@Override
+	public List<Bureaux> findByEquipe(Equipes equipe) {
+		return em.createNamedQuery("Bureaux.findByEquipe")
+				.setParameter("equipe", equipe).getResultList();
+	}
+
+	@Override
+	public List<Bureaux> findAllSorted() {
+		return em.createNamedQuery("Bureaux.findAllSorted").getResultList();
 	}
 
 }

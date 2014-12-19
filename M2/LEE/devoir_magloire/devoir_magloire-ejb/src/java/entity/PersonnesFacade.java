@@ -32,27 +32,20 @@ public class PersonnesFacade extends AbstractFacade<Personnes> implements Person
 
 	@Override
 	public List<Personnes> findByBureau(Bureaux bureau) {
-		return findAll().stream().parallel().filter(p -> {
-			return bureau.equals(p.getBureau());
-		}).collect(Collectors.toList());
+		return em.createNamedQuery("Personnes.findByBureau")
+				.setParameter("bureau", bureau).getResultList();
 	}
 
+	@Override
 	public List<Personnes> findByEquipe(Equipes equipe) {
-		return findAll().stream().parallel().filter(p -> {
-			return p.getEquipe().equals(equipe);
-		}).collect(Collectors.toList());
+		return em.createNamedQuery("Personnes.findByEquipe")
+				.setParameter("equipe", equipe).getResultList();
 	}
 
 	@Override
 	public List<Personnes> findAllSortedByName() {
-		return findAll().stream().sorted((p1, p2) -> {
-			int c1 = p1.getNom().compareToIgnoreCase(p2.getNom());
-			if (c1 == 0) {
-				return p1.getPrenom().compareToIgnoreCase(p2.getPrenom());
-			} else {
-				return c1;
-			}
-		}).collect(Collectors.toList());
+		return em.createNamedQuery("Personnes.findAllSortedByName")
+				.getResultList();
 	}
 
 	private String nameFormat(String s) {
@@ -74,20 +67,15 @@ public class PersonnesFacade extends AbstractFacade<Personnes> implements Person
 
 	@Override
 	public void create(Personnes p) {
-
 		if (p.getNom() == null) {
 			throw new IllegalArgumentException("Nom manquant");
-		}
-		if (p.getPrenom() == null) {
-			throw new IllegalArgumentException("prenom manquant");
-		}
-		if (p.getEquipe() == null) {
+		} else if (p.getPrenom() == null) {
+			throw new IllegalArgumentException("Prenom manquant");
+		} else if (p.getEquipe() == null) {
 			throw new IllegalArgumentException("Equipe manquante");
-		}
-		if (p.getDebut() == null) {
+		} else if (p.getDebut() == null) {
 			throw new IllegalArgumentException("Date de debut manquant");
-		}
-		if (p.getMail() == null) {
+		} else if (p.getMail() == null) {
 			throw new IllegalArgumentException("Mail manquant");
 		}
 

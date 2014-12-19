@@ -5,33 +5,20 @@
  */
 package Administration;
 
-import entity.Messages;
-import entity.MessagesFacadeLocal;
-import entity.Personnes;
-import entity.ResponsablesFacadeLocal;
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.util.ArrayList;
-import java.util.List;
-import javax.ejb.EJB;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import web.HtmlWriter;
 
 /**
+ * Servlet controlant la deconnexion des responsables.
  *
- * @author joxit
+ * @author Jones Magloire
  */
-@WebServlet(name = "Admin.Message", urlPatterns = {"/Admin.Message"})
-public class Message extends HttpServlet {
-
-	@EJB
-	private MessagesFacadeLocal messagesFacade;
-	private final String subMessageReaded = "subMessageReaded";
+@WebServlet(name = "Deconnexion", urlPatterns = {"/Admin.Deconnexion"})
+public class Deconnexion extends HttpServlet {
 
 	/**
 	 * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -45,38 +32,9 @@ public class Message extends HttpServlet {
 	 */
 	protected void processRequest(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		String[] txt = request.getParameterValues(subMessageReaded);
-		if (txt != null) {
-			try {
-				int id = utils.Utils.getFirstNumeric(txt);
-				Messages m = messagesFacade.find(id);
-				m.setEtat(Boolean.TRUE);
-				messagesFacade.edit(m);
-				Personnes p = m.getAuteur();
-				request.setAttribute("success", "Message de de " + p.getNom() + " " + p.getPrenom()
-						+ "(" + p.getPersonneId() + ") lu");
-			} catch (Exception e) {
-				request.setAttribute("error", "Une erreur est survenue");
-
-			}
-
-		}
-		List<Messages> readed = new ArrayList<>();
-		List<Messages> toRead = new ArrayList<>();
-		/* on veut les vieux messages tout en bas de la liste */
-		messagesFacade.findAll().stream().sorted((m1, m2) -> {
-			return m2.getEnvoie().compareTo(m1.getEnvoie());
-		}).forEach(m -> {
-			if (m.getEtat()) {
-				readed.add(m);
-			} else {
-				toRead.add(m);
-			}
-		});
-		request.setAttribute("readed", readed);
-		request.setAttribute("toRead", toRead);
-		request.setAttribute(subMessageReaded, subMessageReaded);
-		getServletContext().getRequestDispatcher("/WEB-INF/Administration/message.jsp").forward(request, response);
+		Authentification.remove(request);
+		request.setAttribute("success", "Déconnexion réussie");
+		this.getServletContext().getRequestDispatcher("/Admin").forward(request, response);
 	}
 
 	// <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

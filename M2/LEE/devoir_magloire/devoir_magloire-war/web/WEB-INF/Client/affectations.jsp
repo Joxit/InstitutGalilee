@@ -1,17 +1,13 @@
 <%--
     Document   : affectations
     Created on : 20 nov. 2014, 22:47:49
-    Author     : joxit
+    Author     : Jones Magloire
 --%>
 
-<%@page import="java.util.HashMap"%>
 <%@page import="java.util.Map"%>
 <%@page import="entity.Bureaux"%>
 <%@page import="entity.Personnes"%>
 <%@page import="java.util.List"%>
-<%@page import="web.HtmlWriter"%>
-<%@page import="entity.BureauxFacadeLocal"%>
-<%@page import="entity.PersonnesFacadeLocal"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
@@ -25,26 +21,24 @@
 		<div class="container">
 			<%@include file="../menus/clientHeader.jsp" %>
 			<div id="body">
+				<p>Vous pouvez voir ici la liste des salles avec les personnes qui y sont affectés.</p>
 				<h1>Liste des personnes</h1>
-				<%
-					HashMap<Bureaux, List<Personnes>> hm = (HashMap<Bureaux, List<Personnes>>) request.getAttribute("bureaux");
-					for (Bureaux b : hm.keySet()) {
-						List<Personnes> lp = hm.get(b);
-						if (lp != null && !lp.isEmpty()) {%>
-				<h3>Bureau: <%=HtmlWriter.bureau(b)%></h3>
+				<%for (Map.Entry<Bureaux, List<Personnes>> entry
+							: ((Map<Bureaux, List<Personnes>>) request.getAttribute("bureaux")).entrySet()) {
+						if (entry.getValue() != null && !entry.getValue().isEmpty()) {%>
+				<h3>Bureau: <%=entry.getKey().toFormatString()%></h3>
 
 				<table class="list">
 					<tr><td>Nom</td><td>Prenom</td><td>Equipe</td></tr>
-					<%for (Personnes p : lp) {%>
+					<%for (Personnes p : entry.getValue()) {%>
 					<tr><td><%=p.getNom()%></td>
 						<td><%=p.getPrenom()%></td>
-
 						<td><%=(p.getEquipe() != null ? p.getEquipe().getEquipeId() : "")%></td>
 					</tr>
 					<%}%>
 				</table>
 				<%} else {%>
-				<h3>Bureau: <%=web.HtmlWriter.bureau(b)%> vide</h3>
+				<h3>Bureau: <%=entry.getKey().toFormatString()%> vide</h3>
 				<%}
 					}%>
 			</div>

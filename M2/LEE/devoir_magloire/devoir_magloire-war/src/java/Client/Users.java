@@ -5,30 +5,27 @@
  */
 package Client;
 
-import entity.Messages;
-import entity.MessagesFacadeLocal;
+import entity.PersonnesFacadeLocal;
 import java.io.IOException;
-import java.io.PrintWriter;
 import javax.ejb.EJB;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import web.HtmlWriter;
 
 /**
+ * Servlet controlant la page ou est listé toutes les personnes de la base de
+ * donnée. La jsp associé à cette servlet est /WEB-INF/Client/personnes.jsp
  *
- * @author joxit
+ * @author Jones Magloire
+ * @version 2 (2/12/14)
  */
-@WebServlet(name = "Message", urlPatterns = {"/Message"})
-public class Message extends HttpServlet {
+@WebServlet(name = "Utilisateurs", urlPatterns = {"/Utilisateurs"})
+public class Users extends HttpServlet {
 
 	@EJB
-	private MessagesFacadeLocal messagesFacade;
-	final private String subSendMsg = "subSendMsg";
-	final private String txtPersSendMsg = "txtPersSendMsg";
-	final private String txtTxtSendMsg = "txtTxtSendMsg";
+	private PersonnesFacadeLocal personnesFacade;
 
 	/**
 	 * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -43,20 +40,9 @@ public class Message extends HttpServlet {
 	protected void processRequest(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 
-		if (request.getParameter(subSendMsg) != null) {
-			try {
-				int persId = Integer.parseInt(request.getParameter(txtPersSendMsg));
-				messagesFacade.create(persId, request.getParameter(txtTxtSendMsg));
-				request.setAttribute("success", "Message envoyé");
-			} catch (Exception e) {
-				request.setAttribute("error", "Une erreur est survenue lors de l'envoie de votre message");
-			}
-
-		}
-		request.setAttribute("subSendMsg", "subSendMsg");
-		request.setAttribute("txtPersSendMsg", "txtPersSendMsg");
-		request.setAttribute("txtTxtSendMsg", "txtTxtSendMsg");
-		getServletContext().getRequestDispatcher("/WEB-INF/Client/message.jsp").forward(request, response);
+		// On envoie toutes les personnes triés par nom
+		request.setAttribute("personnes", personnesFacade.findAllSortedByName());
+		getServletContext().getRequestDispatcher("/WEB-INF/Client/personnes.jsp").forward(request, response);
 	}
 
 	// <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

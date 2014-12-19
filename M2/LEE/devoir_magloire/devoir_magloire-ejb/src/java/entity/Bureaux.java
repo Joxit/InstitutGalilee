@@ -34,29 +34,32 @@ import javax.xml.bind.annotation.XmlTransient;
 	@NamedQuery(name = "Bureaux.findByBatiment", query = "SELECT b FROM Bureaux b WHERE b.batiment = :batiment"),
 	@NamedQuery(name = "Bureaux.findByEtage", query = "SELECT b FROM Bureaux b WHERE b.etage = :etage"),
 	@NamedQuery(name = "Bureaux.findByNumero", query = "SELECT b FROM Bureaux b WHERE b.numero = :numero"),
-	@NamedQuery(name = "Bureaux.findByLimite", query = "SELECT b FROM Bureaux b WHERE b.limite = :limite")})
+	@NamedQuery(name = "Bureaux.findByLimite", query = "SELECT b FROM Bureaux b WHERE b.limite = :limite"),
+	@NamedQuery(name = "Bureaux.findByEquipe", query = "SELECT DISTINCT b FROM Bureaux b, Personnes p WHERE b = p.bureau AND p.equipe = :equipe ORDER BY b.batiment ASC, b.etage ASC, b.numero ASC"),
+	@NamedQuery(name = "Bureaux.findAllSorted", query = "SELECT DISTINCT b FROM Bureaux b ORDER BY b.batiment ASC, b.etage ASC, b.numero ASC")})
 public class Bureaux implements Serializable {
+
 	private static final long serialVersionUID = 1L;
 	@Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Basic(optional = false)
-    @Column(name = "BUREAU_ID")
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Basic(optional = false)
+	@Column(name = "BUREAU_ID")
 	private Integer bureauId;
 	@Basic(optional = false)
-    @NotNull
-    @Column(name = "BATIMENT")
+	@NotNull
+	@Column(name = "BATIMENT")
 	private Character batiment;
 	@Basic(optional = false)
-    @NotNull
-    @Column(name = "ETAGE")
+	@NotNull
+	@Column(name = "ETAGE")
 	private int etage;
 	@Basic(optional = false)
-    @NotNull
-    @Column(name = "NUMERO")
+	@NotNull
+	@Column(name = "NUMERO")
 	private int numero;
 	@Basic(optional = false)
-    @NotNull
-    @Column(name = "LIMITE")
+	@NotNull
+	@Column(name = "LIMITE")
 	private int limite;
 	@OneToMany(mappedBy = "bureau")
 	private Collection<Personnes> personnesCollection;
@@ -148,6 +151,13 @@ public class Bureaux implements Serializable {
 	@Override
 	public String toString() {
 		return "entity.Bureaux[ bureauId=" + bureauId + " ]";
+	}
+
+	public String toFormatString() {
+		int n = getNumero();
+		return (String.valueOf(getBatiment())
+				+ String.valueOf(getEtage()) + " "
+				+ (n < 10 ? "00" + n : n < 100 ? "0" + n : n));
 	}
 
 }

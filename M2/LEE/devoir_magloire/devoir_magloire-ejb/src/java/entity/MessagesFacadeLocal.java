@@ -31,4 +31,7 @@ public interface MessagesFacadeLocal {
 
 	public void create(int auteur, String msg);
 
+	public List<Messages> findByEtat(Boolean etat);
+
+	public List<Messages> findByEtatSorted(Boolean etat);
 }

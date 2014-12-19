@@ -32,4 +32,6 @@ public interface PersonnesFacadeLocal {
 	List<Personnes> findByBureau(Bureaux bureau);
 
 	public List<Personnes> findAllSortedByName();
+
+	public List<Personnes> findByEquipe(Equipes equipe);
 }

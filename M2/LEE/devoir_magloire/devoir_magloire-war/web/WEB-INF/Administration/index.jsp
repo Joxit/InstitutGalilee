@@ -1,9 +1,10 @@
 <%--
     Document   : index
     Created on : 20 nov. 2014, 23:43:09
-    Author     : joxit
+    Author     : Jones Magloire
 --%>
 
+<%@page import="Administration.Admin"%>
 <%@page import="entity.Responsables"%>
 <%@page import="entity.Bureaux"%>
 <%@page import="entity.Personnes"%>
@@ -23,14 +24,23 @@
     <body>
         <div class="container">
             <div id="body">
-				<%@include file="menus/adminHeader.jsp" %>
-				<%if (!isLogged && request.getAttribute("isLogged") == null) {%>
+				<%@include file="../menus/adminHeader.jsp" %>
+				<h3 class='success'>${success}</h3>
+				<h3 class='error'>${error}</h3>
+				<%if (!Authentification.contains(request)) {%>
+				<h1>Connexion pour les responsables</h1>
 				<form method="POST">
 					<table>
-						<tr><td>Login: </td><td><input type="text" name="${txtLogin}"></td></tr>
-						<tr><td>Mot de passe: </td><td><input type="password" name="${txtPassword}"></td></tr>
+						<tr>
+							<td>Login: </td>
+							<td><input type="text" name="<%=Admin.txtLogin%>"></td>
+						</tr>
+						<tr>
+							<td>Mot de passe: </td>
+							<td><input type="password" name="<%=Admin.txtPassword%>" autocomplete="off"></td>
+						</tr>
 					</table>
-					<input type="submit" name="${subLogin}"><br/>
+					<input type="submit" name="<%=Admin.subLogin%>"><br/>
 				</form>
 				<%} else {%>
 				<h1>Bienvenue dans la partie Administration du logiciel</h1>

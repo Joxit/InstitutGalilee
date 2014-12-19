@@ -42,44 +42,48 @@ import javax.xml.bind.annotation.XmlTransient;
 	@NamedQuery(name = "Personnes.findByPrenom", query = "SELECT p FROM Personnes p WHERE p.prenom = :prenom"),
 	@NamedQuery(name = "Personnes.findByMail", query = "SELECT p FROM Personnes p WHERE p.mail = :mail"),
 	@NamedQuery(name = "Personnes.findByDebut", query = "SELECT p FROM Personnes p WHERE p.debut = :debut"),
-	@NamedQuery(name = "Personnes.findByFin", query = "SELECT p FROM Personnes p WHERE p.fin = :fin")})
+	@NamedQuery(name = "Personnes.findByFin", query = "SELECT p FROM Personnes p WHERE p.fin = :fin"),
+	@NamedQuery(name = "Personnes.findByEquipe", query = "SELECT p FROM Personnes p WHERE p.equipe = :equipe"),
+	@NamedQuery(name = "Personnes.findByBureau", query = "SELECT p FROM Personnes p WHERE p.bureau = :bureau"),
+	@NamedQuery(name = "Personnes.findAllSortedByName", query = "SELECT p FROM Personnes p ORDER BY p.nom ASC, p.prenom ASC")})
 public class Personnes implements Serializable {
+
 	private static final long serialVersionUID = 1L;
 	@Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Basic(optional = false)
-    @Column(name = "PERSONNE_ID")
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Basic(optional = false)
+	@Column(name = "PERSONNE_ID")
 	private Integer personneId;
 	@Basic(optional = false)
-    @NotNull
-    @Size(min = 1, max = 25)
-    @Column(name = "NOM")
+	@NotNull
+	@Size(min = 1, max = 25)
+	@Column(name = "NOM")
 	private String nom;
 	@Basic(optional = false)
-    @NotNull
-    @Size(min = 1, max = 25)
-    @Column(name = "PRENOM")
+	@NotNull
+	@Size(min = 1, max = 25)
+	@Column(name = "PRENOM")
 	private String prenom;
 	@Basic(optional = false)
-    @NotNull
-    @Size(min = 1, max = 50)
-    @Column(name = "MAIL")
+	@NotNull
+	@Size(min = 1, max = 50)
+	@Column(name = "MAIL")
 	private String mail;
 	@Basic(optional = false)
-    @NotNull
-    @Column(name = "DEBUT")
-    @Temporal(TemporalType.DATE)
+	@NotNull
+	@Column(name = "DEBUT")
+	@Temporal(TemporalType.DATE)
 	private Date debut;
 	@Column(name = "FIN")
-    @Temporal(TemporalType.DATE)
+	@Temporal(TemporalType.DATE)
 	private Date fin;
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "personne")
 	private Collection<Responsables> responsablesCollection;
 	@JoinColumn(name = "BUREAU", referencedColumnName = "BUREAU_ID")
-    @ManyToOne
+	@ManyToOne
 	private Bureaux bureau;
 	@JoinColumn(name = "EQUIPE", referencedColumnName = "EQUIPE_ID")
-    @ManyToOne(optional = false)
+	@ManyToOne(optional = false)
 	private Equipes equipe;
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "auteur")
 	private Collection<Messages> messagesCollection;
@@ -204,6 +208,14 @@ public class Personnes implements Serializable {
 	@Override
 	public String toString() {
 		return "entity.Personnes[ personneId=" + personneId + " ]";
+	}
+
+	public String toNomPrenomIdString() {
+		return getNom() + " " + getPrenom() + " (" + getPersonneId() + ")";
+	}
+
+	public String toNomPrenomString() {
+		return getNom() + " " + getPrenom();
 	}
 
 }

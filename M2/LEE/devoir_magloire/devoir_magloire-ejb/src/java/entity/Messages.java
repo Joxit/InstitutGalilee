@@ -36,28 +36,30 @@ import javax.xml.bind.annotation.XmlRootElement;
 	@NamedQuery(name = "Messages.findByMessageId", query = "SELECT m FROM Messages m WHERE m.messageId = :messageId"),
 	@NamedQuery(name = "Messages.findByMessage", query = "SELECT m FROM Messages m WHERE m.message = :message"),
 	@NamedQuery(name = "Messages.findByEtat", query = "SELECT m FROM Messages m WHERE m.etat = :etat"),
-	@NamedQuery(name = "Messages.findByEnvoie", query = "SELECT m FROM Messages m WHERE m.envoie = :envoie")})
+	@NamedQuery(name = "Messages.findByEnvoie", query = "SELECT m FROM Messages m WHERE m.envoie = :envoie"),
+	@NamedQuery(name = "Messages.findByEtatSorted", query = "SELECT m FROM Messages m WHERE m.etat = :etat ORDER BY m.envoie DESC")})
 public class Messages implements Serializable {
+
 	private static final long serialVersionUID = 1L;
 	@Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Basic(optional = false)
-    @Column(name = "MESSAGE_ID")
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Basic(optional = false)
+	@Column(name = "MESSAGE_ID")
 	private Integer messageId;
 	@Basic(optional = false)
-    @NotNull
-    @Size(min = 1, max = 2000)
-    @Column(name = "MESSAGE")
+	@NotNull
+	@Size(min = 1, max = 2000)
+	@Column(name = "MESSAGE")
 	private String message;
 	@Basic(optional = false)
-    @NotNull
-    @Column(name = "ETAT")
+	@NotNull
+	@Column(name = "ETAT")
 	private Boolean etat;
 	@Column(name = "ENVOIE")
-    @Temporal(TemporalType.TIMESTAMP)
+	@Temporal(TemporalType.TIMESTAMP)
 	private Date envoie;
 	@JoinColumn(name = "AUTEUR", referencedColumnName = "PERSONNE_ID")
-    @ManyToOne(optional = false)
+	@ManyToOne(optional = false)
 	private Personnes auteur;
 
 	public Messages() {

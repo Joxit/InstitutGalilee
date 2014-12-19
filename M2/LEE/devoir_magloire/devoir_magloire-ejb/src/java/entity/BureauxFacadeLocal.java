@@ -27,5 +27,9 @@ public interface BureauxFacadeLocal {
 
 	List<Bureaux> findRange(int[] range);
 
+	List<Bureaux> findByEquipe(Equipes equipe);
+
+	public List<Bureaux> findAllSorted();
+
 	int count();
 }

@@ -1,0 +1,31 @@
+Devoir fait par Jones Magloire (11000369)
+
+Projet d'administration de bureaux.
+
+Le pojet est fait en JEE pur et necessite la librairie mail.jar qui est dans le
+dossier devoir_mabloire/lib ainsi que Java 8. Il a été fait sous netbeans8, il
+n'y a que un deploy a faire sur l'application principale apres avoir configuré
+le fichier de persistance.
+
+Le schema de la Base de donnée est Devoir, de même pour l'user.
+
+Pour creer la base de donnée, vous devez lancer le script SQL create.sql
+
+Pour inserer ma base de donnée teste, lancez le script insert.sql Attention elle
+correspond au LIPN avec tous ses membres, équipes, bureaux.
+
+Les mails de la base de donnée sont vrais, donc faites attention à ne pas
+affecter les membres du LIPN. La fonctionnalité a été désactivé et marche
+uniquement à l'université.
+
+Les identifiants pour les resoponsables sont :
+login : joxit
+password : mdp
+
+Il y a des NamedQuery qui ont été ajoutés dans certaines classes.
+
+Les jsp qui ont une servlet qui les controles sont dans WEB-INF, il y a que
+index.jsp qui est dans le dossier par defaut.
+
+L'affectation d'un bureau à une personne se fait apres la création de la dite
+personne via une page speciale.

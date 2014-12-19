@@ -20,11 +20,19 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
+ * Servlet controlant la page de l'administration des personnes. Permet aux
+ * responsables de créer de nouvelles personnes ainsi que de voir les
+ * informations de celles qui existent déjà. La jsp associé à cette servlet est
+ * /WEB-INF/Administration/utilisateurs.jsp
  *
- * @author joxit
+ * Les attributs final public static de cette classe sont référencés dans la jsp
+ * pour avoir une armonie dans les identifiants des parametres.
+ *
+ * @author Jones Magloire
+ * @version 2 (2/12/14)
  */
 @WebServlet(name = "Admin.Utilisateurs", urlPatterns = {"/Admin.Utilisateurs"})
-public class Utilisateurs extends HttpServlet {
+public class Users extends HttpServlet {
 
 	@EJB
 	private EquipesFacadeLocal equipesFacade;
@@ -54,10 +62,10 @@ public class Utilisateurs extends HttpServlet {
 	protected void processRequest(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		if (request.getParameter(subPers) != null) {
-			processSubmitPers(request, response);
+			processSubmitPers(request);
 		}
 		if (request.getParameter(delPers) != null) {
-			processDelPers(request, response);
+			processDelPers(request);
 		}
 		request.setAttribute("personnes", personnesFacade.findAll());
 		request.setAttribute("equipes", equipesFacade.findAll());
@@ -65,7 +73,17 @@ public class Utilisateurs extends HttpServlet {
 		getServletContext().getRequestDispatcher("/WEB-INF/Administration/utilisateurs.jsp").forward(request, response);
 	}
 
-	private void processDelPers(HttpServletRequest request, HttpServletResponse response) {
+	/**
+	 * Precessus pour la requete HTTP <code>POST</code> pour la suppression
+	 * d'une personne. Récupère l'identifiant de la personnes concerné et la
+	 * supprimer de la base de données. Affiche un message de reussite a
+	 * l'utilisateur si tout ce passe bien ou une erreur sinon.
+	 *
+	 * @param request servlet request où l'on mettra le message dans l'attribut
+	 *                success si tout ce passe bien ou un dans error s'il y a un
+	 *                probleme
+	 */
+	private void processDelPers(HttpServletRequest request) {
 		try {
 			int id = utils.Utils.getFirstNumeric(request.getParameterValues(delPers));
 			Personnes p = personnesFacade.find(id);
@@ -78,14 +96,26 @@ public class Utilisateurs extends HttpServlet {
 		}
 	}
 
-	private void processSubmitPers(HttpServletRequest request, HttpServletResponse response) {
-		request.getParameter(subPers);
+	/**
+	 * Precessus pour la requete HTTP <code>POST</code> pour l'ajout d'une
+	 * personnes. Verifie les champs obligatoires comme le nom, prenom, mail,
+	 * l'eqiope et la date de début avant d'ajouter la personne dans la base de
+	 * donnée. Si une erreur survient, l'utilisateur sera informé via les
+	 * attributs error et success de la jsp
+	 *
+	 *
+	 * @param request servlet request où l'on mettra le message dans l'attribut
+	 *                success si tout ce passe bien ou un dans error s'il y a un
+	 *                probleme
+	 */
+	private void processSubmitPers(HttpServletRequest request) {
 		String nom = request.getParameter(txtNom);
 		String prenom = request.getParameter(txtPrenom);
 		String mail = request.getParameter(txtMail);
 		String debut = request.getParameter(txtDebut);
 		String fin = request.getParameter(txtFin);
 		String equipe = request.getParameter(txtEquipe);
+		// on remet en état la page pour ne pas que l'utilisateur rentre a nouveau les memes infos
 		request.setAttribute("nom", nom);
 		request.setAttribute("prenom", prenom);
 		request.setAttribute("mail", mail);
@@ -93,6 +123,7 @@ public class Utilisateurs extends HttpServlet {
 		request.setAttribute("fin", fin);
 		request.setAttribute("equipe", equipe);
 
+		// Gestion des erreurs
 		if (utils.Utils.isNullOrEmpty(nom) || utils.Utils.isNullOrEmpty(prenom)
 				|| utils.Utils.isNullOrEmpty(mail) || utils.Utils.isNullOrEmpty(debut)
 				|| utils.Utils.isNullOrEmpty(equipe)) {
@@ -123,6 +154,7 @@ public class Utilisateurs extends HttpServlet {
 
 		Equipes eq = equipesFacade.find(equipe);
 
+		// creation de la personnes
 		Personnes p = new Personnes();
 		p.setNom(nom);
 		p.setPrenom(prenom);

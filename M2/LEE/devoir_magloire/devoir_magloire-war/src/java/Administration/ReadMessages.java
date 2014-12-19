@@ -3,15 +3,12 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package Client;
+package Administration;
 
-import entity.Bureaux;
-import entity.BureauxFacadeLocal;
+import entity.Messages;
+import entity.MessagesFacadeLocal;
 import entity.Personnes;
-import entity.PersonnesFacadeLocal;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.List;
 import javax.ejb.EJB;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -20,21 +17,24 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
- * Servlet controlant la page de l'affichange des affectations de bureau pour
- * les utilisateurs lambdas. La jsp associée à cette servlet est
- * /WEB-INF/Client/affectations.jsp
+ * Servlet pour la lecture des messages par l'admin. Les messages peuvent etre
+ * lus et supprimés
+ *
+ * Les attributs final public static de cette classe sont référencés dans la jsp
+ * pour avoir une armonie dans les identifiants des parametres.
  *
  * @author Jones Magloire
  * @version 2 (2/12/14)
  */
-@WebServlet(name = "Affectations", urlPatterns = {"/Affectations"})
-public class Affectations extends HttpServlet {
+@WebServlet(name = "Admin.Message", urlPatterns = {"/Admin.Message"})
+public class ReadMessages extends HttpServlet {
 
 	@EJB
-	private PersonnesFacadeLocal personnesFacade;
-
-	@EJB
-	private BureauxFacadeLocal bureauxFacade;
+	private MessagesFacadeLocal messagesFacade;
+	/**
+	 * Identifiant du bouton submit pour la lecture et suppression de mssages
+	 */
+	public static final String subMessageReaded = "subMessageReaded";
 
 	/**
 	 * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -48,12 +48,31 @@ public class Affectations extends HttpServlet {
 	 */
 	protected void processRequest(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		HashMap<Bureaux, List<Personnes>> hm = new HashMap<>();
-		bureauxFacade.findAll().stream().forEach(b -> {
-			hm.put(b, personnesFacade.findByBureau(b));
-		});
-		request.setAttribute("bureaux", hm);
-		getServletContext().getRequestDispatcher("/WEB-INF/Client/affectations.jsp").forward(request, response);
+		String[] txt = request.getParameterValues(subMessageReaded);
+		if (txt != null) {
+			try {
+				int id = utils.Utils.getFirstNumeric(txt);
+				Messages m = messagesFacade.find(id);
+				Personnes p = m.getAuteur();
+				String action;
+				if (!m.getEtat()) {
+					m.setEtat(Boolean.TRUE);
+					messagesFacade.edit(m);
+					action = "lu";
+				} else {
+					messagesFacade.remove(m);
+					action = "supprimé";
+				}
+				request.setAttribute("success", "Message de de " + p.getNom() + " " + p.getPrenom()
+						+ "(" + p.getPersonneId() + ") " + action);
+			} catch (Exception e) {
+				request.setAttribute("error", "Une erreur est survenue");
+			}
+		}
+
+		request.setAttribute("readed", messagesFacade.findByEtatSorted(Boolean.TRUE));
+		request.setAttribute("toRead", messagesFacade.findByEtatSorted(Boolean.FALSE));
+		getServletContext().getRequestDispatcher("/WEB-INF/Administration/message.jsp").forward(request, response);
 	}
 
 	// <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

@@ -5,6 +5,7 @@
  */
 package entity;
 
+import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -33,6 +34,16 @@ public class MessagesFacade extends AbstractFacade<Messages> implements Messages
 		String s = "insert into messages(auteur,message) ";
 		s = s + "values (" + auteur + ",'" + msg.replaceAll("'", "''") + "')";
 		em.createNativeQuery(s).executeUpdate();
+	}
+
+	@Override
+	public List<Messages> findByEtat(Boolean etat) {
+		return em.createNamedQuery("Messages.findByEtat").setParameter("etat", etat).getResultList();
+	}
+
+	@Override
+	public List<Messages> findByEtatSorted(Boolean etat) {
+		return em.createNamedQuery("Messages.findByEtatSorted").setParameter("etat", etat).getResultList();
 	}
 
 }
