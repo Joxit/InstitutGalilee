@@ -1,3 +1,19 @@
+/* 
+ * Copyright (C) 2010-2015  Jones Magloire
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 /* _____________________________________________________________________________
  * Jeu Puissance 4 :: fichier Définitions des menus
  *												
@@ -292,8 +308,11 @@ void menu_about(GtkWidget* Item, ctr_s* ctr)
 					       GTK_MESSAGE_INFO, 
 					       GTK_BUTTONS_CLOSE,
 					       "Puissance 4\n\n"
-						 "Version 1.5\n\n"
-						 "Copyright (C) 2011 Joxit. Tout droits reserves\n" 
+						 "Version 1.6\n\n"
+						 "Copyright (C) 2010-2015  Jones Magloire\n"
+						 "This program comes with ABSOLUTELY NO WARRANTY.\n"
+						 "This is free software, and you are welcome to\n"
+						 "redistribute it under certain conditions.\n" 
 						 "Auteur : MAGLOIRE Jones\n"
 						 "Dans le cadre du projet d'interface graphique\n" 
 						 "des Licences 1 de l'Institut Galilee,\n" 

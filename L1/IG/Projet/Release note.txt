@@ -1,5 +1,5 @@
 /* ______________________________________________________________________________
-	Projet Interface Graphique par MAGLOIRE Jones 11000369
+	Projet Interface Graphique par MAGLOIRE Jones 
 	Puissance 4 sous GTK+
 	
 	Beta :
@@ -88,5 +88,6 @@
 	Version 1.6
 			- Ajout : 
 					- maj_pseudo qui met a jour la label du pseudo
+					- Ajout de la licence GNU GPLv3 en header des sources
 
  ______________________________________________________________________________*/ 

@@ -29,7 +29,11 @@ gtk_puissance4.h: partie.h
 gtk_puissance4.c: partie.h puissance4.h
 gtk_puissance4.o: gtk_puissance4.c
 	gcc -c gtk_puissance4.c `pkg-config --cflags --libs gtk+-2.0` -o gtk_puissance4.o -Wall --pedantic 
-	
+
+puissance4_console.exe: puissance4_console.o partie.o dim.o case.o
+	gcc puissance4_console.o partie.o dim.o case.o -o puissance4_console.exe
+
+
 menu.c: partie.h puissance4.h
 menu.o: menu.c
 	gcc -c menu.c `pkg-config --cflags --libs gtk+-2.0` -o menu.o -Wall --pedantic 
