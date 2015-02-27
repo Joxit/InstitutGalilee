@@ -47,6 +47,13 @@ let rec clean_list list = match list with
   | None::tl -> clean_list tl
   | (Some hd)::tl -> hd::clean_list tl;;
 
+
+let print_pos x y = Printf.printf "(%d, %d)" x y;;
+
+let option_get x = match x with
+  | Some a -> a
+  | None -> failwith "No value";;
+
 (****************************** 5.3 Âge et sexe  *******************************)
 
 (* 6/ Les types enumérés *)
@@ -189,14 +196,12 @@ module type INDIVIDU =
 
 (* 23:32 *)
 (* 12/ Signature MAKE_INDIVIDU *)
-module type MAKE_INDIVIDU =
-  functor (P:PLANETE) -> INDIVIDU with type pos = P.pos;;
+module type MAKE_INDIVIDU = INDIVIDU;;
 
 (********************************** 7.2 Zherbs *********************************)
 
 (* 13/ Mudule Make_Zherb *)
-module Make_Zherb:MAKE_INDIVIDU = 
-  functor (P:PLANETE) ->
+module Make_Zherb (P:PLANETE) : (MAKE_INDIVIDU with type pos = P.pos) =
     struct
       type pos = P.pos
       type individu = {id:int; age:age; pos:pos}
@@ -231,8 +236,8 @@ module Make_Zherb:MAKE_INDIVIDU =
 		    age = Bebe;
 		    pos = new_pos}::create_children (x - 1)
 	in
-	if mere.age = Adulte then
-	  create_children (Random.int (nb_zherbs + 1))
+	if mere.age = Adulte && nb_zherbs > 0 then
+	  create_children (Random.int nb_zherbs)
 	else 
 	  []
       let vieillir individu = 
@@ -244,13 +249,14 @@ module Make_Zherb:MAKE_INDIVIDU =
 	  None
     end;;
 
+
 (********************************** 7.3 Krapits ********************************)
 (* 1:00 *)
 (* 14/ Mudule Make_Krapit *)
 let krapit_pv_max = 6;;
 let krapit_pv_consum = 1;;
 let krapit_seuil_faim = 3;;
-module Make_Krapit:MAKE_INDIVIDU = functor (P:PLANETE) ->
+module Make_Krapit (P:PLANETE) : (MAKE_INDIVIDU with type pos = P.pos) =
   struct
     type pos = P.pos
     type individu = {id:int; sexe:sexe; age:(age * int); pos:pos; pv:int}
@@ -258,13 +264,19 @@ module Make_Krapit:MAKE_INDIVIDU = functor (P:PLANETE) ->
     let last_id = ref 0
     let equals individu1 individu2 = individu1.id = individu2.id
     let create () =  last_id := !last_id + 1 ;
-		     {id = !last_id;
-		      sexe = random_sexe ();
+		     let rnd_age = random_age ()
+		     in let age = 
+			  if rnd_age = Adulte then
+			    (rnd_age, (Random.int 4) + 1)  (* 1 a 4 tours adulte *)
+			  else
+			    (rnd_age, 0)
+			in  {id = !last_id;
+			     sexe = random_sexe ();
 		      (* Comme l'age est aléatoire, on ne sait pas si il sera 
 adulte ou non, on initialise donc aussi le second champs *)
-		      age = (random_age (), (Random.int 4) + 1);
-		      pos = P.random_pos ();
-		      pv = krapit_pv_max}
+			     age = age;
+			     pos = P.random_pos ();
+			     pv = krapit_pv_max}
     let get_pos individu = individu.pos
     let get_sexe individu = individu.sexe
     let get_age individu = fst individu.age
@@ -292,7 +304,7 @@ adulte ou non, on initialise donc aussi le second champs *)
 	     else
 	       P.sud individu.pos
 	   in {individu with pos = new_pos}
-    let reproduire nb_zherbs mere pere =
+    let reproduire dummy mere pere =
      	let rec create_children n = match n with
 	  | 0 -> []
 	  | x ->
@@ -326,16 +338,17 @@ adulte ou non, on initialise donc aussi le second champs *)
 	None
   end;;
 (* 2:00 *)
+
 (********************************** 7.4 Kroguls ********************************)
 
 (* 21:57 *)
 (* 15/ Mudule Make_Kroguls *)
 let krogul_pv_max = 10;;
-let krogul_pv_consum = -2;;
+let krogul_pv_consum = 2;;
 let krogul_seuil_faim = 6;;
 let krogul_gain_faim = 5;;
 let krogul_affame = 4;;
-module Make_Kroguls:MAKE_INDIVIDU = functor (P:PLANETE) ->
+module Make_Krogul (P:PLANETE) : (MAKE_INDIVIDU with type pos = P.pos) =
   struct
     type pos = P.pos
     type individu = {id:int; sexe:sexe; age:(age * int); pos:pos; pv:int}
@@ -356,12 +369,16 @@ module Make_Kroguls:MAKE_INDIVIDU = functor (P:PLANETE) ->
 	     pos = P.random_pos ();
 	     pv = krogul_pv_max}
     let get_pos individu = individu.pos
-    let get_sexe individu = failwith "Il n'a pas de sexe"
+    let get_sexe individu = individu.sexe
     let get_age individu = fst individu.age
     let manger qte individu = 
       if qte > 0 && individu.pv <= krogul_seuil_faim then 
-	Some {individu with 
-	  pv = individu.pv + (krogul_gain_faim * qte)} (* le nombre de krapits manges *)
+	let pv =
+	  if individu.pv + (krogul_gain_faim * qte) > krogul_pv_max then
+	    krogul_pv_max
+	  else
+	    individu.pv + (krogul_gain_faim * qte)
+	in Some {individu with pv = pv} (* le nombre de krapits manges *)
       else if  individu.pv > krogul_pv_consum then 
 	(* Si on a plus de pv que ce qu'on va perdre il survit *)
 	Some {individu with  pv = individu.pv - krogul_pv_consum}
@@ -383,7 +400,7 @@ module Make_Kroguls:MAKE_INDIVIDU = functor (P:PLANETE) ->
 	     else
 	       P.sud individu.pos
 	   in {individu with pos = new_pos}
-    let reproduire nb_zherbs mere pere =
+    let reproduire dummy mere pere =
      	let rec create_children n = match n with
 	  | 0 -> []
 	  | x ->
@@ -418,7 +435,6 @@ module Make_Kroguls:MAKE_INDIVIDU = functor (P:PLANETE) ->
   end;;  
 (* 22:55 *)
 
-
 (*******************************************************************************
  *    8  Population                                                            *
  *******************************************************************************)
@@ -452,24 +468,20 @@ module type POPULATION =
 (* 23:36 *)
 
 module type MAKE_PLANTES = 
-  functor (P:PLANETE) -> 
-    functor (MI:MAKE_INDIVIDU) -> 
-     POPULATION with type pos = P.pos
-		and type nourriture = unit;;
+     POPULATION;;
 (* 23:57 *)
 module type MAKE_ANIMAUX = 
-  functor (P:PLANETE) ->
-    functor (PROIES:POPULATION with type pos = P.pos) -> 
-      functor (MI:MAKE_INDIVIDU) -> 
-	POPULATION with type pos = P.pos
-		   and type nourriture = PROIES.individu;;
+	POPULATION;;
 (* 0:02 *) 
 
 (********************************* 8.2 Zherbs *********************************)
-(* 1:28 *)
-module Make_Zherbs:MAKE_PLANTES =
-  functor (P:PLANETE) ->
-    functor (MI:MAKE_INDIVIDU) -> 
+(* 1:28 - 5:30 *)
+module Make_Zherbs 
+  (P:PLANETE) 
+  (MI:MAKE_INDIVIDU with type pos = P.pos) : 
+  (MAKE_PLANTES with type pos = P.pos
+		and type individu = MI.individu
+		and type nourriture = unit) =
       struct 
 	type pos = P.pos
 	type individu = MI.individu
@@ -477,22 +489,128 @@ module Make_Zherbs:MAKE_PLANTES =
 	type nourriture = unit
 	type elt = individu
 	type t = population
-	let create n = map MI.create (Array.to_list (Array.make n ()))
-	let random_ind  population = random_get population
-	let sous_pop pos population = P.at_pos MI.get_pos population
-	let tuer_ind individu population = 
-	  List.filter (function ind -> !MI.equals individu ind) population
 	let map f list = List.map f list
 	let iter f population = List.iter f population
 	let reduce f population a = List.fold_right f population a
+	let create n = map MI.create (Array.to_list (Array.make n ()))
+	let random_ind  population = random_get population
+	let sous_pop pos population = P.at_pos MI.get_pos pos population
+	let tuer_ind individu population = 
+	  List.filter (function ind -> 
+	    ((MI.equals individu ind) = false)) population 
 	let vieillissement population = clean_list (map MI.vieillir population)
-	let reproduction  population = clean_list (map MI.reproduire population)
-	let mouvement nourriture population = population
-	let nourriture nourriture  population = (population, nourriture)
-	let affichage population = ()
-  end:MAKE_PLANTES;;
+	let reproduction population = 
+	  let rec reprod pop = match pop with
+	  | [] -> population
+	  | hd::tl -> let pop_pos = (* on filtre les adultes de la case *)
+			List.filter 
+			  (function ind -> MI.get_age ind = Adulte) 
+			  (sous_pop (MI.get_pos hd) population) 
+		      in let enfants = 
+			(MI.reproduire
+			   ((List.length pop_pos) - 1)
+			   hd hd)
+		      in enfants@(reprod tl)
+	  in (reprod population)@population
+	let mouvement nourriture population = population (* Ils ne bougent pas *)
+	let nourriture nourriture population = (population, nourriture) (* Ils ne mangent pas *)
+	let affichage population = 
+	  iter (function ind -> Printf.printf "[%s " (string_age (MI.get_age ind)) ;
+	    P.display 
+	    (function x -> function y -> Printf.printf "(%d, %d)" x y) 
+	    (MI.get_pos ind); 
+	  print_string "]") 
+	    population
+  end;;
+
+module Zherbs = Make_Zherbs (Symbioz) (Make_Zherb (Symbioz));;
+
+(********************************* 8.3 Animaux ********************************)
+(* 17:29 *)
+module Make_Bestioles 
+  (P:PLANETE) 
+  (PROIES:POPULATION with type pos = P.pos)
+  (MI:MAKE_INDIVIDU with type pos = P.pos) : 
+  (MAKE_ANIMAUX with type pos = P.pos
+		and type individu = MI.individu
+		and type nourriture = PROIES.population) =
+      struct 
+	type pos = P.pos
+	type individu = MI.individu
+	type population = individu list
+	type nourriture = PROIES.population
+	type elt = individu
+	type t = population
+	let map f list = List.map f list
+	let iter f population = List.iter f population
+	let reduce f population a = List.fold_right f population a
+	let create n = map MI.create (Array.to_list (Array.make n ()))
+	let random_ind population = random_get population
+	let sous_pop pos population = P.at_pos MI.get_pos pos population
+	let tuer_ind individu population = 
+	  List.filter (function ind -> 
+	    ((MI.equals individu ind) = false)) population 
+	let vieillissement population = clean_list (map MI.vieillir population)
+	let reproduction population =
+	  let adultes = 
+	    List.filter (function ind -> MI.get_age ind = Adulte) population
+	  in let sorted = P.sort_by_pos MI.get_pos adultes
+	     in let rec split list = match list with 
+	     | [] -> ([], [])
+	     | hd::tl when MI.get_sexe hd = Masculin -> let (m, f) = split tl 
+							in (hd::m, f)
+	     | hd::tl ->  let (m, f) = split tl 
+			  in (m, hd::f)
+		in let splited = map split sorted
+		   in let shuffled = map (function (m, f) -> 
+		     (shuffle m, shuffle f)) splited
+		      in let rec reprod list = match list with 
+		      | ([], _) -> []
+		      | (_, []) -> []
+		      | (m::tlm, f::tlf) -> 
+			(MI.reproduire 0 f m)@(reprod (tlm, tlf))
+			 in let enfants = map reprod shuffled
+			    in let rec flatten list = match list with 
+			    | [] -> []
+			    | hd::tl -> hd@(flatten tl)
+			       in (flatten enfants)@population
+	let mouvement nourriture population = 
+	  map (MI.bouger (function pos -> 1)) population
+	let nourriture nourriture  population = 
+	  let (pop, nour) = reduce 
+	    (function ind -> function (p, n) -> 
+	      let proie = 
+		PROIES.random_ind 
+		  (PROIES.sous_pop (MI.get_pos ind) n)
+	      in P.display 
+	    (function x -> function y -> Printf.printf "(%d, %d)" x y) 
+	    (PROIES.get_pos proie);
+	      if proie = None then
+		((MI.manger 0 ind)::p, n)
+	      else 
+		((MI.manger 1 ind)::p, 
+		 (PROIES.tuer_ind (option_get proie) n))) 
+	    population ([], nourriture)
+	  in (clean_list pop, nour)
+	let affichage population = 
+	  iter (function ind -> 
+	    Printf.printf "[%s %s " 
+	      (string_sexe (MI.get_sexe ind)) 
+	      (string_age (MI.get_age ind)) ; 
+	    P.display 
+	    (function x -> function y -> Printf.printf "(%d, %d)" x y) 
+	    (MI.get_pos ind);
+	  print_string "]") 
+	    population
+  end;;
 
 
+module Krapits = Make_Bestioles (Symbioz) (Zherbs) (Make_Krapit (Symbioz));;
+module Kroguls = Make_Bestioles (Symbioz) (Krapits) (Make_Krogul (Symbioz));;
+
+
+(* 19:16 *)
+(* 19:54 *)
 module Make_Game =
   functor (P:PLANETE) ->
     functor (Plantes:POPULATION with type pos = P.pos
@@ -502,7 +620,45 @@ module Make_Game =
 	functor (Carnivores:POPULATION with type pos = P.pos
 				and type nourriture = Herbivores.population) ->
 struct
-  
-end;;
+  let plantes = ref (Plantes.create 10)
+  let herbivores = ref (Herbivores.create 20)
+  let carnivores = ref (Carnivores.create 20)
+  let tour () = 
+    print_string "\nPlantes\n";
+    Plantes.affichage !plantes;
+    let (p, _) = Plantes.nourriture () !plantes 
+    in plantes := p;
+    plantes := Plantes.reproduction !plantes;
+    plantes := Plantes.mouvement () !plantes;
 
-(* 3:21 *)
+    print_string "\nHerbivores\n";
+    Herbivores.affichage !herbivores;
+    let (p, n) = Herbivores.nourriture !plantes !herbivores 
+    in herbivores := p;
+    plantes := n;
+    herbivores := Herbivores.reproduction !herbivores;
+    herbivores := Herbivores.mouvement !plantes !herbivores;
+
+    print_string "\nCarnivores\n";
+    Carnivores.affichage !carnivores;
+    let (p, n) = Carnivores.nourriture !herbivores !carnivores 
+    in carnivores := p;
+    herbivores := n;
+    carnivores := Carnivores.reproduction !carnivores;
+    carnivores := Carnivores.mouvement !herbivores !carnivores;
+
+    plantes := Plantes.vieillissement !plantes;
+    herbivores := Herbivores.vieillissement !herbivores;
+    carnivores := Carnivores.vieillissement !carnivores
+
+end;;
+module Game = Make_Game (Symbioz) (Zherbs) (Krapits) (Kroguls);;
+
+Game.tour ();;
+Game.tour ();;
+Game.tour ();;
+Game.tour ();;
+Game.tour ();;
+
+(* 20:45 *)
+
