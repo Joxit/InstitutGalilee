@@ -190,7 +190,7 @@ module type INDIVIDU =
 (* 23:32 *)
 (* 12/ Signature MAKE_INDIVIDU *)
 module type MAKE_INDIVIDU =
-  functor (P:PLANETE) ->INDIVIDU with type pos = P.pos;;
+  functor (P:PLANETE) -> INDIVIDU with type pos = P.pos;;
 
 (********************************** 7.2 Zherbs *********************************)
 
@@ -467,13 +467,13 @@ module type MAKE_ANIMAUX =
 
 (********************************* 8.2 Zherbs *********************************)
 (* 1:28 *)
-module Make_Zherbs =
+module Make_Zherbs:MAKE_PLANTES =
   functor (P:PLANETE) ->
     functor (MI:MAKE_INDIVIDU) -> 
       struct 
 	type pos = P.pos
-	type population = individu list
 	type individu = MI.individu
+	type population = individu list
 	type nourriture = unit
 	type elt = individu
 	type t = population
@@ -488,8 +488,7 @@ module Make_Zherbs =
 	let vieillissement population = clean_list (map MI.vieillir population)
 	let reproduction  population = clean_list (map MI.reproduire population)
 	let mouvement nourriture population = population
-	let nourriture 
-	    nourriture  population = (population, nourriture)
+	let nourriture nourriture  population = (population, nourriture)
 	let affichage population = ()
   end:MAKE_PLANTES;;
 
