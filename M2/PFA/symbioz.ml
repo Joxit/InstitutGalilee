@@ -282,7 +282,10 @@ adulte ou non, on initialise donc aussi le second champs *)
     let get_age individu = fst individu.age
     let manger qte individu = 
       if qte > 0 then 
-	Some {individu with pv = krapit_pv_max}
+	if individu.pv <= krapit_pv_consum then 
+	  Some {individu with pv = krapit_pv_max}
+	else
+	  None (* On renvoie None quand on a rien mangé *)
       else if  individu.pv > krapit_pv_consum then 
 	(* Si on a plus de pv que ce qu'on va perdre il survit *)
 	Some {individu with  pv = individu.pv - krapit_pv_consum}
@@ -372,13 +375,16 @@ module Make_Krogul (P:PLANETE) : (MAKE_INDIVIDU with type pos = P.pos) =
     let get_sexe individu = individu.sexe
     let get_age individu = fst individu.age
     let manger qte individu = 
-      if qte > 0 && individu.pv <= krogul_seuil_faim then 
-	let pv =
-	  if individu.pv + (krogul_gain_faim * qte) > krogul_pv_max then
-	    krogul_pv_max
-	  else
-	    individu.pv + (krogul_gain_faim * qte)
-	in Some {individu with pv = pv} (* le nombre de krapits manges *)
+      if qte > 0  then 
+	if  individu.pv <= krogul_seuil_faim then
+	  let pv =
+	    if individu.pv + (krogul_gain_faim * qte) > krogul_pv_max then
+	      krogul_pv_max
+	    else
+	      individu.pv + (krogul_gain_faim * qte)
+	  in Some {individu with pv = pv} (* le nombre de krapits manges *)
+	else
+	  None (* On renvoie none quand on a rien mangé *)
       else if  individu.pv > krogul_pv_consum then 
 	(* Si on a plus de pv que ce qu'on va perdre il survit *)
 	Some {individu with  pv = individu.pv - krogul_pv_consum}
@@ -511,7 +517,7 @@ module Make_Zherbs
 			   ((List.length pop_pos) - 1)
 			   hd hd)
 		      in enfants@(reprod tl)
-	  in (reprod population)@population
+	  in (reprod population)
 	let mouvement nourriture population = population (* Ils ne bougent pas *)
 	let nourriture nourriture population = (population, nourriture) (* Ils ne mangent pas *)
 	let affichage population = 
@@ -573,7 +579,7 @@ module Make_Bestioles
 			    in let rec flatten list = match list with 
 			    | [] -> []
 			    | hd::tl -> hd@(flatten tl)
-			       in (flatten enfants)@population
+			       in population@(flatten enfants)
 	let mouvement nourriture population = 
 	  map (MI.bouger (function pos -> 1)) population
 	let nourriture nourriture  population = 
@@ -582,14 +588,16 @@ module Make_Bestioles
 	      let proie = 
 		PROIES.random_ind 
 		  (PROIES.sous_pop (MI.get_pos ind) n)
-	      in P.display 
-	    (function x -> function y -> Printf.printf "(%d, %d)" x y) 
-	    (PROIES.get_pos proie);
-	      if proie = None then
-		((MI.manger 0 ind)::p, n)
-	      else 
-		((MI.manger 1 ind)::p, 
-		 (PROIES.tuer_ind (option_get proie) n))) 
+	      in if proie = None then
+		  ((MI.manger 0 ind)::p, n)
+		else 
+		  let bestiole = MI.manger 1 ind 
+		  in if bestiole = None then 
+		  (Some ind::p, n)
+		    else
+		  (bestiole::p, 
+		   (PROIES.tuer_ind (option_get proie) n))
+	    ) 
 	    population ([], nourriture)
 	  in (clean_list pop, nour)
 	let affichage population = 
@@ -620,7 +628,7 @@ module Make_Game =
 	functor (Carnivores:POPULATION with type pos = P.pos
 				and type nourriture = Herbivores.population) ->
 struct
-  let plantes = ref (Plantes.create 10)
+  let plantes = ref (Plantes.create 200)
   let herbivores = ref (Herbivores.create 20)
   let carnivores = ref (Carnivores.create 20)
   let tour () = 
@@ -641,9 +649,13 @@ struct
 
     print_string "\nCarnivores\n";
     Carnivores.affichage !carnivores;
+    print_string "\nHerbivores\n";
+    Herbivores.affichage !herbivores;
     let (p, n) = Carnivores.nourriture !herbivores !carnivores 
     in carnivores := p;
     herbivores := n;
+    print_string "\nHerbivores\n";
+    Herbivores.affichage !herbivores;
     carnivores := Carnivores.reproduction !carnivores;
     carnivores := Carnivores.mouvement !herbivores !carnivores;
 
