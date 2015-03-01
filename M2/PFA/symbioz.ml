@@ -484,7 +484,7 @@ module type MAKE_ANIMAUX =
 (* 1:28 - 5:30 *)
 module Make_Zherbs 
   (P:PLANETE) 
-  (MI:MAKE_INDIVIDU with type pos = P.pos) : 
+  (MI:INDIVIDU with type pos = P.pos) : 
   (MAKE_PLANTES with type pos = P.pos
 		and type individu = MI.individu
 		and type nourriture = unit) =
