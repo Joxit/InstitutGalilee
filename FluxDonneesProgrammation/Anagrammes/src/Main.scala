@@ -15,7 +15,7 @@ object Main extends App {
 	 * en maths : hm1 C hm2
 	 */
 	def isIncluded(hm1: HashMap[Char, Int], hm2: HashMap[Char, Int]): Boolean = {
-		return hm1.foldLeft(true) { case (res, (k, v)) => res && (v <= hm2.getOrElse(k, 0)) };
+		hm1.forall { case (k, v) => (v <= hm2.getOrElse(k, 0)) }
 	}
 
 	/**
@@ -23,9 +23,7 @@ object Main extends App {
 	 * en maths : hm1 \ hm2
 	 */
 	def divide(hm1: HashMap[Char, Int], hm2: HashMap[Char, Int]): HashMap[Char, Int] = {
-		val res = HashMap[Char, Int]();
-		hm1.foreach { entry => res += ((entry._1, (entry._2.-(hm2.getOrElse(entry._1, 0))))) }
-		return res.filter { case (k, v) => v != 0 };
+		hm1.map { case (k, v) => (k, v - hm2.getOrElse(k, 0)) }.filter { case (k, v) => v != 0 };
 	}
 
 	/**
@@ -42,7 +40,7 @@ object Main extends App {
 	 * Fait une somme sur les valeurs
 	 */
 	def getNbChar(hm: HashMap[Char, Int]): Int = {
-		return hm.foldLeft(0) { case (res, (k, v)) => res + v }
+		hm.values.sum
 	}
 
 	// On initialise la liste qui aura les mots pour nos anagrammes.
