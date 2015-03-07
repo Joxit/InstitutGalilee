@@ -1,11 +1,11 @@
-/* ______________________________________________________________________________
- *	Projet A.S.D.L par MAGLOIRE Jones 11000369 et DELCOURT Rémi 11002398
- *	Lignes RATP de paris
- *	
- *	Mardi 19 Avril 2011	
- *	
- *	pour plus d'information sur les fonctions voir projet_adsl.h
- * ______________________________________________________________________________ */
+/* ___________________________________________________________________________
+ *	Projet A.S.D.L par MAGLOIRE Jones 11000369 et DELCOURT Rémi 11002398       *
+ *	Lignes RATP de paris                                                       *
+ *	                                                                           *
+ *	Mardi 28 Avril 2011	                                                       *
+ *	                                                                           *
+ *	pour plus d'information sur les fonctions voir projet_adsl.h               *
+ * ___________________________________________________________________________ */
 
 /* Declaration de fonctionnalites supplementaire */
 

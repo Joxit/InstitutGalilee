@@ -1,14 +1,14 @@
 /* ____________________________  Action.c  ___________________________________
- P *rojet A.S.D.L par MAGLOIRE Jones 11000369 et DELCOURT Rémi 11002398  
- Lignes RATP de paris
- 
- Ce fichier contient toutes les fonctions nécessaires à la création
- du réseau RATP et des fonctions de l'agent RATP
- 
- Dernière modification : Mardi 19 Avril 2011			
- 
- pour plus d'informations sur les fonctions voir projet_adsl.h
- ______________________________________________________________________________ */
+ *  Projet A.S.D.L par MAGLOIRE Jones 11000369 et DELCOURT Rémi 11002398       *
+ *  Lignes RATP de paris                                                       *
+ *                                                                             *
+ *  Ce fichier contient toutes les fonctions nécessaires à la création         *
+ *  du réseau RATP et des fonctions de l'agent RATP                            *
+ *                                                                             *
+ *  Dernière modification : Mardi 28 Avril 2011			                       *
+ *                                                                             *
+ *  pour plus d'informations sur les fonctions voir projet_adsl.h              *
+ * ___________________________________________________________________________ */
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -34,9 +34,9 @@ liste_pStations_t* ajout_ligne(int numero_ligne, liste_pStations_t* ligne, FILE*
 			perror("La lecture a echoue");	
 		
 		// fgets met un saut de ligne à la fin de la variable, on le supprime
-			taille = strlen(nom_station);
-			nom_station[taille-1] = '\0';
-			ligne= ajout_station( nom_station, ligne);
+		taille = strlen(nom_station);
+		nom_station[taille-1] = '\0';
+		ligne= ajout_station( nom_station, ligne);
 	}
 	*ligne = *ligne->next;
 	
@@ -58,20 +58,20 @@ void est_voisin(int id1, int id2, liste_pStations_t** toutes_les_lignes,int** vo
 			if(is_open(ligne) == 1)
 			{   
 				id1 = ligne.s->id;
+				ligne = *ligne.next;
+				while(is_open(ligne) == 0)
+				{
 					ligne = *ligne.next;
-					while(is_open(ligne) == 0)
-					{
-						ligne = *ligne.next;
-						if(ligne.s == NULL)
-							break;
-					}
-					if(is_open(ligne) == 1)
-					{
-						voisin[id1][ligne.s->id] = 1;
-						voisin[ligne.s->id][id1] = 1;
-						distance[id1][ligne.s->id] = 1;
-						distance[ligne.s->id][id1] = 1;
-					}
+					if(ligne.s == NULL)
+						break;
+				}
+				if(is_open(ligne) == 1)
+				{
+					voisin[id1][ligne.s->id] = 1;
+					voisin[ligne.s->id][id1] = 1;
+					distance[id1][ligne.s->id] = 1;
+					distance[ligne.s->id][id1] = 1;
+				}
 			}
 			else
 				if(is_open(*ligne.next) == 0)
@@ -93,7 +93,7 @@ void est_voisin(int id1, int id2, liste_pStations_t** toutes_les_lignes,int** vo
 					}
 				}
 				else
-				ligne = *ligne.next;
+					ligne = *ligne.next;
 		}
 		if(ligne.s == NULL)
 		{
@@ -183,18 +183,18 @@ void set_id(liste_pStations_t** toutes_les_lignes)
 							boolean = TRUE;
 						}
 						else // Sinon on passe
-								ligne = *ligne.next;	
+							ligne = *ligne.next;	
 					}
 					
 				}
 				else // Si la station est nul on passe à la ligne suivante
-						if(ligne.s == NULL)
-						{
-							j = j + 1;
-							// Vérification pour les erreures de ségmentations
-							if(j != NB_LIGNES)
-								ligne = *toutes_les_lignes[j];	
-						}
+					if(ligne.s == NULL)
+					{
+						j = j + 1;
+						// Vérification pour les erreures de ségmentations
+						if(j != NB_LIGNES)
+							ligne = *toutes_les_lignes[j];	
+					}
 						
 			}
 			// Si boolean == FALSE c'est qu'on a pas trouvé de station avec la meme  id

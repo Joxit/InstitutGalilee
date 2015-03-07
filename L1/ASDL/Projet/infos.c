@@ -1,14 +1,14 @@
-/* ______________________________________________________________________________
- P roj*et A.S.D.L par MAGLOIRE Jones 11000369 et DELCOURT Rémi 11002398
- Lignes RATP de paris
- 
- Ce fichier contient toutes les fonctions nécessaires à 
- l'interface utilisateur
- 
- Dernière modification : Mardi 19 Avril 2011				
- 
- pour plus d'information sur les fonctions voir projet_adsl.h
- ______________________________________________________________________________ */
+/* __________________________________________________________________________
+ * Projet A.S.D.L par MAGLOIRE Jones 11000369 et DELCOURT Rémi 11002398       *
+ * Lignes RATP de paris                                                       *
+ *                                                                            *
+ * Ce fichier contient toutes les fonctions nécessaires à                     *
+ * l'interface utilisateur                                                    *
+ *                                                                            *
+ * Dernière modification : Mardi 28 Avril 2011				                  *
+ *                                                                            *
+ * pour plus d'information sur les fonctions voir projet_adsl.h               *
+ * __________________________________________________________________________ */
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -26,11 +26,11 @@ void recherche_intineraires(int depart, int arrivee, int** distance, liste_pStat
 {
 	int i = 0;
 	liste_pStations_t ligne;
-	int		n = 0, 		// nombre binaire convertit qui renvoie les lignes de la station
-	numero_ligne = 0;
-	int 	cur_id, 	// id de parcour 
-	sub_id,		// id de test à la sortie de id_proche
-	id;			// id final le plus près d'arrivee
+	int	n = 0, 		// nombre binaire convertit qui renvoie les lignes de la station
+		numero_ligne = 0;
+	int cur_id, 	// id de parcour 
+		sub_id,		// id de test à la sortie de id_proche
+		id;			// id final le plus près d'arrivee
 	
 	if(depart == arrivee)
 	{
@@ -96,37 +96,37 @@ void liste_station_de_toutes_les_lignes(liste_pStations_t** toutes_les_lignes)
 		if( i != NB_LIGNES)
 			ligne = *toutes_les_lignes[i];
 		// Vérification d'un cas complexe avec les lignes à plusieurs branches
-			switch(i)
-			{
-				case 6:
-					printf("Les Station de la ligne %d directon Villejuif : \n", get_num_ligne(i));
-					break;
-				case 7:
-					printf("Les Station de la ligne %d directon Ivry : \n", get_num_ligne(i));
-					break;
-				case 10:	
-					printf("Les Station de la ligne %d directon Boulogne : \n", get_num_ligne(i));
-					break;
-				case 11:	
-					printf("Les Station de la ligne %d directon Gare d'Austerlitz : \n", get_num_ligne(i));
-					break;
-				case 14:	
-					printf("Les Station de la ligne %d directon Saint Denis : \n", get_num_ligne(i));
-					break;
-				case 15:	
-					printf("Les Station de la ligne %d directon Gennevilliers : \n", get_num_ligne(i));
-					break;
-				default : 
-					printf("Les Station de la ligne %d sont : \n", get_num_ligne(i));
-					break;
-			}
-			// Boucle secondaire qui affiche les noms des stations
-			while(ligne.next != NULL)
-			{
-				printf("%s; ", ligne.s->nom);
-				ligne = *ligne.next;
-			}
-			puts("\n");
+		switch(i)
+		{
+		case 6:
+			printf("Les Station de la ligne %d directon Villejuif : \n", get_num_ligne(i));
+			break;
+		case 7:
+			printf("Les Station de la ligne %d directon Ivry : \n", get_num_ligne(i));
+			break;
+		case 10:	
+			printf("Les Station de la ligne %d directon Boulogne : \n", get_num_ligne(i));
+			break;
+		case 11:	
+			printf("Les Station de la ligne %d directon Gare d'Austerlitz : \n", get_num_ligne(i));
+			break;
+		case 14:	
+			printf("Les Station de la ligne %d directon Saint Denis : \n", get_num_ligne(i));
+			break;
+		case 15:	
+			printf("Les Station de la ligne %d directon Gennevilliers : \n", get_num_ligne(i));
+			break;
+		default : 
+			printf("Les Station de la ligne %d sont : \n", get_num_ligne(i));
+			break;
+		}
+		// Boucle secondaire qui affiche les noms des stations
+		while(ligne.next != NULL)
+		{
+			printf("%s; ", ligne.s->nom);
+			ligne = *ligne.next;
+		}
+		puts("\n");
 	}
 }
 
@@ -143,13 +143,13 @@ int ligne_ouverte(liste_pStations_t ligne) // toutes_les_lignes[i] en argument!
 	while(ligne.next != NULL)
 	{
 		if(ligne.s->ouvert == 1) // ouvert
-			{
-				cmp = cmp +1;
-			}
-			if(cmp == 2)
-				return 1;
+		{
+			cmp = cmp +1;
+		}
+		if(cmp == 2)
+			return 1;
 			
-			ligne = *ligne.next;
+		ligne = *ligne.next;
 	}
 	
 	return 0;
@@ -197,33 +197,33 @@ void get_station_ouverte(char* nom_station, liste_pStations_t** toutes_les_ligne
 					printf("La station %s est fermée pour la ligne %d ", nom_station, get_num_ligne(i));
 				
 				// une station n'est pas deux fois sur la meme ligne mais erreur avec  ligne = *ligne.next; qui suit
-					//i++;
-					//ligne = *toutes_les_lignes[i];
-					// Vérification d'un cas complexe avec les lignes à plusieurs branches
-					switch(i)
-					{
-						case 6:
-							printf("directon Villejuif\n");
-							break;
-						case 7:
-							printf("directon Ivry\n");
-							break;
-						case 10:	
-							printf("directon Boulogne\n");
-							break;
-						case 11:	
-							printf("directon Gare d'Austerlitz\n");
-							break;
-						case 14:	
-							printf("directon Saint Denis\n");
-							break;
-						case 15:	
-							printf("directon Gennevilliers\n");
-							break;
-						default : 
-							printf("\n");
-							break;
-					}
+				//i++;
+				//ligne = *toutes_les_lignes[i];
+				// Vérification d'un cas complexe avec les lignes à plusieurs branches
+				switch(i)
+				{
+				case 6:
+					printf("directon Villejuif\n");
+					break;
+				case 7:
+					printf("directon Ivry\n");
+					break;
+				case 10:	
+					printf("directon Boulogne\n");
+					break;
+				case 11:	
+					printf("directon Gare d'Austerlitz\n");
+					break;
+				case 14:	
+					printf("directon Saint Denis\n");
+					break;
+				case 15:	
+					printf("directon Gennevilliers\n");
+					break;
+				default : 
+					printf("\n");
+					break;
+				}
 			}
 		}
 		
