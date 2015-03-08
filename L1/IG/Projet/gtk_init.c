@@ -14,20 +14,20 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-/* _____________________________________________________________________________
- * J *eu Puissance 4 : Fichier Principal									
- *
- * Mardi 17 Mai 2011.												
- *
- * Pour plus de détails, consulter les fichier d'entête						
- * ____________________________________________________________________________ */
+/* ___________________________________________________________________________
+ * Jeu Puissance 4 : Fichier Principal                                         *
+ *                                                                             *
+ * Mardi 17 Mai 2011.                                                          *
+ *                                                                             *
+ * Pour plus de détails, consulter les fichier d'entête                        *
+ * ___________________________________________________________________________ */
 
 /* Declaration de fonctionnalites supplementaire */
 
 #include <stdlib.h> /* EXIT_SUCCSS */
 #include <stdio.h> /* Printf */	
 #include <gtk/gtk.h>	
-#include <time.h>		/*fonction 'time', utilisée pour la génération aléatoire*/
+#include <time.h>	/*fonction 'time', utilisée pour la génération aléatoire*/
 #include "puissance4.h"	/* modèle de la chasse au trésor en GTK(constantes symboliques, types, déclaration des fonctions)*/
 #include "partie.h"
 

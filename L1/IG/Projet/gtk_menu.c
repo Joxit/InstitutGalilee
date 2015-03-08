@@ -14,13 +14,13 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-/* _____________________________________________________________________________
- * Jeu Puissance 4 :: fichier Définitions des menus
- *												
- * Mardi 17 Mai 2011.													
- * 
- * Pour plus de détails, consulter les fichier d'entête						
- * _____________________________________________________________________________ */
+/* ___________________________________________________________________________
+ * Jeu Puissance 4 :: fichier Définitions des menus                            *
+ *                                                                             *
+ * Mardi 17 Mai 2011.                                                          *
+ *                                                                             *
+ * Pour plus de détails, consulter les fichier d'entête                        *
+ * ___________________________________________________________________________ */
 
 # include <stdlib.h>		/* fonction 'rand' de génération aléatoire*/
 # include <gtk/gtk.h>
@@ -45,8 +45,8 @@ void menu_nom(GtkWidget* MenuItem, ctr_s *ctr)
 	
 	/** Premiere etage **/
 	ENV->MenuLabel[0] = gtk_label_new(	"Choisissez votre nouveau pseudonyme\n"
-							"Attention 5 lettres minimum\n" 
-							"laisser vide pour ne pas enregistrer ");
+										"Attention 5 lettres minimum\n" 
+										"laisser vide pour ne pas enregistrer ");
 	
 	/** Deuxieme etage **/
 	/* Affichage du nom du joueur 1 dans le label mise dans MenuhBox */ 
@@ -99,16 +99,16 @@ void get_score(GtkWidget* MenuItem, ctr_s *ctr)
 	/* Initialisation de la boite de Dialog */
 	ENV->reponse = GTK_RESPONSE_NONE;
 	ENV->Dialog = gtk_message_dialog_new(NULL, 
-					       GTK_DIALOG_MODAL, 
-					       GTK_MESSAGE_INFO, 
-					       GTK_BUTTONS_OK,
-					       "\n"
-					       "\n%s :\t\t\t\t\n"
-					       "\t\t\t\t\t%d points\n"
-					       "\n%s :\t\t\t\t\n"
-					       "\t\t\t\t\t%d points",
-					       JOUEUR_1->nom, JOUEUR_1->score,
-					       JOUEUR_2->nom, JOUEUR_2->score );
+										 GTK_DIALOG_MODAL, 
+										 GTK_MESSAGE_INFO, 
+										 GTK_BUTTONS_OK,
+										 "\n"
+										 "\n%s :\t\t\t\t\n"
+										 "\t\t\t\t\t%d points\n"
+										 "\n%s :\t\t\t\t\n"
+										 "\t\t\t\t\t%d points",
+										 JOUEUR_1->nom, JOUEUR_1->score,
+										 JOUEUR_2->nom, JOUEUR_2->score );
 	gtk_window_set_title((GtkWindow*)ENV->Dialog, "Score Partie");
 	
 	/* Connection du bouton Destroy pour retourner au jeu */
@@ -131,11 +131,11 @@ void nouvelle_partie(GtkWidget* MenuItem, ctr_s *ctr)
 	/* Initialisation de la boite de Dialog */
 	ENV->reponse = GTK_RESPONSE_NONE;
 	ENV->Dialog = gtk_message_dialog_new(NULL, 
-					       GTK_DIALOG_MODAL, 
-					       GTK_MESSAGE_WARNING, 
-					       GTK_BUTTONS_YES_NO, 
-					       "Vous etes sur le point de commencer une nouvelle partie.\n"
-					       "\t\tVoulez vous vraiment le faire?\n");
+										 GTK_DIALOG_MODAL, 
+										 GTK_MESSAGE_WARNING, 
+										 GTK_BUTTONS_YES_NO, 
+										 "Vous etes sur le point de commencer une nouvelle partie.\n"
+										 "\t\tVoulez vous vraiment le faire?\n");
 	gtk_window_set_title((GtkWindow*)ENV->Dialog, "Nouvelle Partie");
 	
 	/* Connection du bouton Destroy pour retourner au jeu */
@@ -203,98 +203,98 @@ void menu_IA(GtkWidget* MenuItem, ctr_s *ctr)
 	
 	adt = file_open(adt);
 	
-		/* Initialisation de la boite de Dialog */
-		ENV->reponse = GTK_RESPONSE_NONE;
+	/* Initialisation de la boite de Dialog */
+	ENV->reponse = GTK_RESPONSE_NONE;
 	/** Si l'IA  est off **/
 	if(ctr->IA == FALSE)
 	{
 		ENV->Dialog = gtk_message_dialog_new(NULL, 
-						     GTK_DIALOG_MODAL, 
-						     GTK_MESSAGE_QUESTION, 
-						     GTK_BUTTONS_YES_NO, 
-						     "Beta : Intelligence Artificielle.\n"
-						     "Voulez vous jouer contre l'ordinateur?\n");
+											 GTK_DIALOG_MODAL, 
+											 GTK_MESSAGE_QUESTION, 
+											 GTK_BUTTONS_YES_NO, 
+											 "Beta : Intelligence Artificielle.\n"
+											 "Voulez vous jouer contre l'ordinateur?\n");
 		
 	}
 	else
-	/** Si l'IA  est on **/
-	if(ctr->IA == TRUE)
+		/** Si l'IA  est on **/
+		if(ctr->IA == TRUE)
+		{
+			/* Initialisation de la boite de Dialog */
+			ENV->reponse = GTK_RESPONSE_NONE;
+			ENV->Dialog = gtk_message_dialog_new(NULL, 
+												 GTK_DIALOG_MODAL, 
+												 GTK_MESSAGE_INFO, 
+												 GTK_BUTTONS_YES_NO, 
+												 "Beta : Intelligence Artificielle.\n"
+												 "Voulez vous arreter de jouer contre l'ordinateur?\n");
+		}
+	gtk_window_set_title((GtkWindow*)ENV->Dialog, "Beta Intelligence Artificielle");
+		
+	/* Connection du bouton Destroy pour retourner au jeu */
+	gtk_signal_connect(GTK_OBJECT(ENV->Dialog), "destroy", G_CALLBACK(afficher_fenetre), ctr);
+		
+	/* Boucle d'attente de reponse */
+	while(ENV->reponse == GTK_RESPONSE_NONE)
+		ENV->reponse = gtk_dialog_run(GTK_DIALOG(ENV->Dialog));
+		
+	/* Si les joueurs veulent demarrer/arreter le joueur artificiel */
+	if(ENV->reponse == GTK_RESPONSE_YES)
 	{
-		/* Initialisation de la boite de Dialog */
-		ENV->reponse = GTK_RESPONSE_NONE;
-		ENV->Dialog = gtk_message_dialog_new(NULL, 
-						     GTK_DIALOG_MODAL, 
-						     GTK_MESSAGE_INFO, 
-						     GTK_BUTTONS_YES_NO, 
-						     "Beta : Intelligence Artificielle.\n"
-						     "Voulez vous arreter de jouer contre l'ordinateur?\n");
-	}
-		gtk_window_set_title((GtkWindow*)ENV->Dialog, "Beta Intelligence Artificielle");
-		
-		/* Connection du bouton Destroy pour retourner au jeu */
-		gtk_signal_connect(GTK_OBJECT(ENV->Dialog), "destroy", G_CALLBACK(afficher_fenetre), ctr);
-		
-		/* Boucle d'attente de reponse */
-		while(ENV->reponse == GTK_RESPONSE_NONE)
-			ENV->reponse = gtk_dialog_run(GTK_DIALOG(ENV->Dialog));
-		
-		/* Si les joueurs veulent demarrer/arreter le joueur artificiel */
-		if(ENV->reponse == GTK_RESPONSE_YES)
+		gtk_widget_destroy(ENV->Dialog);	
+		reinit( ctr);
+		ctr->IA = !ctr->IA;
+		if(ctr->IA == TRUE)
 		{
-			gtk_widget_destroy(ENV->Dialog);	
-			reinit( ctr);
-			ctr->IA = !ctr->IA;
-			if(ctr->IA == TRUE)
+			gtk_menu_item_set_label(GTK_MENU_ITEM(ENV->JouerIA), "Joueur Artificiel : On");
+			JOUEUR_2->score = 0;
+			while(!feof(adt))
 			{
-				gtk_menu_item_set_label(GTK_MENU_ITEM(ENV->JouerIA), "Joueur Artificiel : On");
-				JOUEUR_2->score = 0;
-				while(!feof(adt))
-				{
-					fscanf(adt, "%s", JOUEUR_2->nom);
-					fscanf(adt, "%d", &JOUEUR_2->score);
-					if(JOUEUR_2->nom != NULL)
-						if(strcmp("Int._Art.", JOUEUR_2->nom) ==0)
-						{
-							/* si on le trouve on sort */
-							break;
-						}
-				}
+				fscanf(adt, "%s", JOUEUR_2->nom);
+				fscanf(adt, "%d", &JOUEUR_2->score);
+				if(JOUEUR_2->nom != NULL)
+					if(strcmp("Int._Art.", JOUEUR_2->nom) ==0)
+					{
+						/* si on le trouve on sort */
+						break;
+					}
+			}
 				
-				if(strcmp("Int._Art.", JOUEUR_2->nom) !=0)
-				{
-					strcpy(JOUEUR_2->nom, "Int._Art.");
-					JOUEUR_2->score = 0;
-				}
-				if(partie_get_tourjoueur(PARTIE) == CASE_ETAT_JOUEUR_2)
-					gtk_jouer_colonne( ENV->Bouton[rand()% dim_get_nbcol(&(PARTIE->dim))], ctr);
-			}
-			if(ctr->IA == FALSE)
+			if(strcmp("Int._Art.", JOUEUR_2->nom) !=0)
 			{
-				gtk_menu_item_set_label(GTK_MENU_ITEM(ENV->JouerIA), "Joueur Artificiel : Off");
-				sauvegarder_score(MenuItem, ctr);
-				/* Creation des noms des joueurs */	
-				/* joueur 1*/ 
-				fscanf(adt, "%s", JOUEUR_2->nom);
-				fscanf(adt, "%d", &JOUEUR_2->score);
-				/* Int. Art. */
-				fscanf(adt, "%s", JOUEUR_2->nom);
-				fscanf(adt, "%d", &JOUEUR_2->score);
-				/* joueur 2 */
-				fscanf(adt, "%s", JOUEUR_2->nom);
-				fscanf(adt, "%d", &JOUEUR_2->score);
-				if(JOUEUR_2->nom == NULL)
-				{
-					strcpy(JOUEUR_2->nom, "Joueur_2");
-					JOUEUR_2->score = 0;
-				}
+				strcpy(JOUEUR_2->nom, "Int._Art.");
+				JOUEUR_2->score = 0;
+			}
+			if(partie_get_tourjoueur(PARTIE) == CASE_ETAT_JOUEUR_2)
+				gtk_jouer_colonne( ENV->Bouton[rand()% dim_get_nbcol(&(PARTIE->dim))], ctr);
+		}
+		if(ctr->IA == FALSE)
+		{
+			gtk_menu_item_set_label(GTK_MENU_ITEM(ENV->JouerIA), "Joueur Artificiel : Off");
+			sauvegarder_score(MenuItem, ctr);
+			/* Creation des noms des joueurs */	
+			/* joueur 1*/ 
+			fscanf(adt, "%s", JOUEUR_2->nom);
+			fscanf(adt, "%d", &JOUEUR_2->score);
+			/* Int. Art. */
+			fscanf(adt, "%s", JOUEUR_2->nom);
+			fscanf(adt, "%d", &JOUEUR_2->score);
+			/* joueur 2 */
+			fscanf(adt, "%s", JOUEUR_2->nom);
+			fscanf(adt, "%d", &JOUEUR_2->score);
+			if(JOUEUR_2->nom == NULL)
+			{
+				strcpy(JOUEUR_2->nom, "Joueur_2");
+				JOUEUR_2->score = 0;
 			}
 		}
-		/* S'ils veulent rien changer on ferme la boite */
-		if(ENV->reponse == GTK_RESPONSE_NO)
-		{
-			afficher_fenetre(ENV->Dialog, ctr);
-		}
-		fclose(adt);
+	}
+	/* S'ils veulent rien changer on ferme la boite */
+	if(ENV->reponse == GTK_RESPONSE_NO)
+	{
+		afficher_fenetre(ENV->Dialog, ctr);
+	}
+	fclose(adt);
 		
 }
 
@@ -304,21 +304,21 @@ void menu_about(GtkWidget* Item, ctr_s* ctr)
 	/* Initialisation de la boite de Dialog */
 	ENV->reponse = GTK_RESPONSE_NONE;
 	ENV->Dialog = gtk_message_dialog_new(NULL, 
-					       GTK_DIALOG_MODAL, 
-					       GTK_MESSAGE_INFO, 
-					       GTK_BUTTONS_CLOSE,
-					       "Puissance 4\n\n"
-						 "Version 1.6\n\n"
-						 "Copyright (C) 2010-2015  Jones Magloire\n"
-						 "This program comes with ABSOLUTELY NO WARRANTY.\n"
-						 "This is free software, and you are welcome to\n"
-						 "redistribute it under certain conditions.\n" 
-						 "Auteur : MAGLOIRE Jones\n"
-						 "Dans le cadre du projet d'interface graphique\n" 
-						 "des Licences 1 de l'Institut Galilee,\n" 
-						 "Universite Paris 13, Villetaneuse\n"
-						 "http://www-galilee.univ-paris13.fr/\n\n"
-						 "Compatible GTK+ 2.16 et plus\n");
+										 GTK_DIALOG_MODAL, 
+										 GTK_MESSAGE_INFO, 
+										 GTK_BUTTONS_CLOSE,
+										 "Puissance 4\n\n"
+										 "Version 1.6\n\n"
+										 "Copyright (C) 2010-2015  Jones Magloire\n"
+										 "This program comes with ABSOLUTELY NO WARRANTY.\n"
+										 "This is free software, and you are welcome to\n"
+										 "redistribute it under certain conditions.\n" 
+										 "Auteur : MAGLOIRE Jones\n"
+										 "Dans le cadre du projet d'interface graphique\n" 
+										 "des Licences 1 de l'Institut Galilee,\n" 
+										 "Universite Paris 13, Villetaneuse\n"
+										 "http://www-galilee.univ-paris13.fr/\n\n"
+										 "Compatible GTK+ 2.16 et plus\n");
 	gtk_window_set_title((GtkWindow*)ENV->Dialog, "A propos de puissance 4");
 	
 	/* Connection du bouton Destroy pour retourner au jeu */
@@ -338,7 +338,7 @@ void menu_about(GtkWidget* Item, ctr_s* ctr)
  * GTK_MENU_ITEM_GET_CLASS a verifier */
 void gtk_menu_item_set_label (GtkMenuItem *menu_item, const gchar *label)
 {
-  g_return_if_fail (GTK_IS_MENU_ITEM (menu_item));
+	g_return_if_fail (GTK_IS_MENU_ITEM (menu_item));
  
-  GTK_MENU_ITEM_GET_CLASS (menu_item)->set_label (menu_item, label);
+	GTK_MENU_ITEM_GET_CLASS (menu_item)->set_label (menu_item, label);
 }

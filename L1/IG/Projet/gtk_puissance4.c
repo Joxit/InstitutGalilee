@@ -14,19 +14,19 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-/* _____________________________________________________________________________
- * Jeu Puissance 4 :: fichier Définitions des fonctions du jeu
- *												
- * Mardi 17 Mai 2011.													
- * 
- * Pour plus de détails, consulter les fichier d'entête						
- * _____________________________________________________________________________ */
+/* ___________________________________________________________________________
+ * Jeu Puissance 4 :: fichier Définitions des fonctions du jeu                 *
+ *                                                                             *
+ * Mardi 17 Mai 2011.                                                          *
+ *                                                                             *
+ * Pour plus de détails, consulter les fichier d'entête	                       *
+ * ___________________________________________________________________________ */
 
-# include <stdlib.h>		/* fonction 'rand' de génération aléatoire*/
-# include <gtk/gtk.h>
+#include <stdlib.h>		/* fonction 'rand' de génération aléatoire*/
+#include <gtk/gtk.h>
 #include <string.h>	
-# include "puissance4.h"	/* modèle de la chasse au trésor en GTK(constantes symboliques, types, déclaration des fonctions)*/
-# include "partie.h"
+#include "puissance4.h"	/* modèle de la chasse au trésor en GTK(constantes symboliques, types, déclaration des fonctions)*/
+#include "partie.h"
 
 void construire(ctr_s* ctr)
 {
@@ -206,11 +206,11 @@ void gtk_jouer_colonne(GtkWidget* button, ctr_s *ctr)
 	for(colonne = 0; colonne < NB_COL_JEU_DEFAULT; colonne++)
 	{
 		/**for(i = 0; i < NB_ROW_JEU_DEFAULT; i++)**/
-			if(button == ENV->Bouton[colonne] /*|| button == (ENV->Image)[i][colonne]*/)
-				break;
+		if(button == ENV->Bouton[colonne] /*|| button == (ENV->Image)[i][colonne]*/)
+			break;
 	}	
-		/* On joue le coup */
-		ligne = partie_jouer_colonne(PARTIE, colonne);
+	/* On joue le coup */
+	ligne = partie_jouer_colonne(PARTIE, colonne);
 	
 	/* On remplace l'image de la case joue en fonction du tour actuel joueur */
 	if(partie_get_tourjoueur(PARTIE) == CASE_ETAT_JOUEUR_1)

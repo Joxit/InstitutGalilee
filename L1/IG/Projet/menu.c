@@ -14,19 +14,19 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-/* _____________________________________________________________________________
- * Jeu Puissance 4 :: fichier Définitions des menus
- *												
- * Mardi 17 Mai 2011.													
- * 
- * Pour plus de détails, consulter les fichier d'entête						
- * _____________________________________________________________________________ */
+/* ___________________________________________________________________________
+ * Jeu Puissance 4 :: fichier Définitions des menus                            *
+ *                                                                             *
+ * Mardi 17 Mai 2011.                                                          *
+ *                                                                             *
+ * Pour plus de détails, consulter les fichier d'entête                        *
+ * ___________________________________________________________________________ */
 
-# include <stdlib.h>		/* fonction 'rand' de génération aléatoire*/
-# include <gtk/gtk.h>
+#include <stdlib.h>		/* fonction 'rand' de génération aléatoire*/
+#include <gtk/gtk.h>
 #include <string.h>	
-# include "puissance4.h"	/* modèle de la chasse au trésor en GTK(constantes symboliques, types, déclaration des fonctions)*/
-# include "partie.h"
+#include "puissance4.h"	/* modèle de la chasse au trésor en GTK(constantes symboliques, types, déclaration des fonctions)*/
+#include "partie.h"
 
 /* Action lors de la validation du pseudonyme */
 void changer_nom(GtkWidget* Item, ctr_s *ctr)
@@ -42,7 +42,7 @@ void changer_nom(GtkWidget* Item, ctr_s *ctr)
 	/* On cherche quel est la boite de saisie activee 
 	 * On met son resultat dans la variable nom
 	 * Puis on copie dans la variable nom_joueur correspondante */
-	 /** Premiere zone de saisie **/
+	/** Premiere zone de saisie **/
 	if(Item == ENV->MenuEntry[0] || Item == ENV->dBout[0])
 	{
 		nom = gtk_entry_get_text(GTK_ENTRY(ENV->MenuEntry[0]));
@@ -60,16 +60,16 @@ void changer_nom(GtkWidget* Item, ctr_s *ctr)
 			fscanf(adt, "%d", &joueur1->score);
 			/* avant de commencer la recherche on verifie que le nom a bien ete pris */
 			if(JOUEUR_1->nom!=NULL && joueur1->nom != NULL)
-				if(strcmp(JOUEUR_1->nom, joueur1->nom) ==0)
+				if(strcmp(JOUEUR_1->nom, joueur1->nom) == 0)
 				{
-					 JOUEUR_1->score = joueur1->score;
+					JOUEUR_1->score = joueur1->score;
 					/* si on le trouve on sort */
 					break;
 				}
 		}
 	}
 	
-	 /** Seconde zone de saisie **/
+	/** Seconde zone de saisie **/
 	if(Item == ENV->MenuEntry[1] || Item == ENV->dBout[0])
 	{
 		nom = gtk_entry_get_text(GTK_ENTRY(ENV->MenuEntry[1]));
@@ -83,7 +83,7 @@ void changer_nom(GtkWidget* Item, ctr_s *ctr)
 			fscanf(adt, "%s", joueur2->nom);
 			fscanf(adt, "%d", &joueur2->score);
 			if(JOUEUR_2->nom!=NULL && joueur2->nom != NULL)
-				if(strcmp(JOUEUR_2->nom, joueur2->nom) ==0)
+				if(strcmp(JOUEUR_2->nom, joueur2->nom) == 0)
 				{
 					JOUEUR_2->score = joueur2->score;
 					
@@ -126,26 +126,26 @@ void sauvegarder_score(GtkWidget* Item, ctr_s* ctr)
 	 ** Clean up du nom des joueurs saisi :
  	 ** il ne faut pas d'espaces dans le fichier! **/
 	
-		/*  On pointe les espaces et on les remplaces par des '_' jusqu'a la fin de la chaine */
+	/*  On pointe les espaces et on les remplaces par des '_' jusqu'a la fin de la chaine */
+	pch =strchr(JOUEUR_1->nom, ' ');
+	while(pch != NULL)
+	{
+		*pch = '_';
 		pch =strchr(JOUEUR_1->nom, ' ');
-		while(pch != NULL)
-		{
-			*pch = '_';
-			pch =strchr(JOUEUR_1->nom, ' ');
-		}
-		/* pui on ecrit dans le fichier */
-		fprintf(adt2, "%s %d\n", JOUEUR_1->nom, JOUEUR_1->score);
+	}
+	/* pui on ecrit dans le fichier */
+	fprintf(adt2, "%s %d\n", JOUEUR_1->nom, JOUEUR_1->score);
 	
 
-		/*  On pointe les espaces et on les remplaces par des '_' jusqu'a la fin de la chaine */
+	/*  On pointe les espaces et on les remplaces par des '_' jusqu'a la fin de la chaine */
+	pch =strchr(JOUEUR_2->nom, ' ');
+	while(pch != NULL)
+	{
+		*pch = '_';
 		pch =strchr(JOUEUR_2->nom, ' ');
-		while(pch != NULL)
-		{
-			*pch = '_';
-			pch =strchr(JOUEUR_2->nom, ' ');
-		}
-		/* pui on ecrit dans le fichier */
-		fprintf(adt2, "%s %d\n", JOUEUR_2->nom, JOUEUR_2->score);
+	}
+	/* pui on ecrit dans le fichier */
+	fprintf(adt2, "%s %d\n", JOUEUR_2->nom, JOUEUR_2->score);
 	
 		
 	
@@ -157,10 +157,10 @@ void sauvegarder_score(GtkWidget* Item, ctr_s* ctr)
 		if(joueur->nom != NULL && !feof(adt1))
 		{
 			/* Comparaison si on tombe sur un joueur existant on ne l'ecrit pas */
-			if((strcmp(JOUEUR_1->nom, joueur->nom) !=0) && (strcmp(JOUEUR_2->nom, joueur->nom) !=0))
+			if((strcmp(JOUEUR_1->nom, joueur->nom) !=0) && (strcmp(JOUEUR_2->nom, joueur->nom) != 0))
 			{
-					/* si le joueur lu n'est aucun des deux on reecrit son nom et son score passé */
-					fprintf(adt2, "%s %d\n", joueur->nom, joueur->score);
+				/* si le joueur lu n'est aucun des deux on reecrit son nom et son score passé */
+				fprintf(adt2, "%s %d\n", joueur->nom, joueur->score);
 			}
 		}
 	}
@@ -193,7 +193,7 @@ char* get_classement()
 		/* porte de sortie pour eviter que le meme score apparaisse jusqu'a la fin du tableau */
 		if(score[i] == score[i-2] && i > 1)
 			break;
-			/* on se place  au debut du fichier et on lit la premiere ligne et enregistre le score */
+		/* on se place  au debut du fichier et on lit la premiere ligne et enregistre le score */
 		fseek(adt, 0, SEEK_SET);
 		score[i] = 0;
 		/* suite de la lecture jusqu'a la fin du fichier */
@@ -239,13 +239,13 @@ char* get_classement()
 			}
 		}
 	}
-	#if (PUISSANCE4_MODELE_DEBUG != 0)
-		printf("\tTop_5  i == %d j == %d liste_classement : \n%sScore : %d; %d; %d; %d; %d; %d\n", i, j, liste_classement, score[0], score[1], score[2], score[3], score[4], score[5]); 
-	#endif
+#if (PUISSANCE4_MODELE_DEBUG != 0)
+	printf("\tTop_5  i == %d j == %d liste_classement : \n%sScore : %d; %d; %d; %d; %d; %d\n", i, j, liste_classement, score[0], score[1], score[2], score[3], score[4], score[5]); 
+#endif
 		
 	fclose(adt);
 	free(joueur);
-		return liste_classement;
+	return liste_classement;
 }
 
 

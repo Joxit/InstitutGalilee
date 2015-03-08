@@ -14,13 +14,13 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-/* _____________________________________________________________________________
- *	Jeu Puissance 4 :: fichier dÃ©clarations									
- *												
- *	Mardi 17 Mai 2011.													
- *																		
- *	Pour plus de dÃ©tails, consulter les fichier d'entÃªte						
- * _____________________________________________________________________________ */
+/* ___________________________________________________________________________
+ * Jeu Puissance 4 :: fichier déclarations                                    *
+ *                                                                             *
+ * Mardi 17 Mai 2011.                                                          *
+ *                                                                             *
+ * Pour plus de détails, consulter les fichier d'entete	                       *
+ * ___________________________________________________________________________ */
 #include "partie.h"
 # ifndef PUISSANCE4_H
 
@@ -87,7 +87,7 @@ typedef struct gtk_s
 	GtkWidget* dBout[2];			/* Boutons de choix (Ok, Oui, Non, Sortir ) */
 	guint reponse;					/* Reception si l'utilisateur clique sur un bouton */
 }
-gtk;
+	gtk;
 
 
 typedef struct joueur_s
@@ -98,7 +98,7 @@ typedef struct joueur_s
 	int score;
 	
 }
-joueur_s;
+	joueur_s;
 
 typedef struct controlleur_s
 {
@@ -108,7 +108,7 @@ typedef struct controlleur_s
 	struct joueur_s* Joueur2;
 	int IA;
 }
-ctr_s;
+	ctr_s;
 
 
 /** Fonctions definies dans gtk_puissance4.c **/
