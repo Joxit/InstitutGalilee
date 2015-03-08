@@ -15,11 +15,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 /* ___________________________________________________________________________
- * Jeu Puissance 4 :: fichier déclarations                                    *
+ *  Jeu Puissance 4 :: fichier déclarations                                    *
  *                                                                             *
- * Mardi 17 Mai 2011.                                                          *
+ *  Mardi 17 Mai 2011.                                                         *
  *                                                                             *
- * Pour plus de détails, consulter les fichier d'entete	                       *
+ *  Pour plus de détails, consulter les fichier d'entete                       *
  * ___________________________________________________________________________ */
 #include "partie.h"
 # ifndef PUISSANCE4_H

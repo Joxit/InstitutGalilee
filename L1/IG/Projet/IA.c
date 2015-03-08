@@ -15,12 +15,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 /* ____________________________________________________________________________
- *	Jeu Puissance 4 :: fichier déclarations de l'IA                            *
+ *  Jeu Puissance 4 :: fichier déclarations de l'IA                            *
  *          Basé sur les fonctions de partie.c                                 *
  *                                                                             *
- *	Mardi 17 Mai 2011                                                          *
- *	                                                                           *
- *	Pour plus de détails, consulter les fichier d'entête                       *
+ *  Mardi 17 Mai 2011                                                          *
+ *                                                                             *
+ *  Pour plus de détails, consulter les fichier d'entête                       *
  * ___________________________________________________________________________ */
 #include <stdlib.h>		/* fonction 'rand' de génération aléatoire*/
 #include <gtk/gtk.h>
