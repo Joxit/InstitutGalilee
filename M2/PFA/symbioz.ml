@@ -110,8 +110,8 @@ end;;
 (********************************** 6.2 Module *********************************)
 
 (* 10/ Implementation du module Symbioz *)
-let size_x = 10;;
-let size_y = 10;;
+let size_x = 3;;
+let size_y = 3;;
   
 module Symbioz:PLANETE =
 struct
@@ -484,41 +484,44 @@ end;;
 (* 17/ Signature MAKE_PLANTES *)
 module type MAKE_PLANTES = 
   functor (P:PLANETE) -> 
-    functor (MI:INDIVIDU with type pos = P.pos) -> 
+    functor (MI:MAKE_INDIVIDU) -> 
       POPULATION with type pos = P.pos
-		 and type nourriture = unit;;
+		 and type nourriture = unit
+		 and type individu = MI(P).individu;;
 
 (* 18/ Signature MAKE_ANIMAUX *)
 module type MAKE_ANIMAUX = 
   functor (P:PLANETE) ->
     functor (PROIES:POPULATION with type pos = P.pos) -> 
-      functor (MI:INDIVIDU with type pos = P.pos) -> 
+      functor (MI:MAKE_INDIVIDU) -> 
 	POPULATION with type pos = P.pos
-		   and type nourriture = PROIES.population;; 
+		   and type nourriture = PROIES.population
+		   and type individu = MI(P).individu;; 
 
 (********************************* 8.2 Zherbs *********************************)
 
 (* 19/ Module Make_Zherbs *)
 module Make_Zherbs:MAKE_PLANTES = 
   functor (P:PLANETE) ->
-    functor (MI:INDIVIDU with type pos = P.pos) ->
+    functor (MI:MAKE_INDIVIDU) ->
 struct 
+  module Plante = MI(P)
   type pos = P.pos
-  type individu = MI.individu
+  type individu = Plante.individu
   type population = individu list
   type nourriture = unit
-  type elt = individu
+  type elt = Plante.individu
   type t = population
   let map f list = List.map f list
   let iter f population = List.iter f population
   let reduce f population a = List.fold_right f population a
-  let create n = map MI.create (Array.to_list (Array.make n ()))
+  let create n = map Plante.create (Array.to_list (Array.make n ()))
   let random_ind  population = random_get population
-  let sous_pop pos population = P.at_pos MI.get_pos pos population
+  let sous_pop pos population = P.at_pos Plante.get_pos pos population
   let tuer_ind individu population = 
     List.filter (function ind -> 
-      ((MI.equals individu ind) = false)) population 
-  let vieillissement population = clean_list (map MI.vieillir population)
+      ((Plante.equals individu ind) = false)) population 
+  let vieillissement population = clean_list (map Plante.vieillir population)
   let reproduction population = 
     let rec reprod pop = 
       begin 
@@ -527,26 +530,26 @@ struct
 	| hd::tl -> 
 	  let pop_pos = (* on filtre les adultes de la position *)
 	    List.filter 
-	      (function ind -> MI.get_age ind = Adulte) 
-	      (sous_pop (MI.get_pos hd) population) 
+	      (function ind -> Plante.get_age ind = Adulte) 
+	      (sous_pop (Plante.get_pos hd) population) 
 	  in let enfants = 
-	       (MI.reproduire ((List.length pop_pos) - 1) hd hd)
+	       (Plante.reproduire ((List.length pop_pos) - 1) hd hd)
 	     in enfants@(reprod tl)
       end
     in (reprod population)
   let mouvement nourriture population = population (* Ils ne bougent pas *)
   let nourriture nourriture population = (population, nourriture) (* Ils ne mangent pas *)
   let affichage population = 
-    iter (function ind -> Printf.printf "[%s " (string_age (MI.get_age ind)) ;
+    iter (function ind -> Printf.printf "[%s " (string_age (Plante.get_age ind)) ;
       P.display 
 	(function x -> function y -> Printf.printf "(%d, %d)" x y) 
-	(MI.get_pos ind); 
+	(Plante.get_pos ind); 
       print_string "]") 
       population
 end;;
 
 (* 20/ Module Zherbs *)
-module Zherbs = Make_Zherbs (Symbioz) (Make_Zherb (Symbioz));;
+module Zherbs = Make_Zherbs (Symbioz) (Make_Zherb);;
 
 (********************************* 8.3 Animaux ********************************)
 
@@ -555,10 +558,11 @@ module Zherbs = Make_Zherbs (Symbioz) (Make_Zherb (Symbioz));;
 module Make_Bestioles:MAKE_ANIMAUX =
   functor (P:PLANETE) ->
     functor (PROIES:POPULATION with type pos = P.pos) ->
-      functor (MI:INDIVIDU with type pos = P.pos) ->
+      functor (MI:MAKE_INDIVIDU) ->
 struct 
+  module Bestiole = MI(P)
   type pos = P.pos
-  type individu = MI.individu
+  type individu = Bestiole.individu
   type population = individu list
   type nourriture = PROIES.population
   type elt = individu
@@ -566,21 +570,21 @@ struct
   let map f list = List.map f list
   let iter f population = List.iter f population
   let reduce f population a = List.fold_right f population a
-  let create n = map MI.create (Array.to_list (Array.make n ()))
+  let create n = map Bestiole.create (Array.to_list (Array.make n ()))
   let random_ind population = random_get population
-  let sous_pop pos population = P.at_pos MI.get_pos pos population
+  let sous_pop pos population = P.at_pos Bestiole.get_pos pos population
   let tuer_ind individu population = 
-    List.filter (function ind -> ((MI.equals individu ind) = false)) population 
-  let vieillissement population = clean_list (map MI.vieillir population)
+    List.filter (function ind -> ((Bestiole.equals individu ind) = false)) population 
+  let vieillissement population = clean_list (map Bestiole.vieillir population)
   let reproduction population =
     let adultes = 
-      List.filter (function ind -> MI.get_age ind = Adulte) population
-    in let sorted = P.sort_by_pos MI.get_pos adultes
+      List.filter (function ind -> Bestiole.get_age ind = Adulte) population
+    in let sorted = P.sort_by_pos Bestiole.get_pos adultes
        in let rec split list = 
 	    begin 
 	      match list with 
 	      | [] -> ([], [])
-	      | hd::tl when MI.get_sexe hd = Masculin -> 
+	      | hd::tl when Bestiole.get_sexe hd = Masculin -> 
 		let (m, f) = split tl 
 		in (hd::m, f)
 	      | hd::tl -> 
@@ -596,7 +600,7 @@ struct
 		       | ([], _) -> []
 		       | (_, []) -> []
 		       | (m::tlm, f::tlf) -> 
-			 (MI.reproduire 0 f m)@(reprod (tlm, tlf))
+			 (Bestiole.reproduire 0 f m)@(reprod (tlm, tlf))
 		     end
 		   in let enfants = map reprod shuffled
 		      in let rec flatten list = 
@@ -607,17 +611,17 @@ struct
 			   end
 			 in population@(flatten enfants)
   let mouvement nourriture population = 
-    map (MI.bouger (function pos -> 1)) population
+    map (Bestiole.bouger (function pos -> 1)) population
   let nourriture nourriture  population = 
     let (pop, nour) = reduce 
       (function ind -> function (p, n) -> 
 	let proie = 
 	  PROIES.random_ind 
-	    (PROIES.sous_pop (MI.get_pos ind) n)
+	    (PROIES.sous_pop (Bestiole.get_pos ind) n)
 	in if proie = None then
-	    ((MI.manger 0 ind)::p, n)
+	    ((Bestiole.manger 0 ind)::p, n)
 	  else 
-	    let bestiole = MI.manger 1 ind 
+	    let bestiole = Bestiole.manger 1 ind 
 	    in if bestiole = None then 
 		(Some ind::p, n)
 	      else
@@ -629,19 +633,19 @@ struct
   let affichage population = 
     iter (function ind -> 
       Printf.printf "[%s %s " 
-	(string_sexe (MI.get_sexe ind)) 
-	(string_age (MI.get_age ind)) ; 
+	(string_sexe (Bestiole.get_sexe ind)) 
+	(string_age (Bestiole.get_age ind)) ; 
       P.display 
 	(function x -> function y -> Printf.printf "(%d, %d)" x y) 
-	(MI.get_pos ind);
+	(Bestiole.get_pos ind);
       print_string "]") 
       population
 end;;
 
 
 (* 22/ Module Krapits et Kroguls *)
-module Krapits = Make_Bestioles (Symbioz) (Zherbs) (Make_Krapit (Symbioz));;
-module Kroguls = Make_Bestioles (Symbioz) (Krapits) (Make_Krogul (Symbioz));;
+module Krapits = Make_Bestioles (Symbioz) (Zherbs) (Make_Krapit);;
+module Kroguls = Make_Bestioles (Symbioz) (Krapits) (Make_Krogul);;
 
 (*******************************************************************************
  *    9  Jeu Complet                                                           *
@@ -657,9 +661,9 @@ module Make_Game =
 	functor (Carnivores:POPULATION with type pos = P.pos
 				       and type nourriture = Herbivores.population) ->
 struct
-  let plantes = ref (Plantes.create 200)
-  let herbivores = ref (Herbivores.create 100)
-  let carnivores = ref (Carnivores.create 100)
+  let plantes = ref (Plantes.create 100)
+  let herbivores = ref (Herbivores.create 10)
+  let carnivores = ref (Carnivores.create 10)
   let tour () = 
     print_string "\nPlantes\n";
     Plantes.affichage !plantes;
