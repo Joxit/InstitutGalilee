@@ -433,7 +433,7 @@ struct
 		else
 		  P.sud mere.pos
 	      in {child with 
-		age = (Bebe, 0);
+		age = (Bebe, 2);
 		pos = new_pos}::create_children (x - 1)
     in if get_age mere == Adulte && get_age pere == Adulte then
 	create_children (Random.int 3)
@@ -682,7 +682,7 @@ struct
     in carnivores := p;
     herbivores := n;
     carnivores := Carnivores.reproduction !carnivores;
-    carnivores := Carnivores.mouvement !herbivores !carnivores;
+     carnivores := Carnivores.mouvement !herbivores !carnivores;
 
     plantes := Plantes.vieillissement !plantes;
     herbivores := Herbivores.vieillissement !herbivores;
@@ -690,6 +690,8 @@ struct
 
 end;;
 module Game = Make_Game (Symbioz) (Zherbs) (Krapits) (Kroguls);;
+
+
 
 Game.tour ();;
 Game.tour ();;
