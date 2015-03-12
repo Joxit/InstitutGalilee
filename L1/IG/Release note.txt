@@ -3,20 +3,20 @@
 	Puissance 4 sous GTK+
 	
 	Beta :
-			- Création des Widgets l'interface dans la structure gtk
+			- CrÃ©ation des Widgets l'interface dans la structure gtk
 			- Mise en place du controlleur qui rassemble la partie et l'environement
-			- Labels utilisés pour afficher les pions avec X et O et changement de couleurs
-			- Création de fonctions :
+			- Labels utilisÃ©s pour afficher les pions avec X et O et changement de couleurs
+			- CrÃ©ation de fonctions :
 					- construire  : construit l'environement GTK+
-					- gtk_jouer_colonne : fonction attribué aux boutons, le jeu du puissance 4
-					- continuer : à la fin de la partie demande si on continue
+					- gtk_jouer_colonne : fonction attribuÃ© aux boutons, le jeu du puissance 4
+					- continuer : Ã  la fin de la partie demande si on continue
 					- reinit : reinitialise la partie si on continue de jouer
 	Version 1.0 :
-			- Implementation du jeu simple avec des Images crées sous photoshop
-			- Mises à jour :
+			- Implementation du jeu simple avec des Images crÃ©es sous photoshop
+			- Mises Ã  jour :
 					- construire et renit : 
-							- Mode image accepté
-							- Création du label qui affiche le tour du joueur
+							- Mode image acceptÃ©
+							- CrÃ©ation du label qui affiche le tour du joueur
 			- Ajout ; 
 					- confirmer : confirme la sortie du jeu
 					- free_gtk : liber la memoire de l'environnement GTK+
@@ -35,10 +35,10 @@
 					- construire :
 							- ajout des nouveaux menus
 							- Lecture des deux premiers pseudos pour les noms des joueurs
-					- sauvegarde : gere les pseudos, met en premier les joueurs qui ont sauvegardé la derniere partie
+					- sauvegarde : gere les pseudos, met en premier les joueurs qui ont sauvegardÃ© la derniere partie
 			- Ajout : 
 					- get_score : ouvre une boite de dialogue affichant les scores
-					- Création de la structure joueur_s pour les joueurs, mis dans ctr
+					- CrÃ©ation de la structure joueur_s pour les joueurs, mis dans ctr
 					- Mode Fichier (users.dat) : Sauvegarde des joueurs et leurs parcour
 							- Top_5 : ouvre une fenetre affichant le Top 5 des joueurs
 							- sauvegarder_score  : sauvegarde les scores dans le fichier user.dat
@@ -46,48 +46,50 @@
 			-Mise a jour :
 					- gtk_jouer_colonne && continuer pour gerer l'IA
 					- Barre des menus sous menu Partie et Option
-					- Utilisation de GtkTable à la place des GtkBox
+					- Utilisation de GtkTable Ã  la place des GtkBox
 			- Ajout	:
-					- Création d'une Intelligence Artificielle :
-							- fonctions de l'IA dans int_art.c basées sur les fonctions de partie.c :
+					- CrÃ©ation d'une Intelligence Artificielle :
+							- fonctions de l'IA dans int_art.c basÃ©es sur les fonctions de partie.c :
 									- IA_tester_ligne
 									- IA_tester_colonne
 									- IA_jouer
 							- Menu de l'IA dans menu.c : 
 									- menu_IA
-							- L'IA  ne fait que contrer les  coups du vrai joueur et joue aléatoirement
+							- L'IA  ne fait que contrer les  coups du vrai joueur et joue alÃ©atoirement
 	Version 1.3
 			- Ajout :
-					- securité lors de la recherche des pseudos, si le fichier a été supprimé, on en créé un autre
+					- securitÃ© lors de la recherche des pseudos, si le fichier a Ã©tÃ© supprimÃ©, on en crÃ©Ã© un autre
 			- Clean up du code
-			- Version envoyé aux professeurs
+			- Version envoyÃ© aux professeurs
 	Version 1.4
-			- Mise à jour :
+			- Mise Ã  jour :
 					- Meilleure tenue de l'IA, il peut contrer les coups sur les lignes a tout moment, 
 						il verifie a chaques tour si le joueur n'a pas une serie de 3 pions sur lignes dans le jeu
 					- Suppresion de gtk_widget_get_sensitive qui n'existe pas avant GTK+ 2.18
-					- enleve la sensibilité du 2eme GtkEntry contre l'IA
+					- enleve la sensibilitÃ© du 2eme GtkEntry contre l'IA
 			- Ajout :
 					- fonction IA_jouer_ligne pour alleger IA_jouer
 					- nom Int. Art. pour l'IA, il aura ses scores
 	Version 1.5
 			- Clean up :
-					- séparation de menu.c :
-							- gtk_menu.c contient toutes les fonctions de création GTK+
+					- sÃ©paration de menu.c :
+							- gtk_menu.c contient toutes les fonctions de crÃ©ation GTK+
 							- menu.c contient toutes les fonctions qui n'utilise pas d'objet GTK+
-					- get_classement : qui renvoit la chaine de cararctère du classement (dans menu.c) utilisé par Top_5 (dans gtk_menu.c)
-					- file_open : renvoit l'adresse du fichier users.dat en ayant fait une vérification et création si besoin.
-			- Mise à jour :
-					- l'IA bloque dès que le joueur a 2 pions alignés pour anticiper avant qu'il en ait 3.
+					- get_classement : qui renvoit la chaine de cararctÃƒÂ¨re du classement (dans menu.c) utilisÃ© par Top_5 (dans gtk_menu.c)
+					- file_open : renvoit l'adresse du fichier users.dat en ayant fait une vÃ©rification et crÃ©ation si besoin.
+			- Mise Ã  jour :
+					- l'IA bloque dÃ¨s que le joueur a 2 pions alignÃ©s pour anticiper avant qu'il en ait 3.
 					- l'IA cherche au debut s'il a 3 pions en colonne dans le plateau pour gagner
 					- avant de jouer aleatoirement, l'IA regarde s'il a +2 pions sur une ligne dans le plateau pour jouer
 					- remplacement des "jouer_colonne == -1" par "jouer_colonne < 0"
 					- nouveaux pions
 			- Ajout :
-					- menu_about : dialogue des droits et compatibilitée
+					- menu_about : dialogue des droits et compatibilitÃ©e
 	Version 1.6
 			- Ajout : 
 					- maj_pseudo qui met a jour la label du pseudo
 					- Ajout de la licence GNU GPLv3 en header des sources
+			- Correction :
+					- changer_nom : erreur de segmentation quand on voulait changer de nom contre l'IA
 
  ______________________________________________________________________________*/ 

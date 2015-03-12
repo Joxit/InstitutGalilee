@@ -43,7 +43,7 @@ void changer_nom(GtkWidget* Item, ctr_s *ctr)
 	 * On met son resultat dans la variable nom
 	 * Puis on copie dans la variable nom_joueur correspondante */
 	/** Premiere zone de saisie **/
-	if(Item == ENV->MenuEntry[0] || Item == ENV->dBout[0])
+	if(ENV->MenuEntry[0] != NULL && (Item == ENV->MenuEntry[0] || Item == ENV->dBout[0]))
 	{
 		nom = gtk_entry_get_text(GTK_ENTRY(ENV->MenuEntry[0]));
 		/* un pseudo superieur a 4 lettre */
@@ -70,7 +70,7 @@ void changer_nom(GtkWidget* Item, ctr_s *ctr)
 	}
 	
 	/** Seconde zone de saisie **/
-	if(Item == ENV->MenuEntry[1] || Item == ENV->dBout[0])
+	if(ENV->MenuEntry[1] != NULL && (Item == ENV->MenuEntry[1] || Item == ENV->dBout[0]))
 	{
 		nom = gtk_entry_get_text(GTK_ENTRY(ENV->MenuEntry[1]));
 		/* un pseudo superieur a 4 lettre */
