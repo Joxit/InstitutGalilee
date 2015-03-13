@@ -193,8 +193,48 @@ object Main2 extends App {
 		} println(mot1 + " " + mot2 + " " + mot3)
 
 	}
+	/**
+	 * On va stocker toutes les solutions ici
+	 */
+	var solutions = List[List[String]]()
+	/**
+	 * @param hm le multi ensemble contenant la phrase a regarder
+	 * @param len initialement la taille de la phrase. On va limiter la longueur des mots
+	 */
+	def foundAllWord(hm: MultiSet[Char], len: Int): Unit = {
+		if (hm.size == 0)
+			return ;
+		/* on ajoute la condition (ms.size <= len) pour forcer des réponses décroissantes ce qui limite les repetitions dans des ordres differents
+		 * on aura toujours la repetition des melanges des mots de meme taille */
+		val lex = lexique.filterKeys(ms => (ms <= hm) && (ms.size <= len))
+		lex.keys.foreach(bag1 =>
+			{
+				if (!(bag1 <= hm))
+					return ;
+				val cible2 = hm -- bag1;
+				if (cible2.size <= 0) {
+					solutions = lex(bag1) :: solutions;
+						def printAll(l: List[List[String]], acc: String): Unit = {
+							l match {
+								case Nil => println(acc)
+								case hd :: tl =>
+									hd.foreach { s => printAll(tl, acc + " " + s) }
+							}
+						}
+					printAll(solutions, "")
+					solutions = solutions.tail
+				}
+				solutions = lex(bag1) :: solutions;
+				foundAllWord(cible2, bag1.size);
+				solutions = solutions.tail
 
-	soluce2
-	soluce3
+			})
+	}
+
+	println("la phrase a chercher est : j'aime scala et le vélo")
+	val phrase = lettres("j'aime scala et le vélo")
+	foundAllWord(phrase, phrase.size)
+	//soluce2
+	//soluce3
 
 }
