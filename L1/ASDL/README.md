@@ -1,4 +1,4 @@
-# Projet - L1 ASDL - 2011
+# Projet - L1 Algorithmique des Structures de Données Linéaires (ASDL) - 2011
 
 ---
 
