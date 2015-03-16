@@ -1,7 +1,5 @@
 # Projet - L1 Algorithmique des Structures de Données Linéaires (ASDL) - 2011
 
----
-
 On veut représenter et utiliser un réseau de transport urbain. On prendra ici l'exemple du métro de Paris, mais il est évident que les mêmes structures peuvent servir à représenter un réseau d'autobus, de train, ...
 
 Dans notre cas, on supposera qu'il y a au total 14 lignes de métro exactement. Au départ, le

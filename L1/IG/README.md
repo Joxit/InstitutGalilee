@@ -1,5 +1,4 @@
 # Projet - L1 Initiation aux Interfaces Graphiques (IIG) - 2011
----
 
 ## Règles du jeu
 Source : wikipedia http://fr.wikipedia.org/wiki/Puissance_4
