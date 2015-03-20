@@ -106,8 +106,8 @@ end;;
 (********************************** 6.2 Module *********************************)
 
 (* 10/ Implementation du module Symbioz *)
-let size_x = 3;;
-let size_y = 3;;
+let size_x = 10;;
+let size_y = 10;;
 
 module Symbioz:PLANETE =
 struct
@@ -487,14 +487,15 @@ struct
   let sous_pop = P.at_pos Plante.get_pos
 
   let tuer_ind individu pop = 
-    let is_alive ind = (Plante.equals individu ind) = false in
-    List.filter is_alive pop 
+    List.filter (fun ind -> (Plante.equals individu ind) = false) pop
 
   let vieillissement pop = clean_list (map Plante.vieillir pop)
   let reproduction pop =
     let adultes = (* on filtre les adultes *)
       List.filter (fun ind -> Plante.get_age ind = Adulte) pop in
     let get_enfants ind acc =
+      (* Applique la fonction reproduire sur ind et renvoie la liste de ses 
+       * enfants concatener a la population (acc) *)
       let nb_zherb = ((List.length (sous_pop (Plante.get_pos ind) adultes)) - 1) 
       in acc@(Plante.reproduire nb_zherb ind ind)
     in reduce get_enfants adultes pop 
@@ -533,14 +534,13 @@ struct
   let sous_pop = P.at_pos Bestiole.get_pos 
 
   let tuer_ind individu pop =
-    let is_alive ind = (Bestiole.equals individu ind) = false in
-    List.filter is_alive pop 
+    List.filter (fun ind -> (Bestiole.equals individu ind) = false) pop 
 
   let vieillissement pop = clean_list (map Bestiole.vieillir pop)
 
   let reproduction pop =
-    let adultes = List.filter (fun ind -> Bestiole.get_age ind = Adulte) pop in
-    let l_sorted = P.sort_by_pos Bestiole.get_pos adultes in
+    let l_adultes = List.filter (fun ind -> Bestiole.get_age ind = Adulte) pop in
+    let l_sorted = P.sort_by_pos Bestiole.get_pos l_adultes in
     let split = List.partition (fun ind -> Bestiole.get_sexe ind = Masculin) in
     let l_splited = map split l_sorted in
     let l_shuffled =  map (fun (m, f) -> (shuffle m, shuffle f)) l_splited in
@@ -555,7 +555,7 @@ struct
       PROIES.reduce (fun ind -> fun x -> x + 1) (PROIES.sous_pop pos proies) 0
     in map (Bestiole.bouger (fun pos -> nb_proies pos)) pop
 
-  let nourriture nourriture population =
+  let nourriture proies pop =
     let manger ind (p, n) =
       let proie = 
         PROIES.random_ind (PROIES.sous_pop (Bestiole.get_pos ind) n) in
@@ -570,8 +570,8 @@ struct
           else
             (bestiole::p, (PROIES.tuer_ind (option_get proie) n))
         end
-    in let (pop, nour) = reduce manger population ([], nourriture) in
-       (clean_list pop, nour)
+    in let (p, n) = reduce manger pop ([], proies) in
+       (clean_list p, n)
 
   let affichage pop = iter (fun ind -> Bestiole.afficher ind) pop
 end;;
