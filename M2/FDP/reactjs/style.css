@@ -1,0 +1,148 @@
+h1, h2, h3, h4, h5, h6, p, a, ul, li {
+	width: auto;
+	margin: auto;
+	padding: 0;
+}
+
+h1, h2, h3, h4, h5, h6 {
+	margin: 10px auto;
+	font-weight: bold;
+	width: auto;
+}
+
+html {
+	padding: 30px 10px;
+	text-align: justify;
+	text-shadow: 0 0 3px rgb(255,255,255);
+	font-size: 16px;
+	line-height: 1.4;
+	color: #737373;
+	background: #f0f0f0;
+}
+
+@font-face {
+    font-family: edward;
+    src: url(ITCEdscr.TTF);
+}
+
+@media(max-width:700px) {
+	html {
+		width: auto;
+		padding: 5px;
+	}
+}
+
+html, input {
+	font-family: Roboto,"Helvetica Neue",Helvetica,Arial,sans-serif;
+}
+
+body {
+	width: 750px;
+	margin: 0 auto;
+	padding: 30px 20px 50px;
+	border: 0 solid #b3b3b3;
+	border-radius: 5px;
+	background: #fcfcfc;
+	box-shadow: 0 0 75px rgb(200,200,200) ,0 0 5px rgb(0,0,0) inset;
+}
+
+@media(max-width:700px) {
+	body {
+		width: auto;
+		margin: 0;
+		padding: 20px;
+	}
+}
+
+.container {
+	width: 650px;
+	margin: 0 auto;
+}
+
+@media(max-width:700px) {
+	.container {
+		width: auto;
+		margin: 0;
+	}
+}
+
+#content {
+	display: inline-block;
+	width: 650px;
+}
+
+@media(max-width:700px) {
+	#content {
+		width: auto;
+	}
+}
+
+p {
+	padding-left: 20px;
+	font-weight: normal;
+}
+
+a {
+	color: #0099CC; /*4D9CFC;*/
+	-webkit-transition: all 0.75s ease 0s;
+	transition: all 0.75s ease 0s;
+}
+
+a:hover {
+	text-shadow: 0 0 3px #33B5E5;
+	color: #33B5E5;
+	-webkit-transition: all 0.75s ease 0s;
+	transition: all 0.75s ease 0s;
+}
+
+h1 {
+	text-shadow: 0 0 10px #a7a7a7;
+	font-size: 34px;
+	font-weight: bold;
+	color: #F80; /* A SUPP */
+}
+
+h2 {
+	margin-right: 10px;
+	margin-left: 10px;
+	font-size: 24px;
+}
+
+h3 {
+	margin-right: 20px;
+	margin-left: 20px;
+	font-size: 16px;
+}
+
+img {
+	border-radius: 0px;
+	box-shadow: 0 0 4px #aaa;
+	-webkit-transition: all 1s linear 0s;
+	transition: all 1s linear 0s;
+	margin: 10px 20px;
+}
+
+img:hover {
+	border-radius: 200px;
+	-webkit-transition: all 1s linear 1s;
+	transition: all 1s linear 1s;
+}
+
+.border-bottom-line {
+	border-bottom: 2px solid #33B5E5;
+	-webkit-transition: all 0.20s linear 0s;
+	transition: all 0.20s linear 0s;
+}
+
+
+.border-bottom-transition {
+	border-bottom: 0 solid #33B5E5;
+	-webkit-transition: all 0.20s linear 0s;
+	transition: all 0.20s linear 0s;
+}
+
+.border-bottom-transition:hover {
+	border-bottom: 3px solid #33B5E5;
+	-webkit-transition: all 0.20s linear 0s;
+	transition: all 0.20s linear 0s;
+}

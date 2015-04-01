@@ -1,0 +1,12 @@
+-- Les equipes
+INSERT INTO EQUIPES(EQUIPE_ID) VALUES ('A3');
+INSERT INTO EQUIPES(EQUIPE_ID) VALUES ('AOC');
+INSERT INTO EQUIPES(EQUIPE_ID) VALUES ('CALIN');
+INSERT INTO EQUIPES(EQUIPE_ID) VALUES ('LCR');
+INSERT INTO EQUIPES(EQUIPE_ID) VALUES ('RCLN');
+INSERT INTO EQUIPES(EQUIPE_ID) VALUES ('ADMINISTRATION');
+-- Les responsables 
+INSERT INTO PERSONNES(NOM, PRENOM, BUREAU, MAIL, DEBUT, EQUIPE) VALUES ( 'MAGLOIRE', 'Jones', (select bureau_id from bureaux where batiment = 'B' and etage = 1 and numero = 103),'magloire@lipn.fr', '1993-02-17', 'CALIN');
+
+INSERT INTO RESPONSABLES(PERSONNE, IDENTIFIANT, MOT_DE_PASSE) VALUES ((select personne_id from personnes where nom = 'MAGLOIRE' and prenom = 'Jones'), 'joxit', 'mdp');
+
