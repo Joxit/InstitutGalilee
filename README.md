@@ -12,5 +12,6 @@ Ils sont rangés par année puis matière.
 Projet pour la création d'un logiciel permettant de représenter et utiliser un réseau de transport urbain (Cf le README du dossier). 
 
 #### Initiation aux Interfaces Graphiques (IG)
+Création du jeu d'un jeu de puissance 4 avec GTK (Cf README du dossier).
 
 #### Programmation Impérative (PI)
