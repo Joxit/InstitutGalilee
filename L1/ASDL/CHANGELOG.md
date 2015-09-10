@@ -1,6 +1,22 @@
 Projet A.S.D.L Lignes RATP de paris
 ===================
 
+**Version 1.3 :**
+
+* Recherche itinéraire :
+	* Cas normal itinéraire sur tout le reseau avec le plus court chemin (autant de corréspondances qu'il le faut)
+	* Utilisation des id pour arrivee et depart ainsi que de `distance[][]`
+* Création de fonctions : 
+	* `get_id` qui prend un `nom_station` et renvoie un id
+	* `get_nom_station` qui prend un id et renvoie le nom
+	* `id_proche` qui indique l'id de la station la plus proche de arrivee
+	* `get_choix_statio`n qui demande le nom de la station a l'utilisateur
+* Suppression de fonctions :
+	* `retirer_ligne` inutile et improbable dans la vie réele
+	* `ajout_ligne` n'est plus disponible pour l'agent RATP
+* Fix ::
+	* `Action_station` : donne les vrais lignes à la machine grace à `choix_num_ligne`
+
 **Version 1.2 :**
 
 * Création du mode fichier :
