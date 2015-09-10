@@ -1,6 +1,18 @@
 Projet A.S.D.L Lignes RATP de paris
 ===================
 
+**Version 1.2 :**
+
+* Création du mode fichier :
+	* Toutes les stations des lignes sont dans des fichiers
+	* Suppression de lignes.c
+	* Les 14 lignes sont présentes
+* Mise en fonction des id des stations
+* Fix ::
+	* Les séparations de lignes en deux (les branches des lignes)
+	* Stations accessibles que dans un sens (ligne 10 qui n'a des stations que pour une direction)
+* Amélioration de la recherche de stations : propose les stations avec une récurrence du mot recherché
+
 **Version 1.1 :**
 
 * Changement de l'affichage en fonction récursive
