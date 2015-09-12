@@ -1,12 +1,22 @@
 Projet A.S.D.L Lignes RATP de paris
 ===================
 
+**Version 1.4 :**
+	
+* Séparation de projet_asdl.c en 3 fichiers
+	* actions.c contenant toutes les fonctions nécessaires à la création du réseau RATP et des fonctions de l'agent RATP
+	* infos.c contenant toutes les fonctions nécessaires à l'interface utilisateur
+	* aide.c contenant les fonctions nécessaires pour la cumunication entre le programme et l'utilisateur
+* Fix ::
+	* `retirer_station_carte` : plantait quand il ne trouvait pas de stations
+	* `distance[][]` : ne donnait pas toutes les distances de toutes les stations doit repasser de la fin jusqu'au début pour compléter le tableau (CPU Time +0.5)
+
 **Version 1.3 :**
 
 * Recherche itinéraire :
 	* Cas normal itinéraire sur tout le reseau avec le plus court chemin (autant de corréspondances qu'il le faut)
 	* Utilisation des id pour arrivee et depart ainsi que de `distance[][]`
-* Création de fonctions : 
+* Création de fonctions :
 	* `get_id` qui prend un `nom_station` et renvoie un id
 	* `get_nom_station` qui prend un id et renvoie le nom
 	* `id_proche` qui indique l'id de la station la plus proche de arrivee
