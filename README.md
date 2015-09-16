@@ -15,3 +15,4 @@ Projet pour la création d'un logiciel permettant de représenter et utiliser un
 Création du jeu d'un jeu de puissance 4 avec GTK (Cf README du dossier).
 
 #### Programmation Impérative (PI)
+Parsing de fichiers binaire et alphabetiques contenant des données. Conversion également de ces fichiers.
