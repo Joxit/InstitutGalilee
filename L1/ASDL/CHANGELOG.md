@@ -1,8 +1,22 @@
 Projet A.S.D.L Lignes RATP de paris
 ===================
 
+
+**Version 1.5 :**
+
+* `est_voisin` :
+	* refonte de la fonction voisin, (CPU Time /2) on utilise plus la fonction + les boucles, la fonction donne directement les voisins à une matrice initialisée, (prend en compte des stations fermées)
+* Menu2 :
+	* Ajout de l'option "Sauvegarder" après avoir modifier les lignes
+* Creation  de fonctions :
+	* `set_distance` dans action.c qui applique les distances et les stations voisines aux matrices `voisin[][]` et `distance[][]`
+	* `is_open` renvoie `TRUE` si la station est ouverte, `FALSE` sinon -1 si elle n'existe pas
+* Fix ::
+	* Quand l'Agent modifie une station, il peut enregistrer ses changements qui se répercutront sur les itinéraires
+	* Réduction des allocations mémoire dans les menus, les char* ne sont pas tout le temps nécessaires...
+
 **Version 1.4 :**
-	
+
 * Séparation de projet_asdl.c en 3 fichiers
 	* actions.c contenant toutes les fonctions nécessaires à la création du réseau RATP et des fonctions de l'agent RATP
 	* infos.c contenant toutes les fonctions nécessaires à l'interface utilisateur
