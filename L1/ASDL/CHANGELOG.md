@@ -1,6 +1,9 @@
 Projet A.S.D.L Lignes RATP de paris
 ===================
 
+Dernière mise à jour : Jeudi 28 Avril 2011
+
+Pour plus d'information sur les fonctions voir projet_asdl.h
 
 **Version 1.5 :**
 
