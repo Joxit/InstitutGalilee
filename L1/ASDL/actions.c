@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2010-2015  Jones Magloire
  *
  * This program is free software: you can redistribute it and/or modify
@@ -21,7 +21,7 @@
  *  Ce fichier contient toutes les fonctions nécessaires à la création         *
  *  du réseau RATP et des fonctions de l'agent RATP                            *
  *                                                                             *
- *  Dernière modification : Mardi 28 Avril 2011			                       *
+ *  Dernière modification : Mardi 28 Avril 2011                                *
  *                                                                             *
  *  pour plus d'informations sur les fonctions voir projet_adsl.h              *
  * ___________________________________________________________________________ */
@@ -41,21 +41,21 @@ liste_pStations_t* ajout_ligne(int numero_ligne, liste_pStations_t* ligne, FILE*
 	int taille;
 	char* nom_station = malloc(100*sizeof(char));
 	ligne = (liste_pStations_t*)malloc(4*sizeof(liste_pStations_t*));
-	
+
 	while(!feof(adt))
 	{
 		// On récupère le nom du fichier mis en argument au lancement
 		fgets(nom_station, 100, adt);
 		if(nom_station == NULL)
-			perror("La lecture a echoue");	
-		
+			perror("La lecture a echoue");
+
 		// fgets met un saut de ligne à la fin de la variable, on le supprime
 		taille = strlen(nom_station);
 		nom_station[taille-1] = '\0';
 		ligne= ajout_station( nom_station, ligne);
 	}
 	*ligne = *ligne->next;
-	
+
 	free(nom_station);
 	return ligne;
 }
@@ -72,7 +72,7 @@ void est_voisin(int id1, int id2, liste_pStations_t** toutes_les_lignes,int** vo
 		{
 			// Si on trouve la station, on la supprime en la sautant
 			if(is_open(ligne) == 1)
-			{   
+			{
 				id1 = ligne.s->id;
 				ligne = *ligne.next;
 				while(is_open(ligne) == 0)
@@ -118,7 +118,7 @@ void est_voisin(int id1, int id2, liste_pStations_t** toutes_les_lignes,int** vo
 			if( i != NB_LIGNES)
 				ligne = *toutes_les_lignes[i];
 		}
-	}  	    
+	}
 }
 
 // Création de la liste toutes_les_stations
@@ -155,7 +155,6 @@ liste_pStations_t*  liste_station(liste_pStations_t* toutes_les_stations, liste_
 					ligne = *toutes_les_lignes[j];
 			}
 		}
-		
 	}
 	return toutes_les_stations;
 }
@@ -169,7 +168,7 @@ void set_id(liste_pStations_t** toutes_les_lignes)
 	int i = 0, j = 0, id = 0, boolean = -1;
 	ligne = *toutes_les_lignes[i];
 	ligne2 = *toutes_les_lignes[i];
-	
+
 	// Premiere boucle : permet de mettre les id sur toutes les lignes
 	while(i < NB_LIGNES)
 	{
@@ -177,7 +176,7 @@ void set_id(liste_pStations_t** toutes_les_lignes)
 		if(ligne2.s != NULL)
 		{
 			j = 0;
-			ligne = *toutes_les_lignes[j];	
+			ligne = *toutes_les_lignes[j];
 			boolean = -1;	   // carte de sortie
 			// Deuxième boucle qui permet de vérifier si une station a déjà une id sur toutes les lignes déjà vues 
 			while(boolean == -1)
@@ -187,7 +186,7 @@ void set_id(liste_pStations_t** toutes_les_lignes)
 					// Si on est sur la meme ligne que ligne2 on quitte
 					if( j == i)
 					{
-						boolean = FALSE;	
+						boolean = FALSE;
 					}
 					if(boolean== -1)
 					{
@@ -199,9 +198,9 @@ void set_id(liste_pStations_t** toutes_les_lignes)
 							boolean = TRUE;
 						}
 						else // Sinon on passe
-							ligne = *ligne.next;	
+							ligne = *ligne.next;
 					}
-					
+
 				}
 				else // Si la station est nul on passe à la ligne suivante
 					if(ligne.s == NULL)
@@ -209,24 +208,24 @@ void set_id(liste_pStations_t** toutes_les_lignes)
 						j = j + 1;
 						// Vérification pour les erreures de ségmentations
 						if(j != NB_LIGNES)
-							ligne = *toutes_les_lignes[j];	
+							ligne = *toutes_les_lignes[j];
 					}
-						
+
 			}
 			// Si boolean == FALSE c'est qu'on a pas trouvé de station avec la meme  id
 			if(boolean == FALSE )
 			{
-				ligne2.s->id = id;	
+				ligne2.s->id = id;
 				id++;
 			}
 			//station suivante
 			ligne2 = *ligne2.next;
 		}
-		else 
+		else
 		{
 			i++;
 			if(i != NB_LIGNES)
-				ligne2 = *toutes_les_lignes[i];	
+				ligne2 = *toutes_les_lignes[i];
 		}
 	}
 }
@@ -235,7 +234,7 @@ void set_id(liste_pStations_t** toutes_les_lignes)
  * Fonctionalitées de l'agent RATP *
  * ******************************* */
 
-// Met ouvert = 1 à toutes les station de la ligne 
+// Met ouvert = 1 à toutes les station de la ligne
 liste_pStations_t* ouvrir_ligne(liste_pStations_t* ligne)
 {
 	if(ligne->s == NULL)
@@ -246,13 +245,13 @@ liste_pStations_t* ouvrir_ligne(liste_pStations_t* ligne)
 	liste_pStations_t* ligne2 = ligne;
 	while(ligne->next != NULL)
 	{
-		ligne->s->ouvert = 1; 
+		ligne->s->ouvert = 1;
 		ligne = ligne->next;
-	}     
+	}
 	return ligne2;
 }
 
-// Met ouvert = 0 à toutes les station de la ligne 	
+// Met ouvert = 0 à toutes les station de la ligne
 liste_pStations_t* fermer_ligne(liste_pStations_t* ligne)
 {
 	if(ligne->s == NULL)
@@ -263,9 +262,9 @@ liste_pStations_t* fermer_ligne(liste_pStations_t* ligne)
 	liste_pStations_t* ligne2 = ligne;
 	while(ligne->next != NULL)
 	{
-		ligne->s->ouvert = 0; 
+		ligne->s->ouvert = 0;
 		ligne = ligne->next;
-	}   
+	}
 	return ligne2;
 }
 
@@ -274,15 +273,15 @@ liste_pStations_t* fermer_ligne(liste_pStations_t* ligne)
 liste_pStations_t* ajout_station(char* nom_station, liste_pStations_t* ligne)
 {
 	liste_pStations_t *new_station;
-	
+
 	new_station = malloc(4*sizeof(liste_pStations_t*));
 	new_station->s = malloc(4*sizeof(station_t*));
 	new_station->s->nom = (char*)malloc(100*sizeof(char));
 	new_station->next = ligne;
 	strcpy(new_station->s->nom, nom_station);
-	
+
 	new_station->s->ouvert = 1;
-	
+
 	return new_station;
 }
 
@@ -299,18 +298,18 @@ liste_pStations_t* retirer_station(char* nom_station, liste_pStations_t* ligne)
 	while(ligne->s != NULL)
 	{
 		if(strcmp(nom_station, ligne->s->nom) == 0)
-		{    
-			*ligne = *ligne->next; 
+		{
+			*ligne = *ligne->next;
 			return ligne2;
 		}
 		else
 			ligne = ligne->next;
-	}  	    
+	}
 	puts("La Station n'a pas ete trouvee");
 	return ligne2;
 }
 
-// Retire une station du reseau RATP	
+// Retire une station du reseau RATP
 void retirer_station_carte(char* nom_station, liste_pStations_t** toutes_les_lignes)
 {
 	int i = 0;
@@ -322,8 +321,8 @@ void retirer_station_carte(char* nom_station, liste_pStations_t** toutes_les_lig
 		{
 			// Si on trouve la station, on la supprime en la sautant
 			if(strcmp(nom_station, ligne->s->nom) == 0)
-			{    
-				*ligne = *ligne->next; 
+			{
+				*ligne = *ligne->next;
 				i++;
 				// Vérification pour les erreures de ségmentations
 				if( i != NB_LIGNES)
@@ -339,10 +338,10 @@ void retirer_station_carte(char* nom_station, liste_pStations_t** toutes_les_lig
 			if( i != NB_LIGNES)
 				ligne = toutes_les_lignes[i];
 		}
-	}  	    
+	}
 }
 
-// met 1 à nom_station de la ligne 
+// met 1 à nom_station de la ligne
 void ouvrir_station(char* nom_station, liste_pStations_t* ligne)
 {
 	if(ligne->s == NULL)
@@ -357,18 +356,18 @@ void ouvrir_station(char* nom_station, liste_pStations_t* ligne)
 		{
 			if(is_open(*ligne))
 				puts("Station deja ouverte");
-			ligne->s->ouvert = 1; 
+			ligne->s->ouvert = 1;
 			if(is_open(*ligne))
 				puts("La station a bien ete ouverte");
 			return ;
 		}
 		else
 			ligne = ligne->next;
-	}    
+	}
 	puts("La station n'a pas ete trouvee");
 }
 
-// met 0 à nom_station de la ligne 	
+// met 0 à nom_station de la ligne
 void fermer_station(char* nom_station, liste_pStations_t* ligne)
 {
 	if(ligne->s == NULL)
@@ -383,14 +382,14 @@ void fermer_station(char* nom_station, liste_pStations_t* ligne)
 		{
 			if(!is_open(*ligne))
 				puts("Station deja fermée");
-			ligne->s->ouvert = 0; 
+			ligne->s->ouvert = 0;
 			if(!is_open(*ligne))
 				puts("La station a bien ete fermee");
 			return ;
 		}
 		else
 			ligne = ligne->next;
-	}  
+	}
 	puts("La station n'a pas ete trouvee");
 }
 
