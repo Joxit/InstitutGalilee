@@ -178,7 +178,7 @@ void set_id(liste_pStations_t** toutes_les_lignes)
 			j = 0;
 			ligne = *toutes_les_lignes[j];
 			boolean = -1;	   // carte de sortie
-			// Deuxième boucle qui permet de vérifier si une station a déjà une id sur toutes les lignes déjà vues 
+			// Deuxième boucle qui permet de vérifier si une station a déjà une id sur toutes les lignes déjà vues
 			while(boolean == -1)
 			{
 				if( ligne.s != NULL)

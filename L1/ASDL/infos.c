@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2010-2015  Jones Magloire
  *
  * This program is free software: you can redistribute it and/or modify
@@ -44,20 +44,20 @@ void recherche_intineraires(int depart, int arrivee, int** distance, liste_pStat
 	liste_pStations_t ligne;
 	int	n = 0, 		// nombre binaire convertit qui renvoie les lignes de la station
 		numero_ligne = 0;
-	int cur_id, 	// id de parcour 
+	int cur_id, 	// id de parcour
 		sub_id,		// id de test à la sortie de id_proche
 		id;			// id final le plus près d'arrivee
-	
+
 	if(depart == arrivee)
 	{
 		puts("ERREUR : vous avez choisi la meme station!");
 		return;
 	}
-	
+
 	id = depart;
 	while(id != arrivee)
 	{
-		// ligne_station convertit les numeros de la station de binaire à décimal 
+		// ligne_station convertit les numeros de la station de binaire à décimal
 		n = ligne_station( get_nom_station(id, toutes_les_stations), toutes_les_lignes);
 		if((n == 0) || distance[depart][arrivee] == 1000)
 		{
@@ -66,10 +66,10 @@ void recherche_intineraires(int depart, int arrivee, int** distance, liste_pStat
 		}
 		i = 0;
 		cur_id = id;
-		while (n > 0) 
+		while (n > 0)
 		{
 			// Si on a bien n%2 la station passe par la ligne i
-			if (n % 2) 
+			if (n % 2)
 			{
 				// Vérification pour les erreures de ségmentations
 				if( i < NB_LIGNES)
@@ -88,7 +88,7 @@ void recherche_intineraires(int depart, int arrivee, int** distance, liste_pStat
 			// Si on est arrivé on quitte la boucle
 			if((cur_id == arrivee) /*|| (distance[cur_id][arrivee] == 0)*/)
 				break;
-		}	
+		}
 		printf("\tPrendre la ligne %d\n", get_num_ligne(numero_ligne));
 		id = cur_id;
 		// Vérification pour les erreures de ségmentations
@@ -103,11 +103,11 @@ void liste_station_de_toutes_les_lignes(liste_pStations_t** toutes_les_lignes)
 {
 	int i;
 	liste_pStations_t ligne;
-	
+
 	// Boucle principale : parcourt toutes les lignes du réseau
 	for(i = 0; i < NB_LIGNES; i++)
 	{
-		
+
 		// Vérification pour les erreures de ségmentations
 		if( i != NB_LIGNES)
 			ligne = *toutes_les_lignes[i];
@@ -120,19 +120,19 @@ void liste_station_de_toutes_les_lignes(liste_pStations_t** toutes_les_lignes)
 		case 7:
 			printf("Les Station de la ligne %d directon Ivry : \n", get_num_ligne(i));
 			break;
-		case 10:	
+		case 10:
 			printf("Les Station de la ligne %d directon Boulogne : \n", get_num_ligne(i));
 			break;
-		case 11:	
+		case 11:
 			printf("Les Station de la ligne %d directon Gare d'Austerlitz : \n", get_num_ligne(i));
 			break;
-		case 14:	
+		case 14:
 			printf("Les Station de la ligne %d directon Saint Denis : \n", get_num_ligne(i));
 			break;
-		case 15:	
+		case 15:
 			printf("Les Station de la ligne %d directon Gennevilliers : \n", get_num_ligne(i));
 			break;
-		default : 
+		default :
 			printf("Les Station de la ligne %d sont : \n", get_num_ligne(i));
 			break;
 		}
@@ -155,7 +155,7 @@ int ligne_ouverte(liste_pStations_t ligne) // toutes_les_lignes[i] en argument!
 		puts("Erreur: ligne inexistante");
 		return 0;
 	}
-	
+
 	while(ligne.next != NULL)
 	{
 		if(ligne.s->ouvert == 1) // ouvert
@@ -164,10 +164,10 @@ int ligne_ouverte(liste_pStations_t ligne) // toutes_les_lignes[i] en argument!
 		}
 		if(cmp == 2)
 			return 1;
-			
+
 		ligne = *ligne.next;
 	}
-	
+
 	return 0;
 }
 
@@ -179,7 +179,7 @@ void station_dans_ligne(liste_pStations_t ligne)
 		puts("Erreur: ligne inexistante");
 		return ;
 	}
-	
+
 	puts("Les Station de cette ligne sont : ");
 	while(ligne.next != NULL)
 	{
@@ -195,7 +195,7 @@ void get_station_ouverte(char* nom_station, liste_pStations_t** toutes_les_ligne
 	int i = 0;
 	liste_pStations_t ligne;
 	ligne = *toutes_les_lignes[i];
-	
+
 	// Boucle principale : parcourt toutes les lignes du réseau
 	while(i < NB_LIGNES)
 	{
@@ -207,11 +207,11 @@ void get_station_ouverte(char* nom_station, liste_pStations_t** toutes_les_ligne
 			{
 				if(ligne.s->ouvert == 1)
 				{
-					printf("La station %s est ouverte pour la ligne %d ", nom_station, get_num_ligne(i));   
+					printf("La station %s est ouverte pour la ligne %d ", nom_station, get_num_ligne(i));
 				}
-				else 
+				else
 					printf("La station %s est fermée pour la ligne %d ", nom_station, get_num_ligne(i));
-				
+
 				// une station n'est pas deux fois sur la meme ligne mais erreur avec  ligne = *ligne.next; qui suit
 				//i++;
 				//ligne = *toutes_les_lignes[i];
@@ -224,47 +224,47 @@ void get_station_ouverte(char* nom_station, liste_pStations_t** toutes_les_ligne
 				case 7:
 					printf("directon Ivry\n");
 					break;
-				case 10:	
+				case 10:
 					printf("directon Boulogne\n");
 					break;
-				case 11:	
+				case 11:
 					printf("directon Gare d'Austerlitz\n");
 					break;
-				case 14:	
+				case 14:
 					printf("directon Saint Denis\n");
 					break;
-				case 15:	
+				case 15:
 					printf("directon Gennevilliers\n");
 					break;
-				default : 
+				default :
 					printf("\n");
 					break;
 				}
 			}
 		}
-		
+
 		if(ligne.s  == NULL)
-		{ 
+		{
 			i++;
 			// Vérification pour les erreures de ségmentations
 			if( i != NB_LIGNES)
-				ligne = *toutes_les_lignes[i];    
+				ligne = *toutes_les_lignes[i];
 		}
 		else
 			ligne = *ligne.next;
-		
-		
+
+
 	}
 }
 
-// Toutes les lignes d'une station	
+// Toutes les lignes d'une station
 int ligne_station(char* nom_station, liste_pStations_t** toutes_les_lignes)
 {
 	int i = 0;
 	liste_pStations_t ligne;
 	ligne = *toutes_les_lignes[i];
 	int numero_lignes = 0;
-	
+
 	printf("Ligne(s) passant par la station %s : ", nom_station);
 	while(i < NB_LIGNES)
 	{
@@ -282,7 +282,7 @@ int ligne_station(char* nom_station, liste_pStations_t** toutes_les_lignes)
 			}
 		}
 		if( ligne.s == NULL)
-		{ 
+		{
 			i++;
 			// Vérification pour les erreures de ségmentations
 			if( i < NB_LIGNES)
@@ -292,7 +292,7 @@ int ligne_station(char* nom_station, liste_pStations_t** toutes_les_lignes)
 		{
 			ligne = *ligne.next;
 		}
-		
+
 	}
 	if(numero_lignes == 0)
 		printf("Aucunes; cette station a ete fermee sur toutes les lignes allez vous plaindre\n");
@@ -303,7 +303,7 @@ int ligne_station(char* nom_station, liste_pStations_t** toutes_les_lignes)
 double temps_CPU()
 {
 	struct rusage usage;
-	
+
 	getrusage(RUSAGE_SELF, &usage);
 	return usage.ru_utime.tv_sec + (usage.ru_utime.tv_usec / 1000000.0);
 }
