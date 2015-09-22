@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2010-2015  Jones Magloire
  *
  * This program is free software: you can redistribute it and/or modify
@@ -44,7 +44,7 @@ int main(int argc, char** argv)
 	int** distance = (int**)malloc(400*sizeof(int*));
 	liste_pStations_t* toutes_les_stations = malloc(4*sizeof(liste_pStations_t));
 	liste_pStations_t* toutes_les_lignes[18];
-	
+
 	if( argc-1 != NB_LIGNES)
 	{
 		printf("Lancez %s à l'aide de ./run.sh", argv[0]);
@@ -55,14 +55,14 @@ int main(int argc, char** argv)
 	for(i = 0; i <= 300; i++)
 	{
 		voisin[i] = (int*)malloc(400*sizeof(int));
-		distance[i] = (int*)malloc(400*sizeof(int));  
+		distance[i] = (int*)malloc(400*sizeof(int));
 	}
 	if(voisin == NULL || distance == NULL)
 	{
 		perror("Allocation de voisin[][] et distance[][]");
 		exit(-1);
 	}
-	
+
 	// Initialisation des liges
 	for(i = 0; i < NB_LIGNES; i++)
 	{
@@ -70,7 +70,7 @@ int main(int argc, char** argv)
 		if(adt == NULL)
 			perror("Fichier non ouvert");
 		toutes_les_lignes[i] = ajout_ligne(i+1, toutes_les_lignes[i], adt);
-		
+
 		k = fclose(adt);
 		if(k != 0)
 			perror("Fichier non fermé");
@@ -79,20 +79,20 @@ int main(int argc, char** argv)
 	set_id(toutes_les_lignes);
 	// Initialisation de la liste des stations
 	toutes_les_stations = liste_station(toutes_les_stations,  toutes_les_lignes);
-	
+
 	if(toutes_les_stations == NULL || toutes_les_lignes == NULL)
 	{
 		perror("Initialisation des lignes");
 		exit(-1);
 	}
-	
-	
+
+
 	set_distance(toutes_les_lignes, voisin, distance);
 	END = temps_CPU();
-	printf("\033[35mTemps de lancement : %.4f s\033[0m\n", END-START);	
-	
+	printf("\033[35mTemps de lancement : %.4f s\033[0m\n", END-START);
+
 	// Affichage du programme
 	Menu1(toutes_les_lignes,  *toutes_les_stations, voisin, distance);
-	
+
 	return EXIT_SUCCESS;
 }
