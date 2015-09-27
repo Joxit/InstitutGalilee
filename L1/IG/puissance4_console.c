@@ -32,9 +32,9 @@ int main()
     int statut_succes = 0, j;
     char c = 'O';
     s_partie* partie = NULL;
-    
+
     /* ____ construction modèle	*/
-    
+
     /* modèle :: initialisation du plateau de jeu (coordonnées des cases) */
     /*	partie = partie_new(NB_COL_JEU_DEFAULT, NB_ROW_JEU_DEFAULT, NB_WIN_JEU_DEFAULT, &statut_succes);    */
     partie = partie_new(NB_COL_JEU_DEFAULT, NB_ROW_JEU_DEFAULT, NB_WIN_JEU_DEFAULT, &statut_succes);
@@ -48,17 +48,17 @@ int main()
 	    printf("Nouvelle partie [O pour Oui, toute autre saisie pour Non] ?\t");
 	scanf("%c", &c);
 	purger();
-	
+
 	if (c == 'O')
 	{
 	    /* nouvelle partie */
 	    partie_nouvelle_partie(partie);
-	    
+
 	    while(partie_get_etat(partie) == PARTIE_ETAT_ENCOURS)
 	    {
 		/* nouveau tour */
 		partie_print_etat(partie);
-		
+
 		/* choisir coup */
 		j = 0;
 		while(j -1 < 0 || j -1 >= partie_get_nbcol(partie) || partie_est_colonne_pleine(partie, j -1) == 1)
@@ -67,29 +67,29 @@ int main()
 		    for (j = 1 ; j <= partie_get_nbcol(partie) ; j++)
 			if (partie_est_colonne_pleine(partie, j -1) == 0)
 			    printf("%d ", j);
-			
+
 			printf("\t");
 		    scanf("%d", &j);
 		    purger();
 		}
-		
+
 		/* jouer le coup */
 		partie_jouer_colonne(partie, j -1);
-		
+
 		/* tour suivant */
 		if (partie_get_etat(partie) == PARTIE_ETAT_ENCOURS)
 		    partie_tour_suivant(partie);
 	    }
-	    
+
 	    /* partie finie */
 	    partie_print_etat(partie);
 	}
 	}
-	
+
 	/* libération partie */
 	partie_free(& partie);
     }
-    
+
     /* on s'en va	*/
     return statut_succes;
 }
@@ -116,7 +116,7 @@ void case_print_etat(s_case* une_case)
 void partie_print_etat(s_partie* partie)
 {
     int i, j;
-    
+
     /* ____ infos état partie */
     if (partie->etat != PARTIE_ETAT_ENCOURS)
 	printf("%s\n", partie_get_etat_nom(partie->etat));
@@ -124,23 +124,23 @@ void partie_print_etat(s_partie* partie)
 	printf("Tour du joueur 1\n");
     else
 	printf("Tour du joueur 2\n");
-    
+
     /* ____ plateau */
     if (partie->etat != PARTIE_ETAT_NONE)
     {
 	/* indice colonne (en partant de 1 : plus naturel pour l'utilisateur) */
 	for (j = 0 ; j < partie_get_nbcol(partie) ; j ++)
 	    printf("%d ", j +1);
-	
+
 	printf("\n");
-	
+
 	/* séparateur */
 	printf("_");
 	for (j = 0 ; j < partie_get_nbcol(partie) ; j ++)
 	    printf("__");
-	
+
 	printf("\n");
-	
+
 	/* état des cases du plateau */
 	for (i = 0 ; i < partie_get_nbrow(partie) ; i ++)
 	{
@@ -149,11 +149,11 @@ void partie_print_etat(s_partie* partie)
 		case_print_etat(partie->plateau[GET_INDICE(partie_get_nbcol(partie), i, j)]);
 		printf(" ");
 	    }
-	    
+
 	    printf("\n");
 	}
     }
-    
+
     printf("\n");
 }
 
@@ -163,7 +163,7 @@ void partie_print_etat(s_partie* partie)
 void purger ()
 {
     char c;
-    
+
     while ((c = getchar()) != '\n' && c != EOF)
     {}
 }

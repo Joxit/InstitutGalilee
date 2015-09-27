@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2010-2015  Jones Magloire
  *
  * This program is free software: you can redistribute it and/or modify
@@ -25,8 +25,8 @@
 /* Declaration de fonctionnalites supplementaire */
 
 #include <stdlib.h> /* EXIT_SUCCSS */
-#include <stdio.h> /* Printf */	
-#include <gtk/gtk.h>	
+#include <stdio.h> /* Printf */
+#include <gtk/gtk.h>
 #include <time.h>	/*fonction 'time', utilisée pour la génération aléatoire*/
 #include "puissance4.h"	/* modèle de la chasse au trésor en GTK(constantes symboliques, types, déclaration des fonctions)*/
 #include "partie.h"
@@ -51,7 +51,7 @@ int main(int argc, char** argv)
 		perror("Memoire P4 non alloué");
 		exit (-1);
 	}
-	
+
 	/* Environnement GTK */
 	if( (ENV = (gtk*)malloc(5*sizeof(gtk))) == NULL)
 	{
@@ -87,16 +87,16 @@ int main(int argc, char** argv)
 	PARTIE = partie_new(NB_COL_JEU_DEFAULT, NB_ROW_JEU_DEFAULT, NB_WIN_JEU_DEFAULT, &statut_succes);
 	if (PARTIE == NULL)
 		printf("puissance4_jeu :: Une erreur s'est produite pendant l'appel à la fonction 'partie_new' statut (%d) '%s' ; obligation d'abréger le programme.\n", statut_succes, partie_get_statut_nom(statut_succes));
-	
-	
+
+
 	/* nouvelle partie */
 	partie_nouvelle_partie(PARTIE);
-	
+
 	/* DEMARRAGE DE LA BOUCLE*/
 	gtk_main();
-	
+
 	/* Sauvegarde du score a la sortie du programme */
 	sauvegarder_score(ENV->Fenetre, ctr);
-	
+
 	return EXIT_SUCCESS;
 }

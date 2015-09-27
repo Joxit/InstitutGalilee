@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2010-2015  Jones Magloire
  *
  * This program is free software: you can redistribute it and/or modify
@@ -24,7 +24,7 @@
 
 #include <stdlib.h>		/* fonction 'rand' de génération aléatoire*/
 #include <gtk/gtk.h>
-#include <string.h>	
+#include <string.h>
 #include "puissance4.h"	/* modèle de la chasse au trésor en GTK(constantes symboliques, types, déclaration des fonctions)*/
 #include "partie.h"
 
@@ -35,11 +35,11 @@ void changer_nom(GtkWidget* Item, ctr_s *ctr)
 	joueur_s *joueur1 = malloc(13*sizeof(joueur_s));
 	joueur_s *joueur2 = malloc(13*sizeof(joueur_s));
 	FILE* adt = NULL;
-	
+
 	adt = file_open(adt);
-	
+
 	fseek(adt, 0, SEEK_SET);
-	/* On cherche quel est la boite de saisie activee 
+	/* On cherche quel est la boite de saisie activee
 	 * On met son resultat dans la variable nom
 	 * Puis on copie dans la variable nom_joueur correspondante */
 	/** Premiere zone de saisie **/
@@ -50,7 +50,7 @@ void changer_nom(GtkWidget* Item, ctr_s *ctr)
 		if(4 < strlen(nom))
 			strcpy(JOUEUR_1->nom, nom);
 		JOUEUR_1->score = 0;
-		/* Mode fichier : Cherche dans le fichier users.dat 
+		/* Mode fichier : Cherche dans le fichier users.dat
 		 * le nom du joueur qui vient d'etre entre
 		 * s'il existe deja, on recupere son score precedent
 		 * sinon on le met a 0 */
@@ -68,7 +68,7 @@ void changer_nom(GtkWidget* Item, ctr_s *ctr)
 				}
 		}
 	}
-	
+
 	/** Seconde zone de saisie **/
 	if(ENV->MenuEntry[1] != NULL && (Item == ENV->MenuEntry[1] || Item == ENV->dBout[0]))
 	{
@@ -86,15 +86,15 @@ void changer_nom(GtkWidget* Item, ctr_s *ctr)
 				if(strcmp(JOUEUR_2->nom, joueur2->nom) == 0)
 				{
 					JOUEUR_2->score = joueur2->score;
-					
+
 					/* si on le trouve on sort */
 					break;
 				}
 		}
 	}
-	
+
 	maj_pseudo(ctr);
-	
+
 	/* on libere la memoire de joueur */
 	free(joueur1);
 	free(joueur2);
@@ -102,7 +102,7 @@ void changer_nom(GtkWidget* Item, ctr_s *ctr)
 	if(Item != ENV->dBout[0])
 		menu_nom(ENV->Menu, ctr);
 	return;
-	
+
 }
 
 /* Fonctin qui sauvegarde les score des deux joueurs actuels dans le fichier*/
@@ -111,21 +111,21 @@ void sauvegarder_score(GtkWidget* Item, ctr_s* ctr)
 	FILE* adt1 = NULL, *adt2 = NULL;
 	char* pch;
 	joueur_s* joueur = malloc(13*sizeof(joueur_s));
-	
+
 	adt1 = file_open(adt1);
-	
+
 	/* Fichier de substitution */
 	if((adt2 = fopen("tmp", "w")) == NULL)
 	{
 		perror("Fichier tmp non ouvert");
 		exit (-1);
 	}
-	
-		
+
+
 	/** On met le nom des joueurs au debut du fichier pour la prochaine partie
 	 ** Clean up du nom des joueurs saisi :
  	 ** il ne faut pas d'espaces dans le fichier! **/
-	
+
 	/*  On pointe les espaces et on les remplaces par des '_' jusqu'a la fin de la chaine */
 	pch =strchr(JOUEUR_1->nom, ' ');
 	while(pch != NULL)
@@ -135,7 +135,7 @@ void sauvegarder_score(GtkWidget* Item, ctr_s* ctr)
 	}
 	/* pui on ecrit dans le fichier */
 	fprintf(adt2, "%s %d\n", JOUEUR_1->nom, JOUEUR_1->score);
-	
+
 
 	/*  On pointe les espaces et on les remplaces par des '_' jusqu'a la fin de la chaine */
 	pch =strchr(JOUEUR_2->nom, ' ');
@@ -146,9 +146,9 @@ void sauvegarder_score(GtkWidget* Item, ctr_s* ctr)
 	}
 	/* pui on ecrit dans le fichier */
 	fprintf(adt2, "%s %d\n", JOUEUR_2->nom, JOUEUR_2->score);
-	
-		
-	
+
+
+
 	while(!feof(adt1))
 	{
 		/* on lit le fichier actuel */
@@ -164,7 +164,7 @@ void sauvegarder_score(GtkWidget* Item, ctr_s* ctr)
 			}
 		}
 	}
-	
+
 	/* on fini par un saut de ligne en plus et liberer la memoire des variables */
 	fprintf(adt2, "\n");
 	fclose(adt1);
@@ -182,11 +182,11 @@ char* get_classement()
 	char* pch, *liste_classement = malloc(200*sizeof(char));
 	int i = 0,j = 0, score[6];
 	joueur_s* joueur = malloc(13*sizeof(joueur_s));
-	
+
 	adt = file_open(adt);
-	
+
 	score[0] = 1000;
-	
+
 	/** Deuxieme etage **/
 	for(i = 1; i < 6; i = i + 1)
 	{
@@ -201,7 +201,7 @@ char* get_classement()
 		{
 			fscanf(adt, "%s", joueur->nom);
 			fscanf(adt, "%d", &joueur->score);
-			/** Verification : score[i] < joueur->score < score[i-1] pour trouver le vrai suivant 
+			/** Verification : score[i] < joueur->score < score[i-1] pour trouver le vrai suivant
 			 ** joueur->nom doit exister pour eviter les bugs **/
 			if(score[i] < joueur->score && score[i-1] > joueur->score && joueur->nom != NULL)
 				score[i] = joueur->score;
@@ -240,9 +240,9 @@ char* get_classement()
 		}
 	}
 #if (PUISSANCE4_MODELE_DEBUG != 0)
-	printf("\tTop_5  i == %d j == %d liste_classement : \n%sScore : %d; %d; %d; %d; %d; %d\n", i, j, liste_classement, score[0], score[1], score[2], score[3], score[4], score[5]); 
+	printf("\tTop_5  i == %d j == %d liste_classement : \n%sScore : %d; %d; %d; %d; %d; %d\n", i, j, liste_classement, score[0], score[1], score[2], score[3], score[4], score[5]);
 #endif
-		
+
 	fclose(adt);
 	free(joueur);
 	return liste_classement;
