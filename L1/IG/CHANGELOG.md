@@ -1,6 +1,22 @@
 Projet Interface Graphique Puissance 4 sous GTK+
 ===================
 
+**Version 1.2**
+
+- Mise a jour :
+	- `gtk_jouer_colonne` && continuer pour gerer l'IA
+	- Barre des menus sous menu Partie et Option
+	- Utilisation de `GtkTable` à la place des `GtkBox`
+- Ajout	:
+	- Création d'une Intelligence Artificielle :
+		- fonctions de l'IA dans int_art.c basées sur les fonctions de partie.c :
+			- `IA_tester_ligne`
+			- `IA_tester_colonne`
+			- `IA_jouer`
+		- Menu de l'IA dans menu.c :
+			- `menu_IA`
+		- L'IA  ne fait que contrer les  coups du vrai joueur et joue aléatoirement
+
 **Version 1.1 :**
 
 - Mise a jour :
