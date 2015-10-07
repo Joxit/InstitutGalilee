@@ -1,5 +1,11 @@
 Projet Interface Graphique Puissance 4 sous GTK+
 ===================
+**Version 1.3**
+
+- Ajout :
+	- securité lors de la recherche des pseudos, si le fichier a été supprimé, on en créé un autre
+- Clean up du code
+- Version envoyé aux professeurs
 
 **Version 1.2**
 
