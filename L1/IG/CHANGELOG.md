@@ -1,5 +1,15 @@
 Projet Interface Graphique Puissance 4 sous GTK+
 ===================
+**Version 1.4**
+
+- Mise à jour :
+	- Meilleure tenue de l'IA, il peut contrer les coups sur les lignes a tout moment, il verifie a chaques tour si le joueur n'a pas une serie de 3 pions sur lignes dans le jeu
+	- Suppresion de `gtk_widget_get_sensitive` qui n'existe pas avant GTK+ 2.18
+	- enleve la sensibilité du 2eme GtkEntry contre l'IA
+- Ajout :
+	- fonction IA_jouer_ligne pour alleger IA_jouer
+	- nom Int. Art. pour l'IA, il aura ses scores
+
 **Version 1.3**
 
 - Ajout :
