@@ -1,5 +1,22 @@
 Projet Interface Graphique Puissance 4 sous GTK+
 ===================
+**Version 1.5**
+
+- Clean up :
+	- séparation de menu.c :
+		- gtk_menu.c contient toutes les fonctions de création GTK+
+		- menu.c contient toutes les fonctions qui n'utilise pas d'objet GTK+
+	- `get_classement` : qui renvoie la chaine de caractère du classement (dans menu.c) utilisé par Top_5 (dans gtk_menu.c)
+	- `file_open` : renvoie l'adresse du fichier users.dat en ayant fait une vérification et création si besoin.
+- Mise à jour :
+	- l'IA bloque dès que le joueur a 2 pions alignés pour anticiper avant qu'il en ait 3.
+	- l'IA cherche au début s'il a 3 pions en colonne dans le plateau pour gagner
+	- avant de jouer aléatoirement, l'IA regarde s'il a +2 pions sur une ligne dans le plateau pour jouer
+	- remplacement des "jouer_colonne == -1" par "jouer_colonne < 0"
+	- nouveaux pions
+- Ajout :
+	- `menu_about` : dialogue des droits et compatibilité
+
 **Version 1.4**
 
 - Mise à jour :
