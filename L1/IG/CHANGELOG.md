@@ -1,5 +1,13 @@
 Projet Interface Graphique Puissance 4 sous GTK+
 ===================
+**Version 1.6**
+
+- Ajout :
+	- `maj_pseudo` qui met a jour la label du pseudo
+	- Ajout de la licence GNU GPLv3 en header des sources
+- Correction :
+	- `changer_nom` : erreur de segmentation quand on voulait changer de nom contre l'IA
+
 **Version 1.5**
 
 - Clean up :
