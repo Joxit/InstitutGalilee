@@ -48,7 +48,7 @@ Pour illustration, un programme permettant de dérouler le jeu en mode console e
 il s’agit du fichier “puissance4_console.c”. Pour générer l’'exécutable, utiliser le fichier `makefile` fourni :
 `make -f makefile_console`
 
-## Travail demandé
+### Travail demandé
 
 Il s’agit de permettre à un utilisateur de jouer au jeu de puissance 4 via une interface graphique. Il faut donc (contrat de base) :
 
@@ -57,4 +57,40 @@ Il s’agit de permettre à un utilisateur de jouer au jeu de puissance 4 via un
 3. Enfin définir comment cette interface intéragit avec le jeu : quand l’interface doit-elle déclencher une action sur le modèle, comment l’inerface se met-elle à jour suite à une modification du modèle. Ex. pour s’authentifier : lorsque l’utilisateur clique sur le bouton, l’application vérifie que le pesudo saisi fait partie de la liste des peusdo du modèle (imaginons en effet que le modèle comporte un tel annuaire) ; si le pseudo est accepté par le modèle, la fenêtre principale qui aura lancé la boîte de dialogue se personnalise en fonction de ce pseudonyme (mise à jour de la vue suite à l’action de
 validation demandée au modèle).
 
+## Comment ca marche
 
+Bienvenue et merci de me lire.
+
+Programme réalisé par MAGLOIRE Jones pour le projet d'Interface Graphique.
+
+### ORGANISATION
+
+Le programme est séparé en plusieurs fichiers ::
+
+- gtk_puissance4.c : Fonction principale du programme
+- gtk_puissance4.h : Déclaration des fonctions de projet_asdl.c; lignes.c; menu.c
+- menu.c : Définitions des fonctions pour l'affichage du menu
+- makefile : compilateur
+- Dossier img : contient toutes les images de l'interface
+- Code source du modèle : dim.h, dim.c, case.h, case.c, partie.h, partie.c
+- user.dat : Contient toutes les données des joueurs enregistrés
+- CHANGELOG.md : note des versions effectuées lors du projet
+
+### COMPILATION
+
+Vous pouvez compiler en tapant
+```sh
+make projet
+```
+### LANCEMENT
+
+Pour lancer le programme tapez
+```sh
+./projet
+```
+### RANGER
+
+Pour suprimer les *.o
+```sh
+make clean
+```
