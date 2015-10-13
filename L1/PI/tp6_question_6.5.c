@@ -28,7 +28,7 @@ int eclate(char nom[], char nom1[], char nom2[]);
 void selon_n(int n, FILE* adt1, FILE* adt2, struct evaluation_s i);
 int interclate(char nom[], char nom1[],char nom2[], int lg);
 
-int main(int argc, char * argv[]) 
+int main(int argc, char * argv[])
 {
 	
 	tri_externe(argv[1]);
@@ -101,7 +101,7 @@ int interclate(char nom[], char nom1[],char nom2[], int lg)
 	do
 	{
 	n++;
-	l1 = 0; 
+	l1 = 0;
 	l2 = 0;
 		while(l1< lg && l2< lg && !feof(adt1) && !feof(adt2))
 		{

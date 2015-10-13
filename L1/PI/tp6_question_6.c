@@ -31,7 +31,7 @@ int eclate(char nom[], char nom1[], char nom2[]);
 void selon_n(int n, FILE* adt1, FILE* adt2, struct evaluation_s i);
 int interclate(char nom1[], char nom2[],char nom3[], char nom4[], int lg);
 
-int main(int argc, char * argv[]) 
+int main(int argc, char * argv[])
 {
 	double START, END;
 	START = temps_CPU();
@@ -87,19 +87,19 @@ int eclate(char nom[], char nom1[], char nom2[])
 	int n=0;
 	
 	adt1 = fopen(nom1, "w");
-	if (NULL == adt1) 
+	if (NULL == adt1)
 	{
 		perror("echec ouverture fichier");
 		exit(-1);
 	}
 	adt2 = fopen(nom2, "w");
-	if (NULL == adt2) 
+	if (NULL == adt2)
 	{
 		perror("echec ouverture fichier");
 		exit(-1);
 	}
 	adt = fopen(nom, "r");
-	if (NULL == adt) 
+	if (NULL == adt)
 	{
 		perror("echec ouverture fichier");
 		exit(-1);
@@ -130,25 +130,25 @@ int interclate(char nom1[], char nom2[],char nom3[], char nom4[], int lg)
 	struct evaluation_s x, y;
 		
 	adt1 = fopen(nom1,"r");
-	if (NULL == adt1) 
+	if (NULL == adt1)
 	{
 		perror("echec ouverture fichier");
 		exit(-1);
 	}
 	adt2 = fopen(nom2,"r");
-	if (NULL == adt2) 
+	if (NULL == adt2)
 	{
 		perror("echec ouverture fichier");
 		exit(-1);
 	}
 	adt3 = fopen(nom3,"w");
-	if (NULL == adt3) 
+	if (NULL == adt3)
 	{
 		perror("echec ouverture fichier");
 		exit(-1);
 	}
 	adt4 = fopen(nom4,"w");
-	if (NULL == adt4) 
+	if (NULL == adt4)
 	{
 		perror("echec ouverture fichier");
 		exit(-1);
@@ -164,7 +164,7 @@ int interclate(char nom1[], char nom2[],char nom3[], char nom4[], int lg)
 	do
 	{
 	n++;
-	l1 = 0; 
+	l1 = 0;
 	l2 = 0;
 		while(l1< lg && l2< lg && !feof(adt1) && !feof(adt2))
 		{

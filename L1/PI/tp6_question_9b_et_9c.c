@@ -34,7 +34,7 @@ long int first_eval_dicho(int film, FILE* adt);
 // Question 9c
 void repartition_notes(int id_film, FILE* adt, int* tab, int position);
 
-int main(int argc, char * argv[]) 
+int main(int argc, char * argv[])
 {
 	double START, END;
 	/* verification du nombre de parametres transmis sur la ligne de commande */
@@ -47,7 +47,7 @@ int main(int argc, char * argv[])
 	
 	FILE* adt;
 	adt = fopen("index.bin", "r");
-	if (NULL == adt) 
+	if (NULL == adt)
 	{
 		perror("echec ouverture fichier");
 		exit(-1);
@@ -90,7 +90,7 @@ long int first_eval_seq(int film, FILE* adt)
 	
 	
     fread(&i, sizeof(struct evaluation_s), 1, adt);
-    
+
     while( !feof(adt))//( i.date < n1 && i.date > n2)||
     {
 	if( i.film == film)
@@ -98,7 +98,7 @@ long int first_eval_seq(int film, FILE* adt)
 	    return cur_pos;
 	}
 
-	    
+	
 	fread(&i, sizeof(struct evaluation_s), 1, adt);
 	cur_pos = cur_pos + 1;
     }
@@ -109,7 +109,7 @@ long int first_eval_seq(int film, FILE* adt)
 long int first_eval_dicho(int film, FILE* adt)
 {
 	 int	mil = 0,
-		set=0, 
+		set=0,
 		end;
 	
     struct evaluation_s i;
@@ -118,9 +118,9 @@ long int first_eval_dicho(int film, FILE* adt)
     end = ftell(adt)/sizeof(struct evaluation_s);
     mil = set + (end - set)/2;
     fseek(adt, mil*sizeof(struct evaluation_s), SEEK_SET);
-    
+
     fread(&i, sizeof(struct evaluation_s), 1, adt);
-    
+
     while( !feof(adt))
     {
 	
@@ -133,11 +133,11 @@ long int first_eval_dicho(int film, FILE* adt)
 	    {
 		set = mil+1;
 	    }
-	    if(i.film > film) 
+	    if(i.film > film)
 	    {
 		end = mil + 1;
 	    }
-	    
+	
 	if(mil == set+1 && mil == end - 1 && i.film == film)
 	{
 	    // on verifie si nous avons rien oublie avant
@@ -145,21 +145,21 @@ long int first_eval_dicho(int film, FILE* adt)
 	    fread(&i, sizeof(struct evaluation_s), 1, adt);
 	    if(i.film < film)
 		fread(&i, sizeof(struct evaluation_s), 1, adt);
-	    
+	
 	    return ftell(adt)/sizeof(struct evaluation_s);
-	    
+	
 	}
 	
 	mil = set + ((end - set)/2);
 	fseek(adt, mil*sizeof(struct evaluation_s), SEEK_SET);
-	    
+	
 	fread(&i, sizeof(struct evaluation_s), 1, adt);
 	if(feof(adt))
 	    break;
 	
     }
-    
-    
+
+
 	
     return -1;
 }

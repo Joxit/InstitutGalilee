@@ -6,7 +6,7 @@
 #include <stdio.h>   /* printf et puts */
 #include <stdlib.h>  /* EXIT_SUCCESS */
 #define LGMAX_TITRE 84
-struct film 
+struct film
 {
 	unsigned int annee;
 	unsigned int id;

@@ -1,6 +1,6 @@
 /* Question 8 du mini projet
  * Repartition des notes d'un film
- * Fonction qui prend en argument : 
+ * Fonction qui prend en argument :
  *	- l'identification du film
  * 	- l'adresse du tampon du fichier binaire
  * 	- un tableau d'evaluation
@@ -47,7 +47,7 @@ int main(int argc, char * argv[]) {
 	id_film = atoi(argv[2]);
 	
 	adt = fopen(argv[1], "r");
-	if (NULL == adt) 
+	if (NULL == adt)
 	{
 		perror("echec ouverture fichier");
 		exit(-1);
@@ -64,7 +64,7 @@ int main(int argc, char * argv[]) {
 
 void repartition_notes(int id_film, FILE* adt, int* tab)
 {
-    
+
 	struct evaluation_s i;
 	fread(&i, sizeof(struct evaluation_s), 1, adt);
 	while(!feof(adt))
@@ -89,9 +89,9 @@ void repartition_notes(int id_film, FILE* adt, int* tab)
 			tab[4] = tab[4] + 1;
 			break;
 		}
-	    
+	
 	    }
-	    
+	
 	fread(&i, sizeof(struct evaluation_s), 1, adt);
 	}
 	

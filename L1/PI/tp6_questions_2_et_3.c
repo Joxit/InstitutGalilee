@@ -14,7 +14,7 @@
  * - La fonction main permet de tester si la fonction est correcte ; elle met
  *   en évidence une subtilité du fonctionnement de la fonction mktime : son
  *   argument et la valeur renvoyée ne sont pas toujours exprimés sur le même
- *   fuseau horaire...  
+ *   fuseau horaire...
  */
 
 #include <stdlib.h>

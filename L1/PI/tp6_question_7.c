@@ -1,10 +1,10 @@
 /* Question 7 du mini projet
  * Temps recherche sequentiel :
- * 0.0000s - 0.0800s 
+ * 0.0000s - 0.0800s
  * 	Moyenne : 0.0400s
- * 
+ *
  * Temps recherche dichotomique :
- * 0.0000s - 0.0040s 
+ * 0.0000s - 0.0040s
  * 	Moyenne : 0.0020s
  */
 
@@ -34,7 +34,7 @@ void nbsec2date(time_t, int *, int *, int *);
 long int first_eval_seq(int debut, FILE* adt);
 long int first_eval_dicho(int debut, FILE* adt);
 
-int main(int argc, char * argv[]) 
+int main(int argc, char * argv[])
 {
 	double START, END;
 	START = temps_CPU();
@@ -47,7 +47,7 @@ int main(int argc, char * argv[])
 	
 	FILE* adt;
 	adt = fopen(argv[1], "r");
-	if (NULL == adt) 
+	if (NULL == adt)
 	{
 		perror("echec ouverture fichier");
 		exit(-1);
@@ -93,7 +93,7 @@ long int first_eval_seq(int debut, FILE* adt)
 	
 	
     fread(&i, sizeof(struct evaluation_s), 1, adt);
-    
+
     while( !feof(adt))
     {
 	if( i.date >= n1)
@@ -103,7 +103,7 @@ long int first_eval_seq(int debut, FILE* adt)
 	    return cur_pos;
 	}
 
-	    
+	
 	fread(&i, sizeof(struct evaluation_s), 1, adt);
 	cur_pos = cur_pos + 1;
     }
@@ -114,10 +114,10 @@ long int first_eval_seq(int debut, FILE* adt)
 long int first_eval_dicho(int debut, FILE* adt)
 {
     time_t n1, n2, n3;
-	 int j, m, a, 
+	 int j, m, a,
 		fin = debut + 1,
 		mil = 0,
-		set=0, 
+		set=0,
 		end;
 	
     struct evaluation_s i;
@@ -131,10 +131,10 @@ long int first_eval_dicho(int debut, FILE* adt)
     end = ftell(adt)/sizeof(struct evaluation_s);
     mil = set + (end - set)/2;
     fseek(adt, mil*sizeof(struct evaluation_s), SEEK_SET);
-    
+
     n3 = n2;
     fread(&i, sizeof(struct evaluation_s), 1, adt);
-    
+
     while( !feof(adt))
     {
 	
@@ -148,11 +148,11 @@ long int first_eval_dicho(int debut, FILE* adt)
 	    {
 		set = mil+1;
 	    }
-	    if(i.date > n3) 
+	    if(i.date > n3)
 	    {
 		end = mil + 1;
 	    }
-	    
+	
 	if(mil == set+1 && mil == end - 1 && (i.date >= n1 && i.date <= n2))
 	{
 	    // on verifie si nous avons rien oublie avant
@@ -160,23 +160,23 @@ long int first_eval_dicho(int debut, FILE* adt)
 	    fread(&i, sizeof(struct evaluation_s), 1, adt);
 	    if(i.date < n1)
 		fread(&i, sizeof(struct evaluation_s), 1, adt);
-	    
+	
 	    nbsec2date( i.date,  &j,  &m,  &a);
 	    printf("La premiere evaluation a eu lieu le : %d/%d/%d\n", j, m, a);
 	    return ftell(adt)/sizeof(struct evaluation_s);
-	    
+	
 	}
 	
 	mil = set + ((end - set)/2);
 	fseek(adt, mil*sizeof(struct evaluation_s), SEEK_SET);
-	    
+	
 	fread(&i, sizeof(struct evaluation_s), 1, adt);
 	if(feof(adt))
 	    break;
 	
     }
-    
-    
+
+
 	
     return -1;
 }
