@@ -17,7 +17,7 @@ let _ = Random.self_init ();;
 
 (********************************* 5.2 Listes *********************************)
 
-(* 1/ Insert un élément à une position. Si la position est trop grande on 
+(* 1/ Insert un élément à une position. Si la position est trop grande on
  * l'insert a la fin de la liste. On commence à la position 0. *)
 let rec insert_at_pos elt list pos = match list with
   | [] -> [elt]
@@ -25,7 +25,7 @@ let rec insert_at_pos elt list pos = match list with
   | hd::tl -> hd::insert_at_pos elt tl (pos - 1);;
 
 (* 2/ Insert un élément à une position aléatoire. *)
-let insert_at_random elt list = 
+let insert_at_random elt list =
   insert_at_pos elt list (Random.int (List.length list));;
 
 (* 3/ Melange une liste. *)
@@ -116,7 +116,7 @@ struct
    * que le modulo soit bien entre 0 et (size_x - 1) car (-1 mod x = -1)*)
   let ouest (x, y) = ((size_x + (x - 1)) mod size_x, y)
 
-  (* L'est est a droite de x, donc x + 1. On utilise le modulo pour ne pas 
+  (* L'est est a droite de x, donc x + 1. On utilise le modulo pour ne pas
    * depasser (size_x -1) *)
   let est (x, y) = ((x + 1) mod size_x, y)
 
@@ -137,7 +137,7 @@ struct
     let rec sort_x x =
       if x = size_x then
         []
-      else 
+      else
         let rec sort_y y =
           if y = size_y  then []
           else (at_pos get_pos (x, y) list)::sort_y (y + 1)
@@ -171,7 +171,7 @@ sig
    * proies dans le cas ou l'individu ne le mange pas *)
   val a_faim : individu -> bool
   val manger : int -> individu -> individu option
-  (* Quand on utilise la fonction en argument, on prend la valeur max en 
+  (* Quand on utilise la fonction en argument, on prend la valeur max en
    * fonction de la position qu'on lui donne *)
   val bouger : (pos -> int) -> individu -> individu
   val reproduire : int -> individu -> individu -> individu list
@@ -225,7 +225,7 @@ struct
               pos = new_pos}::create_children (x - 1)
     in if mere.age = Adulte && nb_zherbs > 0 then
          create_children (Random.int nb_zherbs)
-       else 
+       else
          []
 
   (* Fait passer l'individu a l'age superieur *)
@@ -234,8 +234,8 @@ struct
     | Enfant -> Some {ind with age = Adulte}
     | Adulte -> None
 
-  let afficher ind = 
-    Printf.printf "[id=%d age=%s pos=" ind.id (string_age ind.age); 
+  let afficher ind =
+    Printf.printf "[id=%d age=%s pos=" ind.id (string_age ind.age);
     P.display (print_pos) ind.pos; print_string "]"
 end;;
 
@@ -245,7 +245,7 @@ end;;
 let krapit_pv_max = 6;;
 let krapit_pv_consum = 1;;
 let krapit_seuil_faim = 3;;
-module Make_Krapit:MAKE_INDIVIDU = 
+module Make_Krapit:MAKE_INDIVIDU =
   functor (P:PLANETE) ->
 struct
   type pos = P.pos
@@ -262,7 +262,7 @@ struct
   let create () = (* creer un individu aleatoire *)
     last_id := !last_id + 1;
     let rnd_age = random_age () in
-    let age = 
+    let age =
       if rnd_age = Adulte then
         (rnd_age, (Random.int 4) + 1)  (* 1 a 4 tours adulte *)
       else
@@ -275,12 +275,12 @@ struct
 
   let a_faim ind = true (* Il mange en toutes circonstances *)
 
-  (* Quand qte > 0 l'individu mange toujours, meme s'il n'a pas faim. Les 
+  (* Quand qte > 0 l'individu mange toujours, meme s'il n'a pas faim. Les
    * Krapits sont des gros mangeurs de zherbes *)
-  let manger qte ind = 
-    if qte > 0 && a_faim ind then 
+  let manger qte ind =
+    if qte > 0 && a_faim ind then
       Some {ind with pv = krapit_pv_max}
-    else if ind.pv > krapit_pv_consum then 
+    else if ind.pv > krapit_pv_consum then
       (* Si on a plus de pv que ce qu'on va perdre il survit *)
       Some {ind with  pv = ind.pv - krapit_pv_consum}
     else  None (* Sinon il meurt *)
@@ -289,7 +289,7 @@ struct
     if ind.pv > krapit_seuil_faim then
       ind (* Il n'a pas faim *)
     else
-      let new_pos = 
+      let new_pos =
         option_get (random_get [ P.ouest ind.pos;
                                  P.est ind.pos;
                                  P.nord ind.pos;
@@ -301,13 +301,13 @@ struct
     let rec create_children n = match n with
       | 0 -> []
       | x -> let child = create ()
-             and new_pos = match Random.int 100 with 
+             and new_pos = match Random.int 100 with
                | x when x < 20 -> mere.pos
                | x when x < 40 -> P.ouest mere.pos
                | x when x < 60 -> P.est mere.pos
                | x when x < 80 -> P.nord mere.pos
                | _ -> P.sud mere.pos
-             in { child with 
+             in { child with
                   age = (Bebe, 1); (* Toujours des bebes *)
                   pos = new_pos}::create_children (x - 1)
     in if get_age mere = Adulte && get_age pere = Adulte then
@@ -315,10 +315,10 @@ struct
        else
          []
 
-  (* Fait passer l'individu a l'age superieur si le compteur est egal a un sinon 
+  (* Fait passer l'individu a l'age superieur si le compteur est egal a un sinon
    * on le decremente (Il est utilise uniquement quand il est Adulte) *)
-  let vieillir ind = 
-    if snd ind.age > 1 then 
+  let vieillir ind =
+    if snd ind.age > 1 then
       (* on reduit l'esperance de vie dans tous les cas *)
       Some {ind with age = (get_age ind, snd ind.age - 1)}
     else match get_age ind with
@@ -326,11 +326,11 @@ struct
          | Enfant -> Some {ind with age = (Adulte, (Random.int 4) + 1)}
          | Adulte -> None
 
-  let afficher ind = 
+  let afficher ind =
     Printf.printf "[id=%d sexe=%s age=(%s, %d) pv=%d pos="
                   ind.id (string_sexe ind.sexe)
                   (string_age (get_age ind)) (snd ind.age)
-                  (ind.pv); 
+                  (ind.pv);
     P.display (print_pos) ind.pos; print_string "]"
 end;;
 
@@ -342,7 +342,7 @@ let krogul_pv_consum = 2;;
 let krogul_seuil_faim = 6;;
 let krogul_gain_faim = 5;;
 let krogul_affame = 4;;
-module Make_Krogul:MAKE_INDIVIDU = 
+module Make_Krogul:MAKE_INDIVIDU =
   functor (P:PLANETE) ->
 struct
   type pos = P.pos
@@ -356,9 +356,9 @@ struct
   let get_age ind = fst ind.age (* renvoyer age *)
 
   let create () = (* creer un individu aleatoire *)
-    last_id := !last_id + 1; 
+    last_id := !last_id + 1;
     let rnd_age = random_age () in
-    let age = 
+    let age =
       if rnd_age = Adulte then
         (rnd_age, (Random.int 4) + 2)  (* 2 a 5 tours adulte *)
       else
@@ -371,11 +371,11 @@ struct
 
   (* Il mange que quand il a faim, donc quand on lui donnera a manger, il
    * faudra verifier qu'il a faim avant de tuer sa proie *)
-  let a_faim ind = ind.pv <= krogul_seuil_faim 
+  let a_faim ind = ind.pv <= krogul_seuil_faim
 
-  (* Mange et regenere sa vie quand il a faim, sinon elle baisse jusqu'a 
+  (* Mange et regenere sa vie quand il a faim, sinon elle baisse jusqu'a
    * mourrir *)
-  let manger qte ind = 
+  let manger qte ind =
     if qte > 0 && a_faim ind then
       begin
         let pv =
@@ -385,21 +385,21 @@ struct
             ind.pv + (krogul_gain_faim * qte)
         in Some {ind with pv = pv} (* le nombre de krapits manges *)
       end
-    else if ind.pv > krogul_pv_consum then 
+    else if ind.pv > krogul_pv_consum then
       (* Si on a plus de pv que ce qu'on va perdre il survit *)
       Some {ind with  pv = ind.pv - krogul_pv_consum}
-    else 
+    else
       (* Sinon il meurt *)
       None
 
-  (* Quand le Krogul est affame, on regarde la position parmi les 4 points 
+  (* Quand le Krogul est affame, on regarde la position parmi les 4 points
    * cardinaux ou il y a le plus de proies a manger a l'aide de f *)
   let bouger f ind =
     if ind.pv > krogul_affame then
       ind
     else
       begin
-        (* On met uniquement 3 points cardinaux, le dernier sera notre base du 
+        (* On met uniquement 3 points cardinaux, le dernier sera notre base du
          * fold *)
         let les_pos = [ (f (P.est ind.pos), P.est ind.pos);
                         (f (P.nord ind.pos), P.nord ind.pos);
@@ -435,8 +435,8 @@ struct
 
   (* Fait passer l'individu a l'age superieur si le compteur est egal a un sinon
    * on le decremente *)
-  let vieillir ind = 
-    if snd ind.age > 1 then 
+  let vieillir ind =
+    if snd ind.age > 1 then
       (* on reduit l'esperance de vie dans tous les cas *)
       Some {ind with age = (get_age ind, snd ind.age - 1)}
     else match get_age ind with
@@ -484,29 +484,29 @@ end;;
 
 
 (* 17/ Signature MAKE_PLANTES *)
-module type MAKE_PLANTES = 
-  functor (P:PLANETE) -> 
-    functor (MI:MAKE_INDIVIDU) -> 
+module type MAKE_PLANTES =
+  functor (P:PLANETE) ->
+    functor (MI:MAKE_INDIVIDU) ->
       POPULATION with type pos = P.pos
          and type nourriture = unit
          and type individu = MI(P).individu;;
 
 (* 18/ Signature MAKE_ANIMAUX *)
-module type MAKE_ANIMAUX = 
+module type MAKE_ANIMAUX =
   functor (P:PLANETE) ->
-    functor (PROIES:POPULATION with type pos = P.pos) -> 
-      functor (MI:MAKE_INDIVIDU) -> 
+    functor (PROIES:POPULATION with type pos = P.pos) ->
+      functor (MI:MAKE_INDIVIDU) ->
         POPULATION with type pos = P.pos
            and type nourriture = PROIES.population
-           and type individu = MI(P).individu;; 
+           and type individu = MI(P).individu;;
 
 (******************************** 8.2 Plantes *********************************)
 
 (* 19/ Module Make_Zherbs *)
-module Make_Zherbs:MAKE_PLANTES = 
+module Make_Zherbs:MAKE_PLANTES =
   functor (P:PLANETE) ->
     functor (MI:MAKE_INDIVIDU) ->
-struct 
+struct
   module Plante = MI(P)
 
   type pos = P.pos
@@ -517,7 +517,7 @@ struct
   type t = population
 
   let map = List.map
-  let iter = List.iter 
+  let iter = List.iter
   let reduce = List.fold_right
   let random_ind = random_get (* Individu aléatoire das une population *)
   let sous_pop = P.at_pos Plante.get_pos (* Sous population *)
@@ -537,11 +537,11 @@ struct
     let adultes = (* on filtre les adultes *)
       List.filter (fun ind -> Plante.get_age ind = Adulte) pop in
     let get_enfants ind acc =
-      (* Applique la fonction reproduire sur ind et renvoie la liste de ses 
+      (* Applique la fonction reproduire sur ind et renvoie la liste de ses
        * enfants concatener a la population (acc) *)
-      let nb_zherb = ((List.length (sous_pop (Plante.get_pos ind) adultes)) - 1) 
+      let nb_zherb = ((List.length (sous_pop (Plante.get_pos ind) adultes)) - 1)
       in acc@(Plante.reproduire nb_zherb ind ind)
-    in reduce get_enfants adultes pop 
+    in reduce get_enfants adultes pop
 
   let mouvement proies pop = pop (* Ils ne bougent pas *)
 
@@ -560,7 +560,7 @@ module Make_Bestioles:MAKE_ANIMAUX =
   functor (P:PLANETE) ->
     functor (PROIES:POPULATION with type pos = P.pos) ->
       functor (MI:MAKE_INDIVIDU) ->
-struct 
+struct
   module Bestiole = MI(P)
   type pos = P.pos
   type individu = Bestiole.individu
@@ -585,7 +585,7 @@ struct
   (* Fait viellir toute la population *)
   let vieillissement pop = clean_list (map Bestiole.vieillir pop)
 
-  (* Fait reproduire tous les adultes en créant des couples male + femelle 
+  (* Fait reproduire tous les adultes en créant des couples male + femelle
    * aléatoirement pour chaque case et recupere l'ancienne population + bebes *)
   let reproduction pop =
     let l_adultes = List.filter (fun ind -> Bestiole.get_age ind = Adulte) pop in
@@ -593,7 +593,7 @@ struct
     let split = List.partition (fun ind -> Bestiole.get_sexe ind = Masculin) in
     let l_splited = map split l_sorted in
     let l_shuffled =  map (fun (m, f) -> (shuffle m, shuffle f)) l_splited in
-    let rec reprod list = match list with 
+    let rec reprod list = match list with
       | ([], _) -> []
       | (_, []) -> []
       | (m::tlm, f::tlf) -> (Bestiole.reproduire 0 f m)@(reprod (tlm, tlf))
@@ -602,7 +602,7 @@ struct
   (* Fait bouger la population, la fonction donne en parametre de bouger est
    * le nombre de proie a une position donne. De ce fait, un predateur pourra
    * regarder toutes les positions et aller dans celle ou il y en a le plus *)
-  let mouvement proies pop = 
+  let mouvement proies pop =
     let nb_proies pos = (* renvoie le nombre de proie a une position *)
       PROIES.reduce (fun ind -> fun x -> x + 1) (PROIES.sous_pop pos proies) 0
     in map (Bestiole.bouger (fun pos -> nb_proies pos)) pop
@@ -611,12 +611,12 @@ struct
    * verifi qu'il a faim avant de supprimer la proie, sinon elle reste *)
   let nourriture proies pop =
     let manger ind (p, n) = (* fonction pour le reduce *)
-      let proie = 
+      let proie =
         PROIES.random_ind (PROIES.sous_pop (Bestiole.get_pos ind) n) in
       if proie = None then
         ((Bestiole.manger 0 ind)::p, n)
       else
-        begin 
+        begin
           let bestiole = Bestiole.manger 1 ind in
           if Bestiole.a_faim ind then
             (* Si l'individu avait  faim on tue la proie *)
@@ -641,32 +641,32 @@ module Kroguls = Make_Bestioles (Symbioz) (Krapits) (Make_Krogul);;
 (* 23/ Module Make_Game *)
 module Make_Game =
   functor (P:PLANETE) ->
-    functor (Plantes:POPULATION 
+    functor (Plantes:POPULATION
              with type pos = P.pos
              and type nourriture = unit) ->
-      functor (Herbivores:POPULATION 
+      functor (Herbivores:POPULATION
                with type pos = P.pos
                and type nourriture = Plantes.population) ->
-        functor (Carnivores:POPULATION 
+        functor (Carnivores:POPULATION
                  with type pos = P.pos
                  and type nourriture = Herbivores.population) ->
 struct
-  (* Environement du jeu *)          
-  type env = 
+  (* Environement du jeu *)
+  type env =
     {p:Plantes.population; h:Herbivores.population; c:Carnivores.population}
 
-  (* Creation d'un environement pour jouer, on a un parametre par population 
+  (* Creation d'un environement pour jouer, on a un parametre par population
    * pour les initialiser a des valeurs qu'on veut *)
-  let create (nb_p, nb_h, nb_c)= { p = Plantes.create nb_p; 
-                                   h = Herbivores.create nb_h; 
+  let create (nb_p, nb_h, nb_c)= { p = Plantes.create nb_p;
+                                   h = Herbivores.create nb_h;
                                    c = Carnivores.create nb_c }
-  (* Un tour du jeu, on affiche une population, on la fait bouger et on passe 
+  (* Un tour du jeu, on affiche une population, on la fait bouger et on passe
    * a la suivante et on renvoie le nouvel environement *)
-  let tour env = 
+  let tour env =
     print_string "\nPlantes\n";
     Plantes.affichage env.p;
-    let (p, _) = Plantes.nourriture () env.p in 
-    let p = Plantes.reproduction p in 
+    let (p, _) = Plantes.nourriture () env.p in
+    let p = Plantes.reproduction p in
     let p = Plantes.mouvement () p in
 
     print_string "\nHerbivores\n";
@@ -679,10 +679,10 @@ struct
     Carnivores.affichage env.c;
     let (c, h) = Carnivores.nourriture h env.c in
     let c = Carnivores.reproduction c in
-    let c = Carnivores.mouvement h c; in 
+    let c = Carnivores.mouvement h c; in
 
-    let p = Plantes.vieillissement p in 
-    let h = Herbivores.vieillissement h in 
+    let p = Plantes.vieillissement p in
+    let h = Herbivores.vieillissement h in
     let c = Carnivores.vieillissement c in
     print_string "\n";
     {p = p; h = h; c = c}
