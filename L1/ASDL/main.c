@@ -15,12 +15,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 /* ___________________________________________________________________________
- *	Projet A.S.D.L par MAGLOIRE Jones 11000369 et DELCOURT Rémi 11002398       *
- *	Lignes RATP de paris                                                       *
- *	                                                                           *
- *	Mardi 28 Avril 2011	                                                       *
- *	                                                                           *
- *	pour plus d'information sur les fonctions voir projet_adsl.h               *
+ *  Projet A.S.D.L par MAGLOIRE Jones 11000369 et DELCOURT Rémi 11002398       *
+ *  Lignes RATP de paris                                                       *
+ *                                                                             *
+ *  Mardi 28 Avril 2011                                                        *
+ *                                                                             *
+ *  pour plus d'information sur les fonctions voir projet_adsl.h               *
  * ___________________________________________________________________________ */
 
 /* Declaration de fonctionnalites supplementaire */
@@ -78,7 +78,7 @@ int main(int argc, char** argv)
 	// Initialisation du mode id
 	set_id(toutes_les_lignes);
 	// Initialisation de la liste des stations
-	toutes_les_stations = liste_station(toutes_les_stations,  toutes_les_lignes);
+	toutes_les_stations = liste_station(toutes_les_stations, toutes_les_lignes);
 
 	if(toutes_les_stations == NULL || toutes_les_lignes == NULL)
 	{

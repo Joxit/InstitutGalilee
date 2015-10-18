@@ -15,15 +15,15 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 /* ___________________________________________________________________________
- *	Projet A.S.D.L par MAGLOIRE Jones 11000369 et DELCOURT Rémi 11002398       *
- *	Lignes RATP de paris                                                       *
- *	                                                                           *
- *	Ce fichier contient toutes les fonctions nécessaires aux                   *
- *	menux utilisateur et agent RATP                                            *
- *	                                                                           *
- *	Dernière modification : Mardi 28 Avril 2011	                               *
- *	                                                                           *
- *	pour plus d'information sur les fonctions voir projet_adsl.h               *
+ *  Projet A.S.D.L par MAGLOIRE Jones 11000369 et DELCOURT Rémi 11002398       *
+ *  Lignes RATP de paris                                                       *
+ *                                                                             *
+ *  Ce fichier contient toutes les fonctions nécessaires aux                   *
+ *  menux utilisateur et agent RATP                                            *
+ *                                                                             *
+ *  Dernière modification : Mardi 28 Avril 2011                                *
+ *                                                                             *
+ *  pour plus d'information sur les fonctions voir projet_adsl.h               *
  * ___________________________________________________________________________ */
 #include <stdio.h>
 #include <stdlib.h>
@@ -187,7 +187,6 @@ void Info_Ligne(liste_pStations_t** toutes_les_lignes, liste_pStations_t toutes_
 			else
 				printf("fermee ");
 			printf("directon Villejuif et ");
-
 
 			if(ligne_ouverte( *toutes_les_lignes[7]))
 				printf("ouverte ");
@@ -387,7 +386,6 @@ void Action_Station(liste_pStations_t** toutes_les_lignes, liste_pStations_t tou
 	puts("\t 4) Fermer une Station");
 	puts("\t 5) Supprimer une Station du reseau");
 	puts("\t 6) Retour");
-
 
 	scanf("%d", &choix);
 	purger ();

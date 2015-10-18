@@ -21,7 +21,7 @@
  * Ce fichier contient toutes les fonctions nécessaires à                     *
  * l'interface utilisateur                                                    *
  *                                                                            *
- * Dernière modification : Mardi 28 Avril 2011				                  *
+ * Dernière modification : Mardi 28 Avril 2011                                *
  *                                                                            *
  * pour plus d'information sur les fonctions voir projet_adsl.h               *
  * __________________________________________________________________________ */
@@ -42,11 +42,13 @@ void recherche_intineraires(int depart, int arrivee, int** distance, liste_pStat
 {
 	int i = 0;
 	liste_pStations_t ligne;
-	int	n = 0, 		// nombre binaire convertit qui renvoie les lignes de la station
+	int
+		n = 0,  // nombre binaire convertit qui renvoie les lignes de la station
 		numero_ligne = 0;
-	int cur_id, 	// id de parcour
-		sub_id,		// id de test à la sortie de id_proche
-		id;			// id final le plus près d'arrivee
+	int
+		cur_id, // id de parcour
+		sub_id, // id de test à la sortie de id_proche
+		id;     // id final le plus près d'arrivee
 
 	if(depart == arrivee)
 	{

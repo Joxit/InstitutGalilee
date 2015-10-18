@@ -80,11 +80,11 @@ int get_id(char* nom_station, liste_pStations_t toutes_les_stations)
 	// Deuxième passage sur toutes_les_stations
 	while(stations.s != NULL)
 	{
-	    // On compare le nom_station à chaque parties de stations.s->nom
+		// On compare le nom_station à chaque parties de stations.s->nom
 		pointeur = strstr(stations.s->nom, nom_station);
 		if(pointeur != NULL)
 		{
-		    // Si on trouve une partie qui correspond on donne l'id à l'utilisateur
+			// Si on trouve une partie qui correspond on donne l'id à l'utilisateur
 			printf("Tapez %d pour %s\n", stations.s->id, stations.s->nom);
 			choix = 1;
 			stations = *stations.next;
