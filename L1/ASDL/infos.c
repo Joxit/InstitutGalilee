@@ -43,12 +43,12 @@ void recherche_intineraires(int depart, int arrivee, int** distance, liste_pStat
 	int i = 0;
 	liste_pStations_t ligne;
 	int
-		n = 0,  // nombre binaire convertit qui renvoie les lignes de la station
+		n = 0, // nombre binaire convertit qui renvoie les lignes de la station
 		numero_ligne = 0;
 	int
 		cur_id, // id de parcour
 		sub_id, // id de test à la sortie de id_proche
-		id;     // id final le plus près d'arrivee
+		id; // id final le plus près d'arrivee
 
 	if(depart == arrivee)
 	{
@@ -214,10 +214,12 @@ void get_station_ouverte(char* nom_station, liste_pStations_t** toutes_les_ligne
 				else
 					printf("La station %s est fermée pour la ligne %d ", nom_station, get_num_ligne(i));
 
-				// une station n'est pas deux fois sur la meme ligne mais erreur avec  ligne = *ligne.next; qui suit
+				// une station n'est pas deux fois sur la meme ligne
+				// mais erreur avec ligne = *ligne.next; qui suit
 				//i++;
 				//ligne = *toutes_les_lignes[i];
-				// Vérification d'un cas complexe avec les lignes à plusieurs branches
+				// Vérification d'un cas complexe avec les
+				// lignes à plusieurs branches
 				switch(i)
 				{
 				case 6:
@@ -245,7 +247,7 @@ void get_station_ouverte(char* nom_station, liste_pStations_t** toutes_les_ligne
 			}
 		}
 
-		if(ligne.s  == NULL)
+		if(ligne.s == NULL)
 		{
 			i++;
 			// Vérification pour les erreures de ségmentations
@@ -276,9 +278,11 @@ int ligne_station(char* nom_station, liste_pStations_t** toutes_les_lignes)
 			if(strcmp(nom_station, ligne.s->nom)==0 && is_open(ligne))
 			{
 				printf("%d ", get_num_ligne(i));
-				// codage en binaire pour une vérification dans recherche_intineraires
+				// codage en binaire pour une vérification dans
+				// recherche_intineraires
 				numero_lignes = numero_lignes + (int)pow(2, (double)i);
-				// une station n'est pas deux fois sur la meme ligne mais erreur avec  ligne = *ligne.next; qui suit
+				// une station n'est pas deux fois sur la meme ligne
+				// mais erreur avec ligne = *ligne.next; qui suit
 				//i++;
 				//ligne = *toutes_les_lignes[i];
 			}

@@ -92,7 +92,7 @@ int main(int argc, char** argv)
 	printf("\033[35mTemps de lancement : %.4f s\033[0m\n", END-START);
 
 	// Affichage du programme
-	Menu1(toutes_les_lignes,  *toutes_les_stations, voisin, distance);
+	Menu1(toutes_les_lignes, *toutes_les_stations, voisin, distance);
 
 	return EXIT_SUCCESS;
 }

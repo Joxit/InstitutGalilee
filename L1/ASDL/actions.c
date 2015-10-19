@@ -14,17 +14,17 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-/* ____________________________  Action.c  ___________________________________
- *  Projet A.S.D.L par MAGLOIRE Jones 11000369 et DELCOURT Rémi 11002398       *
- *  Lignes RATP de paris                                                       *
- *                                                                             *
- *  Ce fichier contient toutes les fonctions nécessaires à la création         *
- *  du réseau RATP et des fonctions de l'agent RATP                            *
- *                                                                             *
- *  Dernière modification : Mardi 28 Avril 2011                                *
- *                                                                             *
- *  pour plus d'informations sur les fonctions voir projet_adsl.h              *
- * ___________________________________________________________________________ */
+/* ____________________________  Action.c  __________________________________
+ *  Projet A.S.D.L par MAGLOIRE Jones 11000369 et DELCOURT Rémi 11002398      *
+ *  Lignes RATP de paris                                                      *
+ *                                                                            *
+ *  Ce fichier contient toutes les fonctions nécessaires à la création        *
+ *  du réseau RATP et des fonctions de l'agent RATP                           *
+ *                                                                            *
+ *  Dernière modification : Mardi 28 Avril 2011                               *
+ *                                                                            *
+ *  pour plus d'informations sur les fonctions voir projet_adsl.h             *
+ * __________________________________________________________________________ */
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -122,7 +122,7 @@ void est_voisin(int id1, int id2, liste_pStations_t** toutes_les_lignes,int** vo
 }
 
 // Création de la liste toutes_les_stations
-liste_pStations_t*  liste_station(liste_pStations_t* toutes_les_stations, liste_pStations_t** toutes_les_lignes)
+liste_pStations_t* liste_station(liste_pStations_t* toutes_les_stations, liste_pStations_t** toutes_les_lignes)
 {
 	int i, j, x;
 	liste_pStations_t ligne;
@@ -177,7 +177,7 @@ void set_id(liste_pStations_t** toutes_les_lignes)
 		{
 			j = 0;
 			ligne = *toutes_les_lignes[j];
-			boolean = -1;	   // carte de sortie
+			boolean = -1; // carte de sortie
 			// Deuxième boucle qui permet de vérifier si une station a déjà une id sur toutes les lignes déjà vues
 			while(boolean == -1)
 			{
@@ -212,7 +212,7 @@ void set_id(liste_pStations_t** toutes_les_lignes)
 					}
 
 			}
-			// Si boolean == FALSE c'est qu'on a pas trouvé de station avec la meme  id
+			// Si boolean == FALSE c'est qu'on a pas trouvé de station avec la meme id
 			if(boolean == FALSE )
 			{
 				ligne2.s->id = id;
@@ -444,6 +444,6 @@ void set_distance(liste_pStations_t* toutes_les_lignes[], int** voisin, int** di
 			}
 		}
 	}
-	END  = temps_CPU();
+	END = temps_CPU();
 	printf("\tTemps de creation des matrices : %.4f s\n", END-START);
 }

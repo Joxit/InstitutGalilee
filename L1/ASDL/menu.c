@@ -33,7 +33,7 @@
 // Menu principal
 void Menu1(liste_pStations_t** toutes_les_lignes, liste_pStations_t toutes_les_stations, int** voisin, int** distance)
 {
-	int  choix = 0, choix2=0;
+	int choix = 0, choix2=0;
 	char* reponse = malloc(40*sizeof(char*));
 	puts("_____________________________________________________________");
 	puts("|                   \033[35mBienvenue chez la RATP\033[0m                   |");
@@ -295,8 +295,8 @@ void Action_Ligne(liste_pStations_t** toutes_les_lignes, liste_pStations_t toute
 		switch(choix)
 		{
 		case 7:
-			printf("Sur quele directon?  %s tapez 1 ", toutes_les_lignes[6]->s->nom);
-			printf("directon  %s tapez 2\n", toutes_les_lignes[7]->s->nom);
+			printf("Sur quele directon? %s tapez 1 ", toutes_les_lignes[6]->s->nom);
+			printf("directon %s tapez 2\n", toutes_les_lignes[7]->s->nom);
 			choix = get_choix(choix);
 			if(choix == 1)
 				toutes_les_lignes[6] = fermer_ligne(toutes_les_lignes[6]);
@@ -335,8 +335,8 @@ void Action_Ligne(liste_pStations_t** toutes_les_lignes, liste_pStations_t toute
 		switch(choix)
 		{
 		case 7:
-			printf("Sur quelle directon?  %s tapez 1 ", toutes_les_lignes[6]->s->nom);
-			printf("directon  %s tapez 2\n", toutes_les_lignes[7]->s->nom);
+			printf("Sur quelle directon? %s tapez 1 ", toutes_les_lignes[6]->s->nom);
+			printf("directon %s tapez 2\n", toutes_les_lignes[7]->s->nom);
 			choix = get_choix(choix);
 			if(choix == 1)
 				toutes_les_lignes[6] = ouvrir_ligne(toutes_les_lignes[6]);
@@ -402,8 +402,8 @@ void Action_Station(liste_pStations_t** toutes_les_lignes, liste_pStations_t tou
 		switch(choix)
 		{
 		case 7:
-			printf("Sur quelle directon?  %s tapez 1 ", toutes_les_lignes[6]->s->nom);
-			printf("directon  %s tapez 2\n", toutes_les_lignes[7]->s->nom);
+			printf("Sur quelle directon? %s tapez 1 ", toutes_les_lignes[6]->s->nom);
+			printf("directon %s tapez 2\n", toutes_les_lignes[7]->s->nom);
 			choix = get_choix(choix);
 			if(choix == 1)
 				toutes_les_lignes[6] = ajout_station(nom_station, toutes_les_lignes[6]);
@@ -444,8 +444,8 @@ void Action_Station(liste_pStations_t** toutes_les_lignes, liste_pStations_t tou
 		switch(choix)
 		{
 		case 7:
-			printf("Sur quelle directon?  %s tapez 1 ", toutes_les_lignes[6]->s->nom);
-			printf("directon  %s tapez 2\n", toutes_les_lignes[7]->s->nom);
+			printf("Sur quelle directon? %s tapez 1 ", toutes_les_lignes[6]->s->nom);
+			printf("directon %s tapez 2\n", toutes_les_lignes[7]->s->nom);
 			choix = get_choix(choix);
 			if(choix == 1)
 				toutes_les_lignes[6] = retirer_station(nom_station, toutes_les_lignes[6]);
@@ -486,8 +486,8 @@ void Action_Station(liste_pStations_t** toutes_les_lignes, liste_pStations_t tou
 		switch(choix)
 		{
 		case 7:
-			printf("Sur quelle directon?  %s tapez 1 ", toutes_les_lignes[6]->s->nom);
-			printf("directon  %s tapez 2\n", toutes_les_lignes[7]->s->nom);
+			printf("Sur quelle directon? %s tapez 1 ", toutes_les_lignes[6]->s->nom);
+			printf("directon %s tapez 2\n", toutes_les_lignes[7]->s->nom);
 			choix = get_choix(choix);
 			if(choix == 1)
 				ouvrir_station(nom_station, toutes_les_lignes[6]);
@@ -528,8 +528,8 @@ void Action_Station(liste_pStations_t** toutes_les_lignes, liste_pStations_t tou
 		switch(choix)
 		{
 		case 7:
-			printf("Sur quelle directon?  %s tapez 1 ", toutes_les_lignes[6]->s->nom);
-			printf("directon  %s tapez 2\n", toutes_les_lignes[7]->s->nom);
+			printf("Sur quelle directon? %s tapez 1 ", toutes_les_lignes[6]->s->nom);
+			printf("directon %s tapez 2\n", toutes_les_lignes[7]->s->nom);
 			choix = get_choix(choix);
 			if(choix == 1)
 				fermer_station(nom_station, toutes_les_lignes[6]);
