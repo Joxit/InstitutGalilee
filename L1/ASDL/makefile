@@ -24,7 +24,6 @@ menu.o: menu.c
 main.o: main.c
 	gcc -c main.c -o main.o -Wall
 
-	
 # nettoyage
-clean: 
+clean:
 	rm *.o
