@@ -6,10 +6,21 @@ type value =
 (* Q1 *)
 let rec write_value = function
   | Vide -> Printf.printf "nil"
-  | Comb (x,y) -> Printf.printf "("; write_value x ; Printf.printf " . " ; write_value y ; Printf.printf ")";;
+  | Comb (x,y) ->
+     Printf.printf "(" ;
+    write_value x ; Printf.printf " . " ; write_value y ;
+    Printf.printf ")";;
 
 
-write_value (Comb ((Comb (Vide, (Comb (Vide, Vide)))),(Comb ((Comb (Vide, Vide)), (Comb ((Comb (Vide, Vide)), Vide))))));;
+write_value (Comb
+               (
+                 (Comb (Vide, (Comb (Vide, Vide)))),
+                 (Comb
+                    (
+                      (Comb (Vide, Vide)),
+                      (Comb ((Comb (Vide, Vide)), Vide))
+                    ))
+               ));;
 
 (* Q2 *)
 let rec eq_value v w = match (v, w) with
@@ -67,7 +78,13 @@ let rec flat = function
 (* Q7 *)
 exception Negative_int;;
 
-let rec value_of_int x = if (x < 0) then raise (Negative_int) else if(x=0) then Vide else Comb(Vide, value_of_int (x-1));;
+let rec value_of_int x =
+  if (x < 0) then
+    raise (Negative_int)
+  else if(x=0) then
+    Vide
+  else
+    Comb(Vide, value_of_int (x-1));;
 
 value_of_int (-1);;
 
