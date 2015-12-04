@@ -25,15 +25,28 @@ write_value (Comb
 (* Q2 *)
 let rec eq_value v w = match (v, w) with
   | (Vide, Vide) -> true
-  | (Comb (x1, y1), Comb (x2, y2)) -> if(eq_value x1 x2) then (eq_value y1 y2) else false
+  | (Comb (x1, y1), Comb (x2, y2)) ->
+     if (eq_value x1 x2) then
+       (eq_value y1 y2)
+     else
+       false
   | x -> false;;
 
  (* true *)
-eq_value (Comb ((Comb (Vide, (Comb (Vide, Vide)))),(Comb ((Comb (Vide, Vide)), (Comb ((Comb (Vide, Vide)), Vide)))))) (Comb ((Comb (Vide, (Comb (Vide, Vide)))),(Comb ((Comb (Vide, Vide)), (Comb ((Comb (Vide, Vide)), Vide))))));;
+eq_value
+  (Comb ((Comb (Vide, (Comb (Vide, Vide)))),
+         (Comb ((Comb (Vide, Vide)), (Comb ((Comb (Vide, Vide)), Vide))))))
+  (Comb ((Comb (Vide, (Comb (Vide, Vide)))),
+         (Comb ((Comb (Vide, Vide)), (Comb ((Comb (Vide, Vide)), Vide))))));;
 
 
  (* false *)
-eq_value (Comb ((Comb (Vide, (Comb (Vide, Vide)))),(Comb ((Comb (Vide, Vide)), (Comb ((Comb (Vide, Vide)), Vide)))))) (Comb ((Comb (Vide, (Comb (Vide, Vide)))),(Comb ((Comb (Vide, Vide)), (Comb ((Comb (Vide, Vide)), Comb (Vide, Vide)))))));;
+eq_value
+  (Comb ((Comb (Vide, (Comb (Vide, Vide)))),
+         (Comb ((Comb (Vide, Vide)), (Comb ((Comb (Vide, Vide)), Vide))))))
+  (Comb ((Comb (Vide, (Comb (Vide, Vide)))),
+         (Comb ((Comb (Vide, Vide)),
+                (Comb ((Comb (Vide, Vide)), Comb (Vide, Vide)))))));;
 
 (* Q3 *)
 let rec length = function
@@ -42,11 +55,19 @@ let rec length = function
 
 let rec depth = function
   | Vide -> 0
-  | Comb (g, d) -> let lg = depth g and ld = depth d in if(lg > ld) then lg +1 else ld +1;;
+  | Comb (g, d) ->
+     let lg = depth g and ld = depth d in if(lg > ld) then lg +1 else ld +1;;
 
-depth (Comb (Comb (Vide, Vide), Comb (Vide, Comb (Comb( Comb (Vide, Vide), Vide), Comb (Vide, Vide)))));;
+depth
+  (Comb (Comb (Vide, Vide),
+         Comb (Vide, Comb
+           (Comb( Comb (Vide, Vide), Vide),
+            Comb (Vide, Vide)))));;
 
-length (Comb (Comb (Vide, Vide), Comb (Vide, Comb (Comb( Comb (Vide, Vide), Vide), Comb (Vide, Vide)))));;
+length
+  (Comb (Comb (Vide, Vide),
+         Comb (Vide, Comb (Comb( Comb (Vide, Vide), Vide),
+                           Comb (Vide, Vide)))));;
 
 (* Q4 *)
 exception Invalide_value of string;;
@@ -67,7 +88,9 @@ let concat v1 v2 =
     | Comb (x, y) -> Comb (x, concat_rec y) in
   concat_rec v1;;
 
-concat (Comb (Vide, Comb(Vide, Comb(Vide, Vide)))) (Comb (Vide, Comb(Vide, Comb(Vide, Comb(Vide, Vide)))));;
+concat
+  (Comb (Vide, Comb(Vide, Comb(Vide, Vide))))
+  (Comb (Vide, Comb(Vide, Comb(Vide, Comb(Vide, Vide)))));;
 
 (* Q6 a tester *)
 let rec flat = function
@@ -113,11 +136,12 @@ Vide -> Vide
 canon (Comb (Comb (Vide, Vide), Comb (Vide, Comb (Vide, Vide))));;
 
 (* 11 faux *)
-let mult x y = let x1 = canon x in
-               let rec mult_rec = function
-               Vide -> Vide
-                 | Comb(h, t) -> concat x1 (mult_rec t) in
-               mult_rec (canon y);;
+let mult x y =
+  let x1 = canon x in
+  let rec mult_rec = function
+  Vide -> Vide
+    | Comb(h, t) -> concat x1 (mult_rec t) in
+  mult_rec (canon y);;
 
 
 (* ******************** PARTIE 2 ******************** *)
@@ -143,7 +167,7 @@ exception Undef_var of var;;
 let env_get (env:environnement) var =
   let rec env_rec = function
   [] -> raise (Undef_var var)
-	| (x, y)::t -> if(x = var) then y else env_rec t in
+    | (x, y)::t -> if(x = var) then y else env_rec t in
   env_rec env;;
 
 let env_set (env:environnement) var value =
@@ -155,18 +179,25 @@ let env_set (env:environnement) var value =
 let rec print_expr = function
 Var x -> print_string x
   | Data d -> write_value d
-  | Cons (e,f) ->  Printf.printf "cons ("; print_expr e; Printf.printf " "; print_expr f; Printf.printf ") "
+  | Cons (e,f) ->
+     Printf.printf "cons ("; print_expr e;
+    Printf.printf " "; print_expr f; Printf.printf ") "
   | Head e -> Printf.printf "hd "; print_expr e
   | Tail e -> Printf.printf "tl "; print_expr e
-  | Test (e,f) ->  Printf.printf "=? ("; print_expr e; Printf.printf " "; print_expr f ; Printf.printf ") ";;
+  | Test (e,f) ->
+     Printf.printf "=? ("; print_expr e;
+    Printf.printf " "; print_expr f ; Printf.printf ") ";;
 
 let rec print_comm = function
 Assign (x, e) -> print_string x; Printf.printf " := "; print_expr e
   | Seq (c, d) -> print_comm c; Printf.printf " ; "; print_comm c
-  | While (e, c) -> Printf.printf "while "; print_expr e; Printf.printf "{";print_comm c; Printf.printf "}";;
+  | While (e, c) ->
+     Printf.printf "while "; print_expr e;
+    Printf.printf "{";print_comm c; Printf.printf "}";;
 
-let rec print_prog = function
-{input = i; body = b; output = o} -> print_string i; print_comm b; print_string o;;
+let rec print_prog =
+  function {input = i; body = b; output = o} ->
+    print_string i; print_comm b; print_string o;;
 
 (* Q4 *)
 exception Empty_tree;;
@@ -178,7 +209,11 @@ Var x -> env_get env x
   | Head e -> hd (eval_expr env e)
   | Tail Data Vide -> raise Empty_tree
   | Tail e -> tl (eval_expr env e)
-  | Test (e, f) -> if (eq_value (eval_expr env e) (eval_expr env f)) then Comb ( Vide, Vide) else Vide ;;
+  | Test (e, f) ->
+     if (eq_value (eval_expr env e) (eval_expr env f)) then
+       Comb ( Vide, Vide)
+     else
+       Vide ;;
 
 (* Q5 *)
 exception Undef_var_in_expr of var * expr;;
@@ -186,6 +221,10 @@ exception Undef_var_in_expr of var * expr;;
 let rec eval_com (env:environnement)  = function
 Assign (var, expr) ->  env_set env var (eval_expr env expr)
   | Seq (c, d) -> eval_com (eval_com env c) d (* C ; D *)
-  | While (expr, c) -> if(eval_expr env expr = Vide) then env else eval_com (eval_com env c) (While (expr, c));;  (* while E do {C} *)
+  | While (expr, c) ->
+     if(eval_expr env expr = Vide) then
+       env
+     else
+       eval_com (eval_com env c) (While (expr, c));;  (* while E do {C} *)
 
 let eval_prog value p = env_get (eval_com [(p.input, value)] p.body) p.output ;;
