@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010-2015  Jones Magloire
+ * Copyright (C) 2010-2016  Jones Magloire
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -177,22 +177,24 @@ int IA_jouer_ligne(s_partie* partie, int i, int j, int jouer_colonne, e_etat_cas
 }
 
 
-/*  Fonction de l'IA
- *   Pré-conditions :
- *       - partie instanciée (=> dont le tableau partie->plateau) et en cours
- *       - la case de coordonnées (i,j) vient d'être jouée par le vrai joueur
+/*
+ * Fonction de l'IA
+ *  Pré-conditions :
+ *      - partie instanciée (=> dont le tableau partie->plateau) et en cours
+ *      - la case de coordonnées (i,j) vient d'être jouée par le vrai joueur
  *           (et l'état de cette case vaut la valeur correspondant à ce joueur)
  *  Gere tout le jeu de l'IA en plusieurs etapes:
- * 	- Verification si il n'a pas une colonne de 3 pions sur tout le plateau,
- *	     si oui il joue
- * 	- Verification si l'autre joueur n'a pas une colonne de 3 pions sur
- * 	     la colonne qui vient d'etre joué, si oui il joue pour le bloquer
- * 	- Verification si l'autre joueur n'a pas une ligne de 2 pions sur
- * 	     la ligne qui vient d'etre joué, si oui il joue pour le bloquer et
- *	     evite les 3 pions en ligne imparables
- * 	- Verification si il n'a pas une ligne de 2 pions sur tout le plateau,
- * 	     si oui il joue pour en avoir 3 s'il peut
- * 	- Si toutes ses verifications ne sont pas vraies il joue aleatoirement */
+ *      - Verification si il n'a pas une colonne de 3 pions sur tout le plateau,
+ *       si oui il joue
+ *      - Verification si l'autre joueur n'a pas une colonne de 3 pions sur
+ *           la colonne qui vient d'etre joué, si oui il joue pour le bloquer
+ *      - Verification si l'autre joueur n'a pas une ligne de 2 pions sur
+ *           la ligne qui vient d'etre joué, si oui il joue pour le bloquer et
+ *       evite les 3 pions en ligne imparables
+ *      - Verification si il n'a pas une ligne de 2 pions sur tout le plateau,
+ *           si oui il joue pour en avoir 3 s'il peut
+ *      - Si toutes ses verifications ne sont pas vraies il joue aleatoirement
+ */
 void IA_jouer(ctr_s* ctr, int i, int j)
 {
 

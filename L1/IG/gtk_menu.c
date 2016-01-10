@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010-2015  Jones Magloire
+ * Copyright (C) 2010-2016  Jones Magloire
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -309,7 +309,7 @@ void menu_about(GtkWidget* Item, ctr_s* ctr)
 										 GTK_BUTTONS_CLOSE,
 										 "Puissance 4\n\n"
 										 "Version 1.6\n\n"
-										 "Copyright (C) 2010-2015  Jones Magloire\n"
+										 "Copyright (C) 2010-2016  Jones Magloire\n"
 										 "This program comes with ABSOLUTELY NO WARRANTY.\n"
 										 "This is free software, and you are welcome to\n"
 										 "redistribute it under certain conditions.\n"
